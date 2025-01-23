@@ -1,6 +1,38 @@
-<!-- HelloWorld pas comme les autres  -->
+<template>
+  <div class="page-container">
+    <!-- Utilisation du composant <transition> -->
+    <transition name="fade" mode="out-in">
+      <div v-if="currentPage === 'home'" key="home" class="home-page">
+        <main class="main-content">
+          <button class="btn sign-up" @click="goToSignup">S'inscrire</button>
+          <div class="divider">
+            <hr class="line" />
+            <span>OU</span>
+            <hr class="line" />
+          </div>
+          <div class="social-icons">
+            <GoogleBouton/>
+            <FacebookBouton/>
+          </div>
+        </main>
+      </div>
+
+      <!-- Page "S'inscrire" -->
+      <div v-else-if="currentPage === 'signup'" key="signup" class="signup-page">
+        <main class="signup-content">
+          <button class="btn full-page-button name-button">Numéro de Licence</button>
+          <button class="btn full-page-button validate-button" @click="goToHome">Valider</button>
+        </main>
+      </div>
+    </transition>
+  </div>
+</template>
+
 <script setup>
 import { ref } from "vue";
+import GoogleBouton from "@/components/boutons authentification/BoutonGoogle.vue";
+import FacebookBouton from "@/components/boutons authentification/BoutonFacebook.vue";
+
 
 // État pour gérer la page visible
 const currentPage = ref("home"); // "home" par défaut
@@ -16,41 +48,7 @@ const goToHome = () => {
 };
 </script>
 
-<template>
-  <div class="page-container">
-    <!-- Utilisation du composant <transition> -->
-    <transition name="fade" mode="out-in">
-      <!-- Page principale -->
-      <div v-if="currentPage === 'home'" key="home" class="home-page">
-        <header class="header">
-          <button class="back-button" @click="goToHome">←</button>
-          <h1 class="title">TTM</h1>
-        </header>
-        <main class="main-content">
-          <button class="btn sign-up" @click="goToSignup">S'inscrire</button>
-          <button class="btn login">Se connecter</button>
-          <div class="divider">
-            <hr class="line" />
-            <span>OU</span>
-            <hr class="line" />
-          </div>
-          <div class="social-icons">
-            <button class="social-button">?</button>
-            <button class="social-button">?</button>
-          </div>
-        </main>
-      </div>
 
-      <!-- Page "S'inscrire" -->
-      <div v-else-if="currentPage === 'signup'" key="signup" class="signup-page">
-        <main class="signup-content">
-          <button class="btn full-page-button name-button">Numéro de Licence</button>
-          <button class="btn full-page-button validate-button" @click="goToHome">Valider</button>
-        </main>
-      </div>
-    </transition>
-  </div>
-</template>
 
 <style scoped>
 /* --- Animations pour la transition fade --- */
@@ -74,27 +72,6 @@ const goToHome = () => {
   justify-content: flex-start;
 }
 
-/* --- Header --- */
-.header {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-}
-
-.title {
-  font-size: 1.5rem;
-  margin: 0 auto;
-}
-
-.back-button {
-  font-size: 1.5rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
 /* --- Style de la page principale --- */
 .home-page {
   display: flex;
@@ -108,7 +85,7 @@ const goToHome = () => {
 .main-content {
   width: 90%;
   max-width: 400px;
-  margin: auto;
+  margin: 0;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -120,7 +97,6 @@ const goToHome = () => {
   max-width: 300px;
   margin: 15px 0;
   padding: 10px;
-  font-size: 1.2rem;
   text-align: center;
   cursor: pointer;
   border-radius: 5px;
@@ -132,11 +108,6 @@ const goToHome = () => {
   border: none;
 }
 
-.login {
-  background-color: white;
-  color: #4CAF50;
-  border: 2px solid #4CAF50;
-}
 
 /* --- Ligne "OU" --- */
 .divider {
@@ -166,24 +137,6 @@ const goToHome = () => {
   gap: 20px;
 }
 
-.social-button {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: #ddd;
-  border: none;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #555;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.social-button:hover {
-  background: #bbb;
-}
 
 /* --- Style de la page "S'inscrire" --- */
 .signup-page {

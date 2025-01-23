@@ -1,19 +1,19 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import LogoTTM from './components/LogoTTM.vue'
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logottm.svg" width="400" height="200" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div class="menu" style="display: grid; place-items: center; height: 100vh;">
+      <h1>BIENVENUE SUR LE SITE DU TTM</h1>
+        <LogoTTM/>
+        <HelloWorld/>
+        <nav>
+        </nav>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
     </div>
   </header>
 
@@ -21,14 +21,15 @@ import HelloWorld from './components/HelloWorld.vue'
 </template>
 
 <style scoped>
+
+h1{
+  color: red;
+  border-color: black;
+  border-width: 10px;
+}
 header {
   line-height: 1.5;
   max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
 }
 
 nav {
@@ -63,15 +64,6 @@ nav a:first-of-type {
     padding-right: calc(var(--section-gap) / 2);
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
 
   nav {
     text-align: left;
