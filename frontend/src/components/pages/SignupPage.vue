@@ -1,15 +1,11 @@
 <template>
   <main class="signup-content">
     <div class="logo">
-      <LogoTTM />
+      <LogoTTM/>
     </div>
     <h1>INSCRIVEZ VOUS</h1>
-
     <div class="form-container">
-      <input class="full-page-input licence-input" placeholder="Votre numéro de licence">
-      <router-link to="/connected">
-        <button class="btn full-page-button licence-validate-button" id="validate">Valider</button>
-      </router-link>
+      <LicenceInput/>
     </div>
 
     <router-link to="/">
@@ -21,6 +17,8 @@
 
 <script setup>
 import LogoTTM from "@/components/icons/LogoTTM.vue";
+import LicenceInput from '@/components/LicenceInput.vue';
+
 </script>
 
 <style scoped>
@@ -84,36 +82,7 @@ h1 {
   font-size: 1.2rem;
 }
 
-.full-page-input {
-  width: 100%;
-  max-width: 300px;
-  margin: 15px 0;
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 1.2rem;
-}
 
-.licence-input {
-  width: 100%; /* Input occupe toute la largeur du conteneur */
-  padding: 10px; /* Espacement interne de l'input */
-  border-radius: 5px; /* Coins arrondis */
-  border: 1px solid #ccc; /* Bordure légère */
-  font-size: 1rem; /* Taille du texte */
-}
-
-.licence-validate-button {
-  width: 100%; /* Bouton occupe toute la largeur du conteneur */
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
 
 .retour-signup {
   width: 100px;
