@@ -1,15 +1,28 @@
 <template>
   <h1>Vous êtes connecté</h1>
   <router-link to="/signup">
-    <button class="goback-button full-page-button">Retour</button>
+    <button class="retour-connected full-page-button" id="retour-connected">Retour</button>
   </router-link>
+  <div class="icon-container">
+    <IconCommunity/>
+    <IconTooling/>
+    <IconSupport/>
+    <IconDocumentation/>
+  </div>
 </template>
 
 <script setup>
-
+import IconDocumentation from "@/components/icons/IconDocumentation.vue";
+import IconSupport from "@/components/icons/IconSupport.vue";
+import IconTooling from "@/components/icons/IconTooling.vue";
+import IconCommunity from "@/components/icons/IconCommunity.vue";
 </script>
 
 <style scoped>
+.icon-container{
+  position:relative;
+}
+
 h1 {
   position: absolute;
   top: 40%;
@@ -32,7 +45,7 @@ h1 {
   font-size: 1.2rem;
 }
 
-.goback-button {
+.retour-connected {
   width: 100px;
   position: absolute;
   bottom: 5%;

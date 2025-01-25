@@ -8,12 +8,12 @@
     <div class="form-container">
       <input class="full-page-input licence-input" placeholder="Votre numéro de licence">
       <router-link to="/connected">
-        <button class="btn full-page-button licence-validate-button">Valider</button>
+        <button class="btn full-page-button licence-validate-button" id="validate">Valider</button>
       </router-link>
     </div>
 
     <router-link to="/">
-      <button class="btn full-page-button goback-button">Retour</button>
+      <button class="btn full-page-button retour-signup" id="retour-signup">Retour</button>
     </router-link>
   </main>
 </template>
@@ -41,7 +41,7 @@ import LogoTTM from "@/components/icons/LogoTTM.vue";
 /* Conteneur pour l'input et le bouton */
 .form-container {
   position: absolute;
-  bottom:30%;
+  top:40%;
   left:39%;
   width: 100%; /* Occupe toute la largeur */
   max-width: 350px; /* Largeur maximale */
@@ -115,7 +115,7 @@ h1 {
   transition: background-color 0.3s;
 }
 
-.goback-button {
+.retour-signup {
   width: 100px;
   position: absolute;
   bottom: 5%;

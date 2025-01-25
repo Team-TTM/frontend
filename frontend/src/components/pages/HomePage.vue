@@ -6,7 +6,7 @@
     <h1>BIENVENUE SUR LE SITE DU TTM</h1>
     <div class="button-container">
       <router-link to="/signup">
-        <button class="btn signup-button">S'inscrire</button>
+        <button class="btn signup-button" id="inscription">S'inscrire</button>
       </router-link>
       <div class="divider">
         <hr class="line" />
@@ -60,20 +60,11 @@ h1 {
   font-weight: bold;
 }
 
-.full-page-button {
-  width: 100%;
-  max-width: 300px;
-  margin: 15px 0;
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 1.2rem;
-}
 /* Conteneur pour le bouton "S'inscrire" et les boutons sociaux */
 .button-container {
   position: absolute;
-  bottom:20%;
+  top:40%;
+  left:39%;
   width: 100%; /* Occupe toute la largeur disponible */
   max-width: 350px; /* Limite la largeur maximale */
   padding: 20px; /* Ajoute de l'espace interne */
