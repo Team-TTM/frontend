@@ -1,23 +1,26 @@
 <template>
   <main class="main-content">
     <div class="logo">
-      <LogoTTM/>
+      <LogoTTM />
     </div>
     <h1>BIENVENUE SUR LE SITE DU TTM</h1>
-    <router-link to="/signup">
-      <button class="btn full-page-button signup-button">S'inscrire</button>
-    </router-link>
-    <div class="divider">
-      <hr class="line" />
-      <span>OU</span>
-      <hr class="line" />
-    </div>
-    <div class="social-icons full-page-button">
-      <GoogleBouton />
-      <FacebookBouton />
+    <div class="button-container">
+      <router-link to="/signup">
+        <button class="btn signup-button">S'inscrire</button>
+      </router-link>
+      <div class="divider">
+        <hr class="line" />
+        <span>OU</span>
+        <hr class="line" />
+      </div>
+      <div class="social-icons">
+        <GoogleBouton />
+        <FacebookBouton />
+      </div>
     </div>
   </main>
 </template>
+
 
 <script setup>
 import GoogleBouton from "@/components/boutons authentification/BoutonGoogle.vue";
@@ -67,30 +70,55 @@ h1 {
   border-radius: 5px;
   font-size: 1.2rem;
 }
+/* Conteneur pour le bouton "S'inscrire" et les boutons sociaux */
+.button-container {
+  position: absolute;
+  bottom:20%;
+  width: 100%; /* Occupe toute la largeur disponible */
+  max-width: 350px; /* Limite la largeur maximale */
+  padding: 20px; /* Ajoute de l'espace interne */
+  background-color: #f2f2f2; /* Fond gris clair */
+  border-radius: 10px; /* Coins arrondis */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Légère ombre */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px; /* Espacement entre les éléments */
+  margin: 20px 0; /* Espacement externe pour le conteneur */
+}
 
 .signup-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 100%; /* Le bouton occupe toute la largeur du conteneur */
+  max-width: 300px; /* Limite sa largeur */
   background-color: #4caf50;
   color: white;
   border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .divider {
-  position: absolute;
-  bottom : 40%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 100%; /* Occupe toute la largeur du conteneur */
 }
 
 .divider .line {
-  flex: 1;
+  flex: 1; /* Permet aux lignes de s'étirer */
   height: 1px;
   background: #ccc;
+  margin: 0 10px; /* Espacement autour des lignes */
+}
+
+.social-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* Espacement entre les boutons sociaux */
+  width: 100%;
 }
 
 span {
@@ -99,13 +127,4 @@ span {
   color: #888;
 }
 
-.social-icons {
-  position:absolute;
-  left:39.5%;
-  bottom: 20%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  align-items: center;
-}
 </style>
