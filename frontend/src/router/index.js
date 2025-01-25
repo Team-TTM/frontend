@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/components/pages/HomePage.vue'; // Assurez-vous que le chemin est correct
 import SignupPage from '@/components/pages/SignupPage.vue'; // Si une page "Signup" existe
+import ConnectedPage from "@/components/pages/ConnectedPage.vue";
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: SignupPage,
+  },
+  {
+    path:'/connected',
+    name: 'Connected',
+    component: ConnectedPage,
   },
 ];
 
