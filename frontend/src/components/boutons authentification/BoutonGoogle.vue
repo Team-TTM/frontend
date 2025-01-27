@@ -1,42 +1,44 @@
-<script setup>
-import googleLogo from '@/assets/logo-google.ico'; // Importation de l'image locale
-
-function handleGoogleClick() {
-  console.log('Connexion avec Google');
-}
-</script>
-
 <template>
-  <button @click="handleGoogleClick" class="google-button">
-    <img
-      :src="googleLogo"
-      alt="Logo Google"
-      class="google-logo"
-    />
-  </button>
+  <div>
+    <!-- Configuration du bouton Google -->
+    <div
+      id="g_id_onload"
+      :data-client_id="clientId"
+      data-context="signin"
+      data-ux_mode="popup"
+      :data-login_uri="loginUri"
+      data-auto_prompt="false">
+    </div>
+
+    <!-- Bouton Google -->
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="filled_blue"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+  </div>
 </template>
 
-<style scoped>
-.google-button {
-  display: flex;
-  align-items: center;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px 20px; /* Augmentation de l'espacement (de 8px à 10px) */
-  cursor: pointer;
-  font-size: 18px; /* Augmentation de la taille du texte (de 16px à 18px) */
-  color: #333;
-}
-
-.google-button:hover {
-  background-color: #f5f5f5;
-}
-
-.google-logo {
-  width: 24px; /* Augmente la taille de l'image (de 20px à 24px) */
-  height: auto;
-  margin-right: 8px; /* Garde un espacement proportionnel */
-}
-</style>
-
+<script>
+export default {
+  data() {
+    return {
+      clientId: "758592485171-8s2snaqkej804kfe3pt2sifnuvfs5j9o.apps.googleusercontent.com",
+      loginUri: "http://localhost:3000/users/auth/google"
+    };
+  },
+  mounted() {
+    // Charger dynamiquement le script Google si ce n'est pas encore fait
+    if (!window.google) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+  }
+};
+</script>
