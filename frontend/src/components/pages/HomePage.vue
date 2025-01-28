@@ -6,6 +6,7 @@
     <h1>BIENVENUE !</h1>
     <div class="button-container">
         <GoogleBouton/>
+        <FacebookBouton/>
     </div>
   </main>
 </template>
