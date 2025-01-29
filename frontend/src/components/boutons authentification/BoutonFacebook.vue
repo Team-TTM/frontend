@@ -9,7 +9,8 @@
 
     <!-- Bouton Facebook -->
     <button @click="loginWithFacebook" class="facebook-button">
-      Connexion avec Facebook
+      <img width="40" height="40" src="https://img.icons8.com/color/48/facebook-new.png" alt="facebook-new"/>
+      <span>Se connecter avec Google</span>
     </button>
 
     <!-- Affichage des informations utilisateur après connexion -->
@@ -105,22 +106,25 @@ export default {
 </script>
 
 <style scoped>
+
+
 .facebook-button {
-  background-color: #4267b2;
+  display: flex; /* Utilisation de Flexbox */
+  align-items: center;     /* Centre verticalement */
+  justify-content: space-around; /* Centre horizontalement */
+  text-align: center;      /* Centre le texte (utile si le texte est sur plusieurs lignes) */
+  background-color: #039be5;
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  height: 50px;
+  width: 300px; /* Ajuste la largeur au texte */
+  min-width: 200px;   /* Assure un minimum de largeur */
 }
-
 .facebook-button:hover {
-  background-color: #365899;
-}
-
-img {
-  border-radius: 50%;
-  margin-top: 10px;
+  background-color: #0374e5;
 }
 </style>
