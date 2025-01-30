@@ -8,7 +8,7 @@
 <script setup>
 const GOOGLE_OAUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 const GOOGLE_CLIENT_ID = "758592485171-8s2snaqkej804kfe3pt2sifnuvfs5j9o.apps.googleusercontent.com"
-const GOOGLE_CALLBACK_URL = "http://localhost:3000/users/google/callback"
+const GOOGLE_CALLBACK_URL = "http://localhost:3000/users/auth/google"
 const GOOGLE_OAUTH_SCOPES = [
   "email",
   "profile",
