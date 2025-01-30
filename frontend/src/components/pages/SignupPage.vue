@@ -39,7 +39,7 @@ import LicenceInput from '@/components/LicenceInput.vue';
 /* Conteneur pour l'input et le bouton */
 .form-container {
   position: absolute;
-  top:40%;
+  top:33%;
   left:39%;
   width: 100%; /* Occupe toute la largeur */
   max-width: 350px; /* Largeur maximale */
@@ -56,14 +56,15 @@ import LicenceInput from '@/components/LicenceInput.vue';
 
 .logo{
   position: absolute;
-  top: 30%;
-  left:50%;
+  top: 8%;
+  left:12%;
+  width: 200px;
 }
 
 h1 {
   position: absolute;
-  top: 5%;
-  left:42%;
+  top: 25%;
+  left:42.5%;
   margin: 1rem 0;
   color: red;
   font-size: 2rem;
@@ -81,8 +82,6 @@ h1 {
   border-radius: 5px;
   font-size: 1.2rem;
 }
-
-
 
 .retour-signup {
   width: 100px;
