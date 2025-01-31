@@ -41,6 +41,23 @@ export default {
             'Content-Type': 'application/json'
           }
         });
+        switch (response){
+          case 404:
+            this.errorMessage = `Licence ${this.licenceValue} introuvable.`;
+            break;
+          case 403:
+            this.errorMessage = "Utilisateur non trouvé.";
+            break;
+          case 400:
+            this.errorMessage = "Fusion impossible : deux comptes du même type (Facebook ou Google) détectés.";
+            break;
+          case 201:
+            this.errorMessage = "Fusion des comptes réussie (Facebook et Google).";
+            break;
+          default:
+            this.errorMessage = "Une erreur inconnue est survenue.";
+            break;
+        }
         console.log(response.data)
         this.errorMessage = ''; // Réinitialise le message d'erreur si la saisie est valide
         this.$router.push('/connected');
