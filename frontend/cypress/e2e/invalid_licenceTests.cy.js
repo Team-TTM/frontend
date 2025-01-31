@@ -1,6 +1,6 @@
 describe('Validation du numéro de licence', () => {
   it("affiche un message d'erreur si le numéro de licence est invalide", () => {
-    cy.visit('http://localhost:5173/signup');
+    cy.visit('http://localhost:3000/users/signup');
     // Saisir un numéro de licence invalide
     cy.get('.licence-input').type('ABCD12345'); // Numéro invalide
     // Cliquer sur le bouton "Valider"
