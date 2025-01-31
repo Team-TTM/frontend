@@ -2,8 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/components/pages/HomePage.vue'; // Assurez-vous que le chemin est correct
 import VerifyLicence from '@/components/pages/VerifyLicence.vue'; // Si une page "Signup" existe
 import ConnectedPage from "@/components/pages/ConnectedPage.vue";
-import GoogleCallback from "@/components/pages/GoogleCallback.vue";
-
 const routes = [
   {
     path: '/', // La route racine correspond à la page d'accueil
@@ -11,8 +9,8 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/users/signup',
-    name: 'Signup',
+    path: '/users/verify-licence',
+    name: 'Verify-licence',
     component: VerifyLicence,
   },
   {
@@ -20,12 +18,6 @@ const routes = [
     name: 'Connected',
     component: ConnectedPage,
   },
-  {
-    path: '/google/callback',
-    name: 'google-callback',
-    component: GoogleCallback,
-  },
-
 ];
 
 const router = createRouter({
