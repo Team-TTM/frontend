@@ -60,12 +60,16 @@ export default {
 <style scoped>
 
 .licence-validate-button {
-  background-color: #4caf50;
+  background-color: #ee261d;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+
+.licence-validate-button:hover {
+  background-color: #c1150d;
 }
 
 .licence-input {
