@@ -14,7 +14,11 @@
 </template>
 
 <script>
+
+import axios from "axios";
+
 export default {
+
   data() {
     return {
       licenceValue: '', // Stocke la valeur saisie par l'utilisateur
@@ -22,17 +26,34 @@ export default {
     };
   },
   methods: {
-    validateLicence() {
-      const licenceRegex = /^[ABC]\d{5}[CL]\d{7}[A-Z]{2}[A-Z\d]FRA$/;
-
-      if (!licenceRegex.test(this.licenceValue.trim())) {
+    async validateLicence() {
+      if (this.licenceValue.length === 0) {
         this.errorMessage = 'Numéro de licence invalide.';
       } else {
+        const token = this.$store.getters['getToken'];
+        console.log(token);
+        const body = {
+          licence: this.licenceValue,
+        }
+        const response = await axios.post("http://localhost:3000/users/licence-check",body,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log(response.data)
         this.errorMessage = ''; // Réinitialise le message d'erreur si la saisie est valide
         this.$router.push('/connected');
       }
     },
   },
+  mounted() {
+    const token = this.$route.query.token;
+    if (token) {
+      this.$store.dispatch("login", token);
+      console.log("Token stocké :",this.$store.getters.isAuthenticated,this.$store.getters.getToken);
+    }
+  }
 };
 </script>
 

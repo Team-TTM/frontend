@@ -6,6 +6,7 @@
     <h1>BIENVENUE !</h1>
     <div class="button-container">
         <GoogleBouton/>
+        <FacebookBouton/>
     </div>
   </main>
 </template>
@@ -34,14 +35,15 @@ import LogoTTM from "@/components/icons/LogoTTM.vue";
 
 .logo{
   position: absolute;
-  top: 30%;
-  left:50%;
+  top: 8%;
+  left:12%;
+  width: 200px;
 }
 
 h1 {
   position: absolute;
-  top: 5%;
-  left:45%;
+  top: 25%;
+  left:44%;
   margin: 1rem 0;
   color: red;
   font-size: 2rem;
@@ -52,7 +54,7 @@ h1 {
 /* Conteneur pour le bouton "S'inscrire" et les boutons sociaux */
 .button-container {
   position: absolute;
-  top:40%;
+  top:33%;
   left:39%;
   width: 100%; /* Occupe toute la largeur disponible */
   max-width: 350px; /* Limite la largeur maximale */
