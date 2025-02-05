@@ -3,25 +3,13 @@
   <router-link to="/signup">
     <button class="retour-connected full-page-button" id="retour-connected">Retour</button>
   </router-link>
-  <div class="icon-container">
-    <IconCommunity/>
-    <IconTooling/>
-    <IconSupport/>
-    <IconDocumentation/>
-  </div>
 </template>
 
 <script setup>
-import IconDocumentation from "@/components/icons/IconDocumentation.vue";
-import IconSupport from "@/components/icons/IconSupport.vue";
-import IconTooling from "@/components/icons/IconTooling.vue";
-import IconCommunity from "@/components/icons/IconCommunity.vue";
+
 </script>
 
 <style scoped>
-.icon-container{
-  position:relative;
-}
 
 h1 {
   position: absolute;
