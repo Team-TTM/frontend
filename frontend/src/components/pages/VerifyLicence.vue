@@ -89,14 +89,14 @@ h1 {
   bottom: 5%;
   right: 10%;
   transform: translate(-50%, -50%);
-  background-color: #ee261d;
+  background-color: #e74c3c;
   color: white;
   border: none;
   cursor: pointer;
 }
 
 .retour-signup:hover{
-  background-color: #c1150d;
+  background-color: #cb4335;
 }
 
 </style>
