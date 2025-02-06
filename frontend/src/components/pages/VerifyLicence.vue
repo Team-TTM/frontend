@@ -3,7 +3,6 @@
     <div class="logo">
       <LogoTTM/>
     </div>
-    <h1>INSCRIVEZ VOUS</h1>
     <div class="form-container">
       <LicenceInput/>
     </div>
@@ -41,8 +40,6 @@ import LicenceInput from '@/components/LicenceInput.vue';
   position: absolute;
   top:33%;
   left:39%;
-  width: 100%; /* Occupe toute la largeur */
-  max-width: 350px; /* Largeur maximale */
   padding: 20px; /* Espacement interne */
   background-color: #f2f2f2; /* Fond gris clair */
   border-radius: 10px; /* Coins arrondis */
