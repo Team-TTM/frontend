@@ -41,6 +41,38 @@ export default {
             'Content-Type': 'application/json'
           }
         });
+        switch (response.status){
+          case 404:
+            this.errorMessage = `Licence ${this.licenceValue} introuvable.`;
+            break;
+          case 403:
+            this.errorMessage = "Utilisateur non trouvé.";
+            break;
+          case 402:
+            this.errorMessage = "Fusion impossible : deux comptes du même type (Facebook ou Google) détectés.";
+            break;
+          case 401:
+            this.errorMessage = "Utilisateur non authentifié.";
+            break;
+          case 400:
+            this.errorMessage = "Le paramètre 'licence' est requis.";
+            break;
+          case 201:
+            this.errorMessage = "Fusion des comptes réussie (Facebook et Google).";
+            break;
+          case 200:
+            this.errorMessage = `Licence ${this.licenceValue} associée à l'utilisateur avec succès.`;
+            break;
+          case 501:
+            this.errorMessage = "Erreur lors de la redirection après authentification."
+            break;
+          case 500:
+            this.errorMessage = "Une erreur s'est produite lors de l'authentification de la licence.";
+            break;
+          default:
+            this.errorMessage = "Une erreur inconnue est survenue.";
+            break;
+        }
         console.log(response.data)
         this.errorMessage = ''; // Réinitialise le message d'erreur si la saisie est valide
         this.$router.push('/connected');
@@ -103,7 +135,7 @@ export default {
 }
 
 .error-message {
-  color: red;
+  color: black;
   margin-top: 5px;
   font-size: 14px;
 }
