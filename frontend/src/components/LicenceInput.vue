@@ -1,16 +1,14 @@
 <template>
   <div class="input-container">
-    <h1>Veuillez saisir votre numéro de licence Triathlon toulouse metrople </h1>
-    <p>Pour accéder à ce service, veuillez entrer votre numéro de licence valide dans le champ ci-dessous.</p>
-    <p v-if="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </p>
     <input
       class="full-page-input licence-input"
       placeholder="Votre numéro de licence"
       v-model="licenceValue"
       @keydown.enter="validateLicence"
     />
+    <p v-if="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </p>
     <button class="licence-validate-button full-page-button" @click="validateLicence">Valider</button>
   </div>
 </template>
@@ -43,7 +41,7 @@ export default {
             'Content-Type': 'application/json'
           }
         });
-        switch (response){
+        switch (response.status){
           case 404:
             this.errorMessage = `Licence ${this.licenceValue} introuvable.`;
             break;
@@ -61,11 +59,9 @@ export default {
             break;
           case 201:
             this.errorMessage = "Fusion des comptes réussie (Facebook et Google).";
-            this.$router.push('/connected')
             break;
           case 200:
             this.errorMessage = `Licence ${this.licenceValue} associée à l'utilisateur avec succès.`;
-            this.$router.push('/connected');
             break;
           case 501:
             this.errorMessage = "Erreur lors de la redirection après authentification."
@@ -73,12 +69,13 @@ export default {
           case 500:
             this.errorMessage = "Une erreur s'est produite lors de l'authentification de la licence.";
             break;
-          case 200:
           default:
             this.errorMessage = "Une erreur inconnue est survenue.";
             break;
         }
-        this.licenceValue = "";
+        console.log(response.data)
+        this.errorMessage = ''; // Réinitialise le message d'erreur si la saisie est valide
+        this.$router.push('/connected');
       }
     },
   },
@@ -95,7 +92,7 @@ export default {
 <style scoped>
 
 .licence-validate-button {
-  background-color: limegreen;
+  background-color: #ee261d;
   color: white;
   border: none;
   border-radius: 5px;
@@ -138,7 +135,7 @@ export default {
 }
 
 .error-message {
-  color: red;
+  color: black;
   margin-top: 5px;
   font-size: 14px;
 }
