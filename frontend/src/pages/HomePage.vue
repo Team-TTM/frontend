@@ -4,7 +4,9 @@
   </header>
   <div id="app">
     <main class="main-container">
-      <h1>BIENVENUE !</h1>
+      <h1>
+        BIENVENUE !
+      </h1>
       <div class="container container-google-facebook">
         <GoogleBouton/>
         <FacebookBouton/>
