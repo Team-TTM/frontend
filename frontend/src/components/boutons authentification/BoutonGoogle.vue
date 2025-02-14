@@ -20,7 +20,7 @@ const redirectToGoogleOAuth = () => {
   align-items: center;     /* Centre verticalement */
   justify-content: space-around; /* Centre horizontalement */
   text-align: center;      /* Centre le texte (utile si le texte est sur plusieurs lignes) */
-  background-color: white;
+  background-color: #f2f2f2;
   color: #4267b2;
   border: none;
   padding: 10px 20px;

@@ -1,0 +1,157 @@
+/* Mise en page globale */
+#app {
+  display: flex;
+  flex-direction: column; /* Organisation verticale */
+  align-items: center; /* Centre horizontalement */
+  height: 90vh; /* Prend toute la hauteur de l'écran */
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+header {
+  position: fixed; /* Fixe le header en haut */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Assure qu'il occupe toute la largeur */
+  height: 80px;
+  background-color: white; /* Ajoutez une couleur de fond si nécessaire */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.logo {
+  background-color: transparent;
+  height: 100%; /* Ajuste la taille du logo */
+  width: 10%;
+  object-fit: contain; /* S'assure que le logo ne déborde pas */
+}
+
+footer {
+  position: fixed; /* Fixe le header en haut */
+  bottom: 0;
+  left: 0;
+  width: 100vw; /* Assure qu'il occupe toute la largeur */
+  height: 60px;
+  background-color: white; /* Ajoutez une couleur de fond si nécessaire */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'Open Sans', 'Helvetica', Arial, sans-serif;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 20px 0 10px;
+  justify-content: center;
+}
+
+/* Conteneur principal */
+.main-container {
+  position: fixed;
+  background-color: #f2f2f2;
+  flex: 1; /* Prend tout l’espace restant sans dépasser */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height : 90%;
+}
+
+
+/* Conteneur de l'input et du bouton */
+.container{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /*Centre le container dans la page*/
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px; /*Arrondi les bords du container*/
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /*Aligne verticalement les éléments au centre du container */
+  gap: 15px;
+  width: 35%;
+  height: 30%;
+}
+
+.container-google-facebook{
+  justify-content: space-evenly;
+}
+
+.container-licence-input{
+  justify-content: center;
+}
+
+/* Input */
+.licence-input {
+  width: 60%;
+  border-radius: 5px;
+  padding: 10px;
+  border : none;
+  text-align: center;
+  font-size: 1.2rem;
+  background-color: #f2f2f2;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Bouton */
+.licence-validate-button {
+  width: 170px;
+  height: 40px;
+  background-color: #17a589;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background-color 0.5s;
+}
+
+.licence-validate-button:hover {
+  background-color: #148f77;
+}
+
+.retour-button {
+  position: absolute;
+  bottom : 90px;
+  right : 70px;
+  width: 150px;
+  height : 40px;
+  background-color: #e74C3C;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background-color 0.5s;
+}
+
+.retour-button:hover {
+  background-color: #C23028;
+}
+
+.error-message{
+  color: #e74C3C;
+  font-family: 'Open Sans', 'Helvetica', Arial, sans-serif;
+}
+
+.good-message{
+  color: #17a589;
+  font-family: 'Open Sans', 'Helvetica', Arial, sans-serif
+}
+
+h1{
+  position : absolute;
+  top : 15%;
+  color : #e74C3C;
+  font-family: 'Open Sans', 'Helvetica', Arial, sans-serif;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .main-container {
+    flex-direction: column;
+  }
+}

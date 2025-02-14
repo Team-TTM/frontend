@@ -19,7 +19,7 @@
 .facebook-button {
   display: flex; /* Utilisation de Flexbox */
   align-items: center;     /* Centre verticalement */
-  justify-content: space-around; /* Centre horizontalement */
+  justify-content: space-around;
   text-align: center;      /* Centre le texte (utile si le texte est sur plusieurs lignes) */
   background-color: #039be5;
   color: white;
@@ -29,8 +29,9 @@
   cursor: pointer;
   font-size: 16px;
   height: 50px;
+  min-height: 50px;
   width: 300px; /* Ajuste la largeur au texte */
-  min-width: 200px;   /* Assure un minimum de largeur */
+  min-width: 300px;   /* Assure un minimum de largeur */
 }
 .facebook-button:hover {
   background-color: #0374e5;
