@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomePage from '@/components/pages/HomePage.vue'; // Assurez-vous que le chemin est correct
-import VerifyLicence from '@/components/pages/VerifyLicence.vue'; // Si une page "Signup" existe
-import ConnectedPage from "@/components/pages/ConnectedPage.vue";
+import HomePage from '@/pages/HomePage.vue'; // Assurez-vous que le chemin est correct
+import VerifyLicencePage from '@/pages/VerifyLicencePage.vue'; // Si une page "Signup" existe
+import ConnectedPage from "@/pages/ConnectedPage.vue";
 const routes = [
   {
     path: '/', // La route racine correspond à la page d'accueil
@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/users/verify-licence',
     name: 'Verify-licence',
-    component: VerifyLicence,
+    component: VerifyLicencePage,
   },
   {
     path:'/users/connected',
