@@ -53,33 +53,11 @@ export default {
         console.log("Réponse serveur :", response);
 
         switch (response.status) {
-          case 404:
-            this.errorMessage = `Licence ${this.licenceValue} introuvable.`;
-            break;
-          case 403:
-            this.errorMessage = "Utilisateur non trouvé.";
-            break;
-          case 402:
-            this.errorMessage = "Fusion impossible : deux comptes du même type (Facebook ou Google) détectés.";
-            break;
-          case 401:
-            this.errorMessage = "Utilisateur non authentifié.";
-            break;
           case 400:
-            this.errorMessage = "Le paramètre 'licence' est requis.";
-            break;
-          case 501:
-            this.errorMessage = "Erreur lors de la redirection après authentification.";
-            break;
-          case 500:
-            this.errorMessage = "Une erreur s'est produite lors de l'authentification de la licence.";
-            break;
-          case 201:
-            this.goodMessage = "Fusion des comptes réussie (Facebook et Google).";
-            setTimeout(() => this.$router.push('/connected'), 2000);
+            this.errorMessage = response.data.error;
             break;
           case 200:
-            this.goodMessage = `Licence ${this.licenceValue} associée à l'utilisateur avec succès.`;
+            this.goodMessage = response.data.message;
             setTimeout(() => this.$router.push('/users/connected'), 2000);
             break;
           default:
