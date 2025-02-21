@@ -27,6 +27,8 @@ export default {
   },
   methods: {
     async validateLicence() {
+      const uri =  "/users/licence-check";
+
       // Réinitialiser les messages avant la requête
       this.errorMessage = '';
       this.goodMessage = '';
@@ -42,7 +44,7 @@ export default {
         const body = { licence: this.licenceValue };
 
         // Ajout de validateStatus pour empêcher Axios de lever une erreur
-        const response = await axios.post("http://localhost:3000/users/licence-check", body, {
+        const response = await axios.post(uri, body, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -58,7 +60,6 @@ export default {
             break;
           case 200:
             this.goodMessage = response.data.message;
-            setTimeout(() => this.$router.push('/users/connected'), 2000);
             break;
           default:
             this.errorMessage = "Une erreur inconnue est survenue.";

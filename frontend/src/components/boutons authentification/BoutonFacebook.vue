@@ -4,10 +4,11 @@
     <span>Se connecter avec Facebook</span>
   </button>
 </template>
+
 <script setup>
 
   const loginWithFacebook = ()=> {
-    window.location.href = 'http://localhost:3000/users/auth/facebook';
+    window.location.href =  '/users/auth/facebook';
   }
 
 

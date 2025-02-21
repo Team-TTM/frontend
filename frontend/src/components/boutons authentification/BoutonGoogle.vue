@@ -9,7 +9,7 @@
 
 
 const redirectToGoogleOAuth = () => {
-  window.location.href = 'http://localhost:3000/users/auth/google';
+  window.location.href = '/users/auth/google';
 };
 </script>
 
