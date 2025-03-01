@@ -60,6 +60,7 @@ export default {
             break;
           case 200:
             this.goodMessage = response.data.message;
+            this.$router.push('/users/csvListeAdherent');
             break;
           default:
             this.errorMessage = "Une erreur inconnue est survenue.";
