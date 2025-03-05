@@ -1,6 +1,6 @@
 <template>
   <header>
-    <img class="logo" alt="LogoTTM" src="@/assets/logo/logottm.svg">
+    <LogoTTM/>
   </header>
   <div id="app">
     <main class="main-container">
@@ -8,9 +8,7 @@
         Vous êtes connecté
       </h1>
     </main>
-    <router-link to="/users/verify-licence">
-      <button class="retour-button">Retour</button>
-    </router-link>
+
   </div>
   <footer>
     © 2025 - Site TTM | Auteur | Support
@@ -21,5 +19,6 @@
 <script setup>
 
 import LicenceInput from "@/components/LicenceInput.vue";
+import LogoTTM from "@/components/LogoTTM.vue";
 </script>
 

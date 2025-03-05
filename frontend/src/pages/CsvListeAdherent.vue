@@ -1,4 +1,8 @@
 <template>
+  <header>
+    <LogoTTM/>
+  </header>
+
   <div class="main-container">
     <h1 class="titre">Liste des Adhérents</h1>
 
@@ -17,12 +21,13 @@
               <th class="infoAdherent">Téléphone</th>
               <th class="infoAdherent">Mobile</th>
               <th class="infoAdherent">Email</th>
+              <th class="infoAdherent">Statut</th>
               <th class="infoAdherent">Actions</th>
             </tr>
             </thead>
             <tbody>
             <template v-for="adherent in adherents" :key="adherent.numeroLicence">
-              <tr class="hover:bg-gray-50">
+              <tr class="info-adherent-container">
                 <td class="infoAdherent">{{ adherent.numeroLicence }}</td>
                 <td class="infoAdherent">{{ adherent.prenom }}</td>
                 <td class="infoAdherent">{{ adherent.nom }}</td>
@@ -32,6 +37,10 @@
                 <td class="infoAdherent">{{ adherent.telephone }}</td>
                 <td class="infoAdherent">{{ adherent.mobile }}</td>
                 <td class="infoAdherent">{{ adherent.email }}</td>
+                <td class="infoAdherent">
+                  <span class="statut-lumiere"
+                        :class="{'statut-actif': adherent.statut, 'statut-inactif': !adherent.statut}"></span>
+                </td>
                 <td class="btn-afficherDetails">
                   <button class="btn-afficherDetails" @click="afficherDetails(adherent.numeroLicence)">
                     {{ adherentSelectionne === adherent.numeroLicence ? '-' : '+' }}
@@ -70,10 +79,19 @@
       </div>
     </div>
   </div>
+
+  <footer>
+    © 2025 - Site TTM | Auteur | Support
+  </footer>
 </template>
 
 <script>
+
+import LogoTTM from "@/components/LogoTTM.vue";
+import axios from "axios";
+
 export default {
+  components: {LogoTTM},
   data() {
     return {
       adherents: [
@@ -97,17 +115,42 @@ export default {
     afficherDetails(numeroLicence) {
       this.adherentSelectionne = this.adherentSelectionne === numeroLicence ? null : numeroLicence;
     }
-  }
-};
+  },
+  async mounted() {
+    const uri = "/users/getAllAdherent";
+    try {
+
+      const token = this.$store.getters['getToken'];
+      console.log(token);
+      const response = await axios.get(uri, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      this.adherents = response.data.adherents;
+      }
+    catch
+      (error)
+      {
+        console.error("Erreur lors de la requête :", error);
+      }
+    }
+  };
 </script>
 
 <style scoped>
-/* 🎯 Fenêtre avec une hauteur limitée */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+
 .panel-adherents {
-  width: 90%;
-  max-width: 1200px;
-  height: 70vh; /* Hauteur limitée pour le panel */
-  margin: auto;
+  margin-top: 105px;
+  width: 95%;
+  max-width: 1400px;
+  max-height: 450px;
+
+  height: 75vh;
+
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -115,18 +158,18 @@ export default {
   padding: 20px;
   display: flex;
   flex-direction: column;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* 🎯 Scroll vertical pour la liste */
 .table-wrapper {
+
   max-height: 60vh;
   overflow-y: auto;
 }
 
-/* 🎯 Ajustement du titre */
 .titre {
   position: fixed;
-  top: 0;
+  top: 70px; /* Ajuste cette valeur selon la hauteur de ton header */
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(255, 255, 255, 0.9);
@@ -139,9 +182,10 @@ export default {
   z-index: 1000;
 }
 
-/* 🌟 Table et styles */
+
 .table {
   width: 100%;
+  top: 100px;
   border-collapse: collapse;
   background-color: #ffffff;
   border-radius: 8px;
@@ -170,7 +214,6 @@ tr:hover {
   transition: background 0.3s ease;
 }
 
-/* 🎯 Scroll stylé */
 .table-wrapper::-webkit-scrollbar {
   width: 8px;
 }
@@ -193,11 +236,38 @@ tr:hover {
 }
 
 .details-colonne {
-  width: 48%; /* Pour avoir un peu d'espace entre les colonnes */
+  width: 48%;
 }
 
 .details-colonne p {
   margin: 5px 0;
+}
+
+td.infoAdherent {
+  text-align: center;
+}
+
+.statut-lumiere {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.statut-actif {
+  background-color: green;
+  box-shadow: 0 0 8px rgba(0, 128, 0, 0.8);
+}
+
+.statut-inactif {
+  background-color: red;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+}
+header a {
+  display: inline-block; /* Permet de conserver la taille de l'image */
 }
 
 </style>

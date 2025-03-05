@@ -1,6 +1,6 @@
 <template>
   <header>
-    <img class="logo" alt="LogoTTM" src="@/assets/logo/logottm.svg">
+    <LogoTTM/>
   </header>
   <div id="app">
     <main class="main-container">
@@ -28,6 +28,7 @@
 import GoogleBouton from "@/components/boutons authentification/BoutonGoogle.vue";
 import FacebookBouton from "@/components/boutons authentification/BoutonFacebook.vue";
 import LicenceInput from "@/components/LicenceInput.vue";
+import LogoTTM from "@/components/LogoTTM.vue";
 </script>
 
 <style scoped>

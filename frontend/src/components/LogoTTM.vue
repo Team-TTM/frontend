@@ -1,9 +1,19 @@
 <template>
-  <img alt="Vue logo" class="logo" src="../assets/logo/logottm.svg" width="125" height="75"/>
+  <router-link to="/">
+    <img alt="Vue logo" class="logo logo-link" src="../assets/logo/logottm.svg" width="125" height="75"/>
+  </router-link>
 </template>
-<style>
-.logo{
-  display: grid;
-  transform: translate(-50%, -50%);
+<style scoped>
+
+
+.logo-link {
+  display: inline-block; /* Empêche le lien de prendre toute la largeur */
+}
+
+.logo {
+  width: 100px; /* Ajuste la taille du logo selon tes besoins */
+  height: auto;
 }
 </style>
+<script setup lang="ts">
+</script>
