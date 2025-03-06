@@ -1,7 +1,9 @@
 <template>
-  <router-link to="/">
-    <img alt="Vue logo" class="logo logo-link" src="../assets/logo/logottm.svg" width="125" height="75"/>
-  </router-link>
+  <header>
+    <router-link to="/">
+      <img alt="Vue logo" class="logo logo-link" src="../assets/logo/logottm.svg" width="125" height="75"/>
+    </router-link>
+  </header>
 </template>
 <style scoped>
 
