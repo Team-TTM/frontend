@@ -13,7 +13,7 @@ header {
   top: 0;
   left: 0;
   width: 100vw; /* Assure qu'il occupe toute la largeur */
-  height: 80px;
+  height: 15vh;
   background-color: white; /* Ajoutez une couleur de fond si nécessaire */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
@@ -34,7 +34,7 @@ footer {
   bottom: 0;
   left: 0;
   width: 100vw; /* Assure qu'il occupe toute la largeur */
-  height: 60px;
+  height: 10vh;
   background-color: white; /* Ajoutez une couleur de fond si nécessaire */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   font-family: 'Open Sans', 'Helvetica', Arial, sans-serif;
