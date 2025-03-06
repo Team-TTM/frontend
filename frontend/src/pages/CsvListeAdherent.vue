@@ -89,7 +89,6 @@
 
 import LogoTTM from "@/components/LogoTTM.vue";
 import axios from "axios";
-
 export default {
   components: {LogoTTM},
   data() {
@@ -117,7 +116,7 @@ export default {
     }
   },
   async mounted() {
-    const uri = "/users/getAllAdherent";
+    const uri = "/users/getAllAdherents";
     try {
 
       const token = this.$store.getters['getToken'];
@@ -128,7 +127,7 @@ export default {
           'Content-Type': 'application/json'
         }
       });
-      this.adherents = response.data.adherents;
+      this.adherents = response.data;
       }
     catch
       (error)
