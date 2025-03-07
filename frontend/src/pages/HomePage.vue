@@ -10,10 +10,11 @@
       <div class="container container-google-facebook">
         <GoogleBouton/>
         <FacebookBouton/>
-
       </div>
-
     </main>
+    <router-link to="/users/profil">
+      <button class="retour-button">Profil</button>
+    </router-link>
   </div>
   <footer>
       © 2025 - Site TTM | Auteur | Support
@@ -25,14 +26,12 @@
 <script setup>
 import GoogleBouton from "@/components/boutons authentification/BoutonGoogle.vue";
 import FacebookBouton from "@/components/boutons authentification/BoutonFacebook.vue";
-import LicenceInput from "@/components/LicenceInput.vue";
+//import LicenceInput from "@/components/LicenceInput.vue";
 import LogoTTM from "@/components/LogoTTM.vue";
+
 </script>
 
 <style scoped>
-.bouton{
-  position: absolute;
-  top: 10%;
-}
+
 
 </style>

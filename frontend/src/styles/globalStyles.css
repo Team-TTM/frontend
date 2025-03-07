@@ -33,7 +33,7 @@ footer {
   position: fixed; /* Fixe le header en haut */
   bottom: 0;
   left: 0;
-  width: 100vw; /* Assure qu'il occupe toute la largeur */
+  width: 100%; /* Assure qu'il occupe toute la largeur */
   height: 60px;
   background-color: white; /* Ajoutez une couleur de fond si nécessaire */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -55,6 +55,9 @@ footer {
   align-items: center;
   width: 100%;
   height : 90%;
+  margin-bottom: 60px;
+  max-height: 80vh; /* Ajustez cette valeur selon vos besoins */
+  overflow-y: auto;
 }
 
 
