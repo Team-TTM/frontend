@@ -3,6 +3,7 @@ import HomePage from '@/pages/HomePage.vue'; // Assurez-vous que le chemin est c
 import VerifyLicencePage from '@/pages/VerifyLicencePage.vue'; // Si une page "Signup" existe
 import ConnectedPage from "@/pages/ConnectedPage.vue";
 import CsvListeAdherent from "@/pages/CsvListeAdherent.vue";
+import pageAccueil from "@/pages/pageAccueil.vue";
 const routes = [
   {
     path: '/', // La route racine correspond à la page d'accueil
@@ -24,6 +25,11 @@ const routes = [
     name: 'CsvListeAdherent',
     component: CsvListeAdherent,
   },
+  {
+    path :'/users/pageAccueil',
+    name :'pageAccueil',
+    component : pageAccueil,
+  }
 ];
 
 const router = createRouter({
