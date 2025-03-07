@@ -7,6 +7,13 @@
       <div class="panel-adherents">
 
         <div class="filters-container">
+          <input
+            type="text"
+            v-model="rechercheTexte"
+            class="recherche-input"
+            placeholder="Rechercher"
+            @input="filtrerAdherents"
+          />
           <select ref="combobox" v-model="pratiqueSelectionnee"  class="combobox" @change="filtrerAdherents">
             <option value="">Toutes les pratiques</option>
             <option value="Compétition occasionnelle">Compétition occasionnelle</option>
@@ -20,6 +27,8 @@
             <span>Afficher seulement les licences valides</span>
           </label>
 
+
+
         </div>
 
         <div class="container-liste-adherent">
@@ -27,15 +36,54 @@
             <table class="table">
               <thead>
               <tr>
-                <th>Numéro Licence</th>
-                <th>Prénom</th>
-                <th>Nom</th>
-                <th>Ville</th>
-                <th>Mobile</th>
-                <th>Email</th>
-                <th>Saison</th>
-                <th>Statut</th>
-                <th>Actions</th>
+                <th @click="trierAdherents('numeroLicence')"
+                    :class="{'trie-asc': colonneTriee === 'numeroLicence' && ordreTriAscendant,
+             'trie-desc': colonneTriee === 'numeroLicence' && !ordreTriAscendant}">
+                  Numéro Licence
+                </th>
+
+                <th @click="trierAdherents('prenom')"
+                    :class="{'trie-asc': colonneTriee === 'prenom' && ordreTriAscendant,
+             'trie-desc': colonneTriee === 'prenom' && !ordreTriAscendant}">
+                  Prénom
+                </th>
+
+                <th @click="trierAdherents('nom')"
+                    :class="{'trie-asc': colonneTriee === 'nom' && ordreTriAscendant,
+             'trie-desc': colonneTriee === 'nom' && !ordreTriAscendant}">
+                  Nom
+                </th>
+
+                <th @click="trierAdherents('ville')"
+                    :class="{'trie-asc': colonneTriee === 'ville' && ordreTriAscendant,
+             'trie-desc': colonneTriee === 'ville' && !ordreTriAscendant}">
+                  Ville
+                </th>
+
+                <th @click="trierAdherents('mobile')"
+                    :class="{'trie-asc': colonneTriee === 'mobile' && ordreTriAscendant,
+             'trie-desc': colonneTriee === 'mobile' && !ordreTriAscendant}">
+                  Mobile
+                </th>
+
+                <th @click="trierAdherents('email')"
+                    :class="{'trie-asc': colonneTriee === 'email' && ordreTriAscendant,
+             'trie-desc': colonneTriee === 'email' && !ordreTriAscendant}">
+                  Email
+                </th>
+
+                <th @click="trierAdherents('saison')"
+                    :class="{'trie-asc': colonneTriee === 'saison' && ordreTriAscendant,
+             'trie-desc': colonneTriee === 'saison' && !ordreTriAscendant}">
+                  Saison
+                </th>
+
+                <th @click="trierAdherents('statut')"
+                    :class="{'trie-asc': colonneTriee === 'statut' && ordreTriAscendant,
+             'trie-desc': colonneTriee === 'statut' && !ordreTriAscendant}">
+                  Statut
+                </th>
+                <th class="non-triable">  Actions</th>
               </tr>
               </thead>
               <tbody>
@@ -66,7 +114,7 @@
                         <p><strong>Téléphone :</strong> {{ adherent.telephone }}</p>
                         <p><strong>Pratique :</strong> {{ adherent.pratique }}</p>
                         <p><strong>Année Blanche:</strong> {{ convertirAnneeBlanche(adherent.anneeBlanche) }}</p>
-                        <p><strong>Date de Naissance :</strong> {{ adherent.dateNaissance }}</p>
+                        <p><strong>Date de Naissance :</strong> {{ convertirDateInverse(adherent.dateNaissance) }}</p>
                         <p><strong>Sexe :</strong> {{ convertirSexe(adherent.sexe) }}</p>
                         <p><strong>Profession :</strong> {{ adherent.profession }}</p>
                         <p><strong>Saison :</strong> {{ adherent.saison.join(", ") }}</p>
@@ -108,8 +156,8 @@
     components: {LogoTTM},
     data() {
       return {
-        adherents: [
-          /*{
+        adherents: [/*
+          {
             numeroLicence: "B81769C7180418MCAFRA", prenom: "Jean", nom: "Dupont", statut: true, type: "Standard", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "6 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
           },
           {
@@ -123,6 +171,9 @@
         adherentSelectionne: null,
         pratiqueSelectionnee: "",
         filtreLicenceValide: false,
+        rechercheTexte: "",
+        colonneTriee: null,
+        ordreTriAscendant: true, // Sens du tri (true = ascendant, false = descendant)
       };
     },
     methods: {
@@ -174,14 +225,48 @@
           filteredAdherents = filteredAdherents.filter(adherent => adherent.statut);
         }
 
+        // Appliquer le filtre de recherche (par nom, prénom ou numéro de licence)
+        if (this.rechercheTexte) {
+          const searchText = this.rechercheTexte.toLowerCase();
+          filteredAdherents = filteredAdherents.filter(adherent => {
+            const nomPrenomLicence = `${adherent.prenom.toLowerCase()} ${adherent.nom.toLowerCase()} ${adherent.numeroLicence.toLowerCase()} ${adherent.email.toLowerCase()}`;
+            return nomPrenomLicence.includes(searchText);
+          });
+        }
+
         // Mettre à jour adherentsFiltres
         this.adherentsFiltres = filteredAdherents;
+      },
+
+      trierAdherents(colonne) {
+        if (this.colonneTriee === colonne) {
+          // Si on clique sur la même colonne, on inverse l'ordre
+          this.ordreTriAscendant = !this.ordreTriAscendant;
+        } else {
+          // Sinon, on définit la nouvelle colonne et on tri en ordre croissant par défaut
+          this.colonneTriee = colonne;
+          this.ordreTriAscendant = true;
+        }
+
+        // Tri des adhérents
+        this.adherentsFiltres.sort((a, b) => {
+          let valeurA = a[colonne];
+          let valeurB = b[colonne];
+
+          // Si c'est un tableau (ex: saison), on prend le dernier élément pour trier
+          if (Array.isArray(valeurA)) valeurA = valeurA[valeurA.length - 1];
+          if (Array.isArray(valeurB)) valeurB = valeurB[valeurB.length - 1];
+
+
+          // Comparaison des valeurs
+          if (typeof valeurA === "string") valeurA = valeurA.toLowerCase();
+          if (typeof valeurB === "string") valeurB = valeurB.toLowerCase();
+
+          if (valeurA > valeurB) return this.ordreTriAscendant ? 1 : -1;
+          if (valeurA < valeurB) return this.ordreTriAscendant ? -1 : 1;
+          return 0;
+        });
       }
-
-    },
-    computed: {
-
-
     },
 
     async mounted() {
@@ -204,6 +289,13 @@
         console.error("Erreur lors de la requête :", error);
       }
     }
+    /*async mounted() {
+      try {
+        this.adherentsFiltres = [...this.adherents];
+      } catch (error) {
+        console.error("Erreur :", error);
+      }
+    }*/
   };
   </script>
 
@@ -242,8 +334,6 @@
     flex-direction: column;
     font-family: 'Poppins', sans-serif;
   }
-
-
 
   .filters-container {
     display: flex;
@@ -290,14 +380,52 @@
 
 
   th {
-    background-color: #f8f9fa;
-    font-weight: bold;
-    color: #333;
-    text-transform: uppercase;
-    padding: 12px;
-    border-bottom: 1px solid #e0e0e0;
-    text-align: left;
+    cursor: pointer;
+    position: relative;
+    padding: 10px;
+    user-select: none;
+    border-radius: 5px; /* Coins arrondis */
+    transition: all 0.2s ease-in-out;
   }
+
+  th:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Léger fond au survol */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Ombre légère */
+  }
+
+  th.trie-asc, th.trie-desc {
+    background-color: rgba(0, 0, 0, 0.15); /* Couleur plus marquée pour la colonne triée */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); /* Ombre plus prononcée */
+  }
+
+  th::after {
+    content: " ⬍";
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    opacity: 0.5;
+  }
+
+  th.trie-asc::after {
+    content: " ⬆";
+    opacity: 1;
+  }
+
+  th.trie-desc::after {
+    content: " ⬇";
+    opacity: 1;
+  }
+  th.non-triable {
+    cursor: default; /* Ne pas montrer la main */
+    background-color: white; /* Garde la couleur normale */
+    transition: none; /* Pas d'effet au survol */
+  }
+
+  th.non-triable::after {
+    content: ""; /* Aucune icône */
+  }
+
+
   td {
     padding: 12px;
     border-bottom: 1px solid #e0e0e0;
@@ -368,4 +496,25 @@
     display: inline-block; /* Permet de conserver la taille de l'image */
   }
 
+  .recherche-input {
+    width: 100%;
+    max-width: 200px; /* Limite la largeur de la barre de recherche */
+    padding: 10px 20px; /* Espacement interne pour rendre le texte plus lisible */
+    font-size: 16px; /* Taille du texte */
+    border: 2px solid #ccc; /* Bordure grise */
+    border-radius: 30px; /* Coins arrondis */
+    background-color: #f9f9f9; /* Couleur de fond claire */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Effet de transition pour les changements */
+    outline: none; /* Enlève l'effet de contour par défaut */
+  }
+
+  .recherche-input:focus {
+    border-color: #4CAF50; /* Bordure verte quand l'input est sélectionné */
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4); /* Ombre autour de l'input */
+  }
+
+  .recherche-input::placeholder {
+    color: #aaa; /* Couleur du texte de placeholder */
+    font-style: italic; /* Style en italique */
+  }
   </style>
