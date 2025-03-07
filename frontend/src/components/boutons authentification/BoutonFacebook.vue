@@ -29,10 +29,10 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  height: 50px;
-  min-height: 50px;
-  width: 300px; /* Ajuste la largeur au texte */
-  min-width: 300px;   /* Assure un minimum de largeur */
+  height: 10vh;
+  min-height : 5vh;
+  width: 25vw;
+  min-width: 20vw;
 }
 .facebook-button:hover {
   background-color: #0374e5;
