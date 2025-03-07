@@ -27,8 +27,11 @@ const redirectToGoogleOAuth = () => {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: bold;
   height: 10vh;
+  min-height : 5vh;
   width: 25vw;
+  min-width: 20vw;
 }
 .boutonGoogle:hover {
   background-color: #F0F8FF;

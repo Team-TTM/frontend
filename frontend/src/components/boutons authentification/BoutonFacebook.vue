@@ -29,6 +29,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: bold;
   height: 10vh;
   min-height : 5vh;
   width: 25vw;
