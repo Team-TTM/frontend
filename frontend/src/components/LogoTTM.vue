@@ -1,5 +1,5 @@
 <template>
-  <router-link to="/">
+  <router-link to="/users/HomePage">
     <img alt="Vue logo" class="logo" src="../assets/logo/logottm.svg" width="125" height="75"/>
   </router-link>
 </template>
@@ -8,7 +8,9 @@
 .logo {
   width: 130px; /* Ajuste la taille du logo selon tes besoins */
   height: auto;
-  margin-left: 5px;
+  margin-right: 20px;
+  border-radius: 10px;
+  margin-left: 0;
   display: inline-block;
   transition-duration: 0.4s;
 
