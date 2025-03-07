@@ -18,6 +18,7 @@ header {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 0 20px;
 }
@@ -72,8 +73,8 @@ footer {
   flex-direction: column;
   align-items: center; /*Aligne verticalement les éléments au centre du container */
   gap: 15px;
-  width: 35%;
-  height: 30%;
+  width: 35vw;
+  height: 30vh;
 }
 
 .container-google-facebook{
