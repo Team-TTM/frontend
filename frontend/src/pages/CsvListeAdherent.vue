@@ -300,23 +300,31 @@
   <style scoped>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Playfair+Display:wght@700&display=swap');
+
   .titre {
-    position:relative;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 12px 24px;
-    margin-top:5px;
-    font-size: 24px;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 8px 22px;
+    margin-top: 30px;
+    font-size: 26px;
     font-weight: bold;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    font-family: 'Playfair Display', serif;
+    color: #2C3E50; /* Bleu profond */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    border: 2px solid #2c3e50; /* Doré doux */
     z-index: 1000;
+    letter-spacing: 1px;
   }
 
 
 
+
   .panel-adherents {
-    margin-top: 105px;
+
+    margin-top:10px;
     width: 95%;
     max-width: 1400px;
     max-height: 450px;
