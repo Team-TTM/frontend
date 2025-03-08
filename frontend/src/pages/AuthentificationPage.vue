@@ -3,8 +3,8 @@
     <img alt="Vue logo" class="logo" src="../assets/logo/logottm.svg" width="125" height="75"/>
   </header>
   <div id="app">
-    <main class="main-container">
-      <h1>
+    <main class="auth-container">
+      <h1 class="titre-auth-page">
         BIENVENUE !
       </h1>
       <div class="container container-google-facebook">
@@ -35,6 +35,10 @@ import FacebookBouton from "@/components/boutons authentification/BoutonFacebook
   display: inline-block;
   transition-duration: 0.4s;
 
+}
+
+.auth-container{
+  background-color:white;
 }
 
 </style>
