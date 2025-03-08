@@ -161,11 +161,78 @@ main{
   font-family: 'Open Sans', 'Helvetica', Arial, sans-serif
 }
 
-h1{
+.titre-auth-page{
   position : absolute;
-  top : 15%;
+  top : 30%;
   color : #e74C3C;
   font-family: 'Open Sans', 'Helvetica', Arial, sans-serif;
+}
+
+/* Ajout des styles du spinner */
+#html-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #fcd779;
+  border-top: 4px solid white;
+  border-radius: 50%;
+}
+
+#html-spinner {
+  transition-property: transform; /* Propriété standard */
+  transition-duration: 1.2s; /* Durée de la transition */
+  transition-timing-function: linear; /* Fonction de timing de la transition */
+  animation-name: rotate; /* Animation sans préfixe */
+  animation-duration: 1.2s; /* Durée de l'animation */
+  animation-iteration-count: infinite; /* Répéter indéfiniment */
+  animation-timing-function: linear; /* Fonction de timing de l'animation */
+  transform: rotate(0deg); /* Propriété standard, sans préfixe */
+}
+
+/* Définition de l'animation "rotate" */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Positionnement du spinner */
+#html-spinner {
+  position: relative;
+  left:45%;
+}
+
+#PageText{
+  height: auto;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 12px 24px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  color:red;
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#Text{
+  position:relative;
+  height: auto;
+  width:auto;
+  padding: 12px 24px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  color:red;
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 /* Responsive */
