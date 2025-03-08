@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-buttons">
     <router-link to="/users/EventPage">
       <button class="evenement">Évènement</button>
     </router-link>
@@ -22,11 +22,10 @@
 
 <style scoped>
 
-div{
+.container-buttons{
   display: flex;
   justify-content: space-around;
   align-items: center;
-  flex-wrap: wrap;
   background-color: #ffffff;
   height: 10vh;
   width: 175vh;
@@ -50,7 +49,7 @@ button{
   transition-duration: 0.4s;
   text-align : center;
   text-transform: uppercase;
-  margin: 5px;
+  margin: 10px;
 }
 
 button:hover{

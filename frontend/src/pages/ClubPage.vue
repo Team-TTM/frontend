@@ -9,8 +9,10 @@ import BoutonsHeader from "@/components/boutonsHeader.vue";
       <LogoTTM/>
       <boutons-header/>
     </header>
-    <div id="ClubText">
-      Vous êtes sur la page du club
+    <div class="main-container">
+      <div id="PageText">
+        Vous êtes sur la page du club
+      </div>
     </div>
     <footer>
       © 2025 - Site TTM | Auteur | Support
@@ -19,15 +21,17 @@ import BoutonsHeader from "@/components/boutonsHeader.vue";
 </template>
 
 <style scoped>
-#ClubText{
-  position: absolute;
-  top:50%;
-  left:40%;
-  color:red;
+#PageText{
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 12px 24px;
   font-weight: bold;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  color:red;
   font-size: 20px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-
 
 </style>
