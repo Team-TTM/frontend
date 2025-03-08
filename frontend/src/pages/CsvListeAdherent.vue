@@ -5,7 +5,6 @@
     <div class="main-container">
       <h1 class="titre">Liste des Adhérents</h1>
       <div class="panel-adherents">
-
         <div class="filters-container">
           <input
             type="text"
@@ -26,9 +25,6 @@
             <input type="checkbox" v-model="filtreLicenceValide" @change="filtrerAdherents" />
             <span>Afficher seulement les licences valides</span>
           </label>
-
-
-
         </div>
 
         <div class="container-liste-adherent">
@@ -72,12 +68,6 @@
                   Email
                 </th>
 
-                <th @click="trierAdherents('saison')"
-                    :class="{'trie-asc': colonneTriee === 'saison' && ordreTriAscendant,
-             'trie-desc': colonneTriee === 'saison' && !ordreTriAscendant}">
-                  Saison
-                </th>
-
                 <th @click="trierAdherents('statut')"
                     :class="{'trie-asc': colonneTriee === 'statut' && ordreTriAscendant,
              'trie-desc': colonneTriee === 'statut' && !ordreTriAscendant}">
@@ -93,9 +83,9 @@
                   <td>{{ adherent.prenom.toUpperCase() }}</td>
                   <td>{{ adherent.nom }}</td>
                   <td>{{ adherent.ville }}</td>
-                  <td>{{ afficherTelephoneMobile(adherent.mobile)    }}</td>
+                  <td>{{ afficherTelephoneMobile(adherent.mobile) }}</td>
                   <td>{{ adherent.email }}</td>
-                  <td> {{ adherent.saison}}</td>
+
                   <td>
                     <span class="statut-lumiere"
                           :class="{'statut-actif': adherent.statut, 'statut-inactif': !adherent.statut}"></span>
@@ -114,7 +104,7 @@
                         <p><strong>Téléphone :</strong> {{ adherent.telephone }}</p>
                         <p><strong>Pratique :</strong> {{ adherent.pratique }}</p>
                         <p><strong>Année Blanche:</strong> {{ convertirAnneeBlanche(adherent.anneeBlanche) }}</p>
-                        <p><strong>Date de Naissance :</strong> {{ convertirDateInverse(adherent.dateNaissance) }}</p>
+                        <p><strong>Date de Naissance:</strong> {{ formatDate(adherent.dateNaissance) }}</p>
                         <p><strong>Sexe :</strong> {{ convertirSexe(adherent.sexe) }}</p>
                         <p><strong>Profession :</strong> {{ adherent.profession }}</p>
                         <p><strong>Saison :</strong> {{ adherent.saison.join(", ") }}</p>
@@ -125,7 +115,7 @@
                         <p><strong>Catégorie :</strong> {{ adherent.categorie }}</p>
                         <p><strong>Nom d'usage :</strong> {{ adherent.nomUsage }}</p>
                         <p><strong>Adresse Principale :</strong> {{ adherent.principale }}</p>
-                        <p><strong>Lieu dit :</strong> {{ convertLieuDit(adherent.lieuDit) }}</p>
+                        <p><strong>Lieu dit :</strong> {{ adherent.lieuDit }}</p>
                         <p><strong>Code postal :</strong> {{ adherent.codePostal }}</p>
                         <p><strong>Pays:</strong> {{ adherent.pays }}</p>
                         <p><strong>Hors Club :</strong> {{ convertirBoolenEnOuiNon(adherent.horsClub) }}</p>
@@ -183,15 +173,23 @@
       afficherTelephoneMobile(mobile) {
         if (mobile.length <= 1) {
           return "";
-        } else {
-          return "0" + mobile;
         }
-      },
-      convertirDateInverse(dateObj) {
-        const formatDate = new Intl.DateTimeFormat('fr-FR');
-        return formatDate.format(dateObj);
-      },
+        if (mobile.startsWith("-")) {
+          mobile = mobile.slice(1);
+        }
 
+        if (mobile.startsWith("33")) {
+          mobile = mobile.slice(2);
+        }
+        return "0" + mobile;
+      },
+      formatDate(objDate) {
+        const date = new Date(objDate);
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Les mois commencent à 0
+        const year = date.getUTCFullYear();
+        return `${day}/${month}/${year}`;
+      },
       convertirBoolenEnOuiNon(value) {
         return value ? 'Oui' : 'Non';
       },
@@ -207,11 +205,6 @@
       convertirAnneeBlanche(value) {
         return value >= 1 ? value : 'Aucune';
       },
-
-      convertLieuDit(value){
-        return String(value);
-      },
-
       filtrerAdherents() {
         let filteredAdherents = [...this.adherents];
 
@@ -229,7 +222,7 @@
         if (this.rechercheTexte) {
           const searchText = this.rechercheTexte.toLowerCase();
           filteredAdherents = filteredAdherents.filter(adherent => {
-            const nomPrenomLicence = `${adherent.prenom.toLowerCase()} ${adherent.nom.toLowerCase()} ${adherent.numeroLicence.toLowerCase()} ${adherent.email.toLowerCase()}`;
+            const nomPrenomLicence = `${adherent.prenom.toLowerCase()} ${adherent.nom.toLowerCase()} ${adherent.numeroLicence.toLowerCase()} ${adherent.email.toLowerCase()} ${adherent.ville.toLowerCase()}`;
             return nomPrenomLicence.includes(searchText);
           });
         }
