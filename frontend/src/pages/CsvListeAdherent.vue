@@ -1,149 +1,154 @@
   <template>
+    <div id="page-container">
 
-    <LogoTTM/>
+      <header>
+        <LogoTTM/>
+        <boutons-header/>
+      </header>
+      <div class="main-container">
+        <h1 class="titre">Liste des Adhérents</h1>
+        <div class="panel-adherents">
+          <div class="filters-container">
+            <input
+              type="text"
+              v-model="rechercheTexte"
+              class="recherche-input"
+              placeholder="Rechercher"
+              @input="filtrerAdherents"
+            />
+            <select ref="combobox" v-model="pratiqueSelectionnee"  class="combobox" @change="filtrerAdherents">
+              <option value="">Toutes les pratiques</option>
+              <option value="Compétition occasionnelle">Compétition occasionnelle</option>
+              <option value="Compétition de manière régulière">Compétition de manière régulière</option>
+              <option value="Ne pratique pas">Ne pratique pas</option>
+              <option value="Entrainement">Entrainement</option>
+            </select>
 
-    <div class="main-container">
-      <h1 class="titre">Liste des Adhérents</h1>
-      <div class="panel-adherents">
-        <div class="filters-container">
-          <input
-            type="text"
-            v-model="rechercheTexte"
-            class="recherche-input"
-            placeholder="Rechercher"
-            @input="filtrerAdherents"
-          />
-          <select ref="combobox" v-model="pratiqueSelectionnee"  class="combobox" @change="filtrerAdherents">
-            <option value="">Toutes les pratiques</option>
-            <option value="Compétition occasionnelle">Compétition occasionnelle</option>
-            <option value="Compétition de manière régulière">Compétition de manière régulière</option>
-            <option value="Ne pratique pas">Ne pratique pas</option>
-            <option value="Entrainement">Entrainement</option>
-          </select>
+            <label class="checkbox-container">
+              <input type="checkbox" v-model="filtreLicenceValide" @change="filtrerAdherents" />
+              <span>Afficher seulement les licences valides</span>
+            </label>
+          </div>
 
-          <label class="checkbox-container">
-            <input type="checkbox" v-model="filtreLicenceValide" @change="filtrerAdherents" />
-            <span>Afficher seulement les licences valides</span>
-          </label>
-        </div>
+          <div class="container-liste-adherent">
+            <div class="table-wrapper">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th @click="trierAdherents('numeroLicence')"
+                      :class="{'trie-asc': colonneTriee === 'numeroLicence' && ordreTriAscendant,
+               'trie-desc': colonneTriee === 'numeroLicence' && !ordreTriAscendant}">
+                    Numéro Licence
+                  </th>
 
-        <div class="container-liste-adherent">
-          <div class="table-wrapper">
-            <table class="table">
-              <thead>
-              <tr>
-                <th @click="trierAdherents('numeroLicence')"
-                    :class="{'trie-asc': colonneTriee === 'numeroLicence' && ordreTriAscendant,
-             'trie-desc': colonneTriee === 'numeroLicence' && !ordreTriAscendant}">
-                  Numéro Licence
-                </th>
+                  <th @click="trierAdherents('prenom')"
+                      :class="{'trie-asc': colonneTriee === 'prenom' && ordreTriAscendant,
+               'trie-desc': colonneTriee === 'prenom' && !ordreTriAscendant}">
+                    Prénom
+                  </th>
 
-                <th @click="trierAdherents('prenom')"
-                    :class="{'trie-asc': colonneTriee === 'prenom' && ordreTriAscendant,
-             'trie-desc': colonneTriee === 'prenom' && !ordreTriAscendant}">
-                  Prénom
-                </th>
+                  <th @click="trierAdherents('nom')"
+                      :class="{'trie-asc': colonneTriee === 'nom' && ordreTriAscendant,
+               'trie-desc': colonneTriee === 'nom' && !ordreTriAscendant}">
+                    Nom
+                  </th>
 
-                <th @click="trierAdherents('nom')"
-                    :class="{'trie-asc': colonneTriee === 'nom' && ordreTriAscendant,
-             'trie-desc': colonneTriee === 'nom' && !ordreTriAscendant}">
-                  Nom
-                </th>
+                  <th @click="trierAdherents('ville')"
+                      :class="{'trie-asc': colonneTriee === 'ville' && ordreTriAscendant,
+               'trie-desc': colonneTriee === 'ville' && !ordreTriAscendant}">
+                    Ville
+                  </th>
 
-                <th @click="trierAdherents('ville')"
-                    :class="{'trie-asc': colonneTriee === 'ville' && ordreTriAscendant,
-             'trie-desc': colonneTriee === 'ville' && !ordreTriAscendant}">
-                  Ville
-                </th>
+                  <th @click="trierAdherents('mobile')"
+                      :class="{'trie-asc': colonneTriee === 'mobile' && ordreTriAscendant,
+               'trie-desc': colonneTriee === 'mobile' && !ordreTriAscendant}">
+                    Mobile
+                  </th>
 
-                <th @click="trierAdherents('mobile')"
-                    :class="{'trie-asc': colonneTriee === 'mobile' && ordreTriAscendant,
-             'trie-desc': colonneTriee === 'mobile' && !ordreTriAscendant}">
-                  Mobile
-                </th>
+                  <th @click="trierAdherents('email')"
+                      :class="{'trie-asc': colonneTriee === 'email' && ordreTriAscendant,
+               'trie-desc': colonneTriee === 'email' && !ordreTriAscendant}">
+                    Email
+                  </th>
 
-                <th @click="trierAdherents('email')"
-                    :class="{'trie-asc': colonneTriee === 'email' && ordreTriAscendant,
-             'trie-desc': colonneTriee === 'email' && !ordreTriAscendant}">
-                  Email
-                </th>
-
-                <th @click="trierAdherents('statut')"
-                    :class="{'trie-asc': colonneTriee === 'statut' && ordreTriAscendant,
-             'trie-desc': colonneTriee === 'statut' && !ordreTriAscendant}">
-                  Statut
-                </th>
-                <th class="non-triable">  Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              <template v-for="adherent in adherentsFiltres" :key="adherent.numeroLicence">
-              <tr class="info-adherent-container">
-                  <td>{{ adherent.numeroLicence }}</td>
-                  <td>{{ adherent.prenom.toUpperCase() }}</td>
-                  <td>{{ adherent.nom }}</td>
-                  <td>{{ adherent.ville }}</td>
-                  <td>{{ afficherTelephoneMobile(adherent.mobile) }}</td>
-                  <td>{{ adherent.email }}</td>
-
-                  <td>
-                    <span class="statut-lumiere"
-                          :class="{'statut-actif': adherent.statut, 'statut-inactif': !adherent.statut}"></span>
-                  </td>
-                  <td class="btn-afficherDetails">
-                    <button class="btn-afficherDetails" @click="afficherDetails(adherent.numeroLicence)">
-                      {{ adherentSelectionne === adherent.numeroLicence ? '-' : '+' }}
-                    </button>
-                  </td>
+                  <th @click="trierAdherents('statut')"
+                      :class="{'trie-asc': colonneTriee === 'statut' && ordreTriAscendant,
+               'trie-desc': colonneTriee === 'statut' && !ordreTriAscendant}">
+                    Statut
+                  </th>
+                  <th class="non-triable">  Actions</th>
                 </tr>
+                </thead>
+                <tbody>
+                <template v-for="adherent in adherentsFiltres" :key="adherent.numeroLicence">
+                <tr class="info-adherent-container">
+                    <td>{{ adherent.numeroLicence }}</td>
+                    <td>{{ adherent.prenom.toUpperCase() }}</td>
+                    <td>{{ adherent.nom }}</td>
+                    <td>{{ adherent.ville }}</td>
+                    <td>{{ afficherTelephoneMobile(adherent.mobile) }}</td>
+                    <td>{{ adherent.email }}</td>
 
-                <tr v-if="adherentSelectionne === adherent.numeroLicence">
-                  <td colspan="10" class="details-cell">
-                    <div class="details-container">
-                      <div class="details-colonne">
-                        <p><strong>Téléphone :</strong> {{ adherent.telephone }}</p>
-                        <p><strong>Pratique :</strong> {{ adherent.pratique }}</p>
-                        <p><strong>Année Blanche:</strong> {{ convertirAnneeBlanche(adherent.anneeBlanche) }}</p>
-                        <p><strong>Date de Naissance:</strong> {{ formatDate(adherent.dateNaissance) }}</p>
-                        <p><strong>Sexe :</strong> {{ convertirSexe(adherent.sexe) }}</p>
-                        <p><strong>Profession :</strong> {{ adherent.profession }}</p>
-                        <p><strong>Saison :</strong> {{ adherent.saison.join(", ") }}</p>
-                        <p><strong>Demi-Tarif :</strong> {{ convertirBoolenEnOuiNon(adherent.demiTarif) }}</p>
+                    <td>
+                      <span class="statut-lumiere"
+                            :class="{'statut-actif': adherent.statut, 'statut-inactif': !adherent.statut}"></span>
+                    </td>
+                    <td class="btn-afficherDetails">
+                      <button class="btn-afficherDetails" @click="afficherDetails(adherent.numeroLicence)">
+                        {{ adherentSelectionne === adherent.numeroLicence ? '-' : '+' }}
+                      </button>
+                    </td>
+                  </tr>
 
+                  <tr v-if="adherentSelectionne === adherent.numeroLicence">
+                    <td colspan="10" class="details-cell">
+                      <div class="details-container">
+                        <div class="details-colonne">
+                          <p><strong>Téléphone :</strong> {{ adherent.telephone }}</p>
+                          <p><strong>Pratique :</strong> {{ adherent.pratique }}</p>
+                          <p><strong>Année Blanche:</strong> {{ convertirAnneeBlanche(adherent.anneeBlanche) }}</p>
+                          <p><strong>Date de Naissance:</strong> {{ formatDate(adherent.dateNaissance) }}</p>
+                          <p><strong>Sexe :</strong> {{ convertirSexe(adherent.sexe) }}</p>
+                          <p><strong>Profession :</strong> {{ adherent.profession }}</p>
+                          <p><strong>Saison :</strong> {{ adherent.saison.join(", ") }}</p>
+                          <p><strong>Demi-Tarif :</strong> {{ convertirBoolenEnOuiNon(adherent.demiTarif) }}</p>
+
+                        </div>
+                        <div class="details-colonne">
+                          <p><strong>Catégorie :</strong> {{ adherent.categorie }}</p>
+                          <p><strong>Nom d'usage :</strong> {{ adherent.nomUsage }}</p>
+                          <p><strong>Adresse Principale :</strong> {{ adherent.principale }}</p>
+                          <p><strong>Lieu dit :</strong> {{ adherent.lieuDit }}</p>
+                          <p><strong>Code postal :</strong> {{ adherent.codePostal }}</p>
+                          <p><strong>Pays:</strong> {{ adherent.pays }}</p>
+                          <p><strong>Hors Club :</strong> {{ convertirBoolenEnOuiNon(adherent.horsClub) }}</p>
+                          <p><strong>Urgence Téléphone :</strong> {{ adherent.urgenceTelephone }}</p>
+                        </div>
                       </div>
-                      <div class="details-colonne">
-                        <p><strong>Catégorie :</strong> {{ adherent.categorie }}</p>
-                        <p><strong>Nom d'usage :</strong> {{ adherent.nomUsage }}</p>
-                        <p><strong>Adresse Principale :</strong> {{ adherent.principale }}</p>
-                        <p><strong>Lieu dit :</strong> {{ adherent.lieuDit }}</p>
-                        <p><strong>Code postal :</strong> {{ adherent.codePostal }}</p>
-                        <p><strong>Pays:</strong> {{ adherent.pays }}</p>
-                        <p><strong>Hors Club :</strong> {{ convertirBoolenEnOuiNon(adherent.horsClub) }}</p>
-                        <p><strong>Urgence Téléphone :</strong> {{ adherent.urgenceTelephone }}</p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
 
-              </template>
-              </tbody>
-            </table>
+                </template>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <footer>
-      © 2025 - Site TTM | Auteur | Support
-    </footer>
+      <footer>
+        © 2025 - Site TTM | Auteur | Support
+      </footer>
+    </div>
   </template>
 
   <script>
 
   import LogoTTM from "@/components/LogoTTM.vue";
   import axios from "axios";
+  import BoutonsHeader from "@/components/boutonsHeader.vue";
   export default {
-    components: {LogoTTM},
+    components: {BoutonsHeader, LogoTTM},
     data() {
       return {
         adherents: [/*
@@ -296,12 +301,10 @@
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
   .titre {
-    position: fixed;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%);
+    position:relative;
     background-color: rgba(255, 255, 255, 0.9);
     padding: 12px 24px;
+    margin-top:5px;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
