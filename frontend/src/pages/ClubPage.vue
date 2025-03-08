@@ -11,7 +11,11 @@ import BoutonsHeader from "@/components/boutonsHeader.vue";
     </header>
     <div class="main-container">
       <div id="PageText">
-        Vous êtes sur la page du club
+        Vous êtes sur la page de club
+        <div id="Text">
+          En cours de développement !!
+          <div id="html-spinner"></div>
+        </div>
       </div>
     </div>
     <footer>
@@ -21,17 +25,7 @@ import BoutonsHeader from "@/components/boutonsHeader.vue";
 </template>
 
 <style scoped>
-#PageText{
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 12px 24px;
-  font-weight: bold;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  z-index: 1000;
-  color:red;
-  font-size: 20px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
+
 
 </style>
+
