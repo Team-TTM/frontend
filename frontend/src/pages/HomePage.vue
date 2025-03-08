@@ -10,10 +10,18 @@
         <button id="button">Accéder à la BD</button>
       </router-link>
     </div>
+    <div class="instagram-newsletter-container">
+      <div class="instagram-container">
+
+      </div>
+      <div class="newsletter-container">
+
+      </div>
+    </div>
   </div>
   <footer>
       © 2025 - Site TTM | Auteur | Support
-    </footer>
+  </footer>
 </template>
 
 <script setup>
@@ -23,21 +31,56 @@ import BoutonsHeader from "@/components/boutonsHeader.vue";
 </script>
 
 <style scoped>
-#button{
-  border : solid 2px red;
+
+.instagram-newsletter-container{
+  display:flex;
+  flex-direction: row;
+  position:fixed;
+  height:70%;
+  width:100%;
+  margin-top:30px;
+  background-color: white;
 }
-#PageText{
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 12px 24px;
-  font-weight: bold;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  z-index: 1000;
-  color:red;
-  font-size: 20px;
+
+.instagram-container{
+  display:flex;
+  height:90%;
+  width:80%;
+  background-color: white;
+  border-radius:10px;
+  margin-top: 40px;
+  margin-right: 10px;
+  margin-left: 20px;
+  /*box-shadow: -2px 3px 6px rgba(0, 0, 0, 0.8);*/
+}
+
+.newsletter-container{
+  display:flex;
+  height:90%;
+  width:80%;
+  background-color: white;
+  border-radius:10px;
+  margin-top: 40px;
+  margin-right: 20px;
+  margin-left: 10px;
+  /*box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.8);*/
+}
+
+#button{
+  background-color:#ffffff;
+  cursor: pointer;
+  border : none;
+  border-radius: 10px;
+  font-weight:bold;
+
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+
+#button:hover{
+  background-color: #b52b1d;
+  transition-duration: 0.4s;
+}
+
 
 p{
   font-weight: bold;
