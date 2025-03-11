@@ -11,7 +11,7 @@
     "test:e2e:dev": "start-server-and-test 'vite dev --port 3000' http://localhost:3000 'cypress open --e2e'",
     "test:unit": "cypress run --component",
     "test:unit:dev": "cypress open --component",
-    "lint": "eslint . --fix"
+    "lint": "eslint frontend --fix"
   },
   "dependencies": {
     "@nuxt/ui": "^2.21.0",
