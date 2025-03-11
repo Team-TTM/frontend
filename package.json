@@ -11,25 +11,25 @@
     "test:e2e:dev": "start-server-and-test 'vite dev --port 3000' http://localhost:3000 'cypress open --e2e'",
     "test:unit": "cypress run --component",
     "test:unit:dev": "cypress open --component",
-    "lint": "eslint frontend --fix"
+    "lint": "eslint"
   },
   "dependencies": {
-    "@nuxt/ui": "^2.21.0",
+    "@nuxt/ui": "^2.21.1",
     "@nuxthq/ui": "^2.7.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.14.0",
+    "@eslint/js": "^9.22.0",
     "@vitejs/plugin-vue": "^5.2.1",
-    "cypress": "^13.17.0",
-    "eslint": "^9.18.0",
-    "eslint-plugin-cypress": "^4.1.0",
-    "eslint-plugin-vue": "^9.32.0",
-    "globals": "^15.14.0",
-    "start-server-and-test": "^2.0.9",
-    "vite": "^6.0.5",
-    "vite-plugin-vue-devtools": "^7.6.8"
+    "cypress": "^14.1.0",
+    "eslint": "^9.22.0",
+    "eslint-plugin-cypress": "^4.2.0",
+    "eslint-plugin-vue": "^9.33.0",
+    "globals": "^15.15.0",
+    "start-server-and-test": "^2.0.10",
+    "vite": "^6.2.1",
+    "vite-plugin-vue-devtools": "^7.7.2"
   }
 }

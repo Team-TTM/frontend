@@ -18,7 +18,6 @@
 
 <script setup>
 
-import LicenceInput from "@/components/LicenceInput.vue";
 import LogoTTM from "@/components/LogoTTM.vue";
 </script>
 

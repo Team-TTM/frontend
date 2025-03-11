@@ -49,7 +49,7 @@ export default {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
-          validateStatus: (status) => true // Accepter tous les statuts HTTP
+          validateStatus: () => true // Accepter tous les statuts HTTP
         });
 
         console.log("Réponse serveur :", response);
