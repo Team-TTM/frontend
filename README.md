@@ -1,57 +1,56 @@
-# frontend
+# Frontend - Triathlon Toulouse Métropole
+Ce répertoire contient l'interface utilisateur du projet Triathlon Toulouse Métropole développée avec Vue 3 et Vite.
 
-This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
+Structure du projet
+Le frontend est une application Vue.js qui fournit l'interface utilisateur pour les adhérents et administrateurs du club de triathlon.
+Technologies utilisées
+* Vue 3 - Framework JavaScript progressif 
+* Vite - Outil de build ultrarapide
+* Cypress - Framework de test pour les tests de composants et E2E
+* ESLint - Outil d'analyse de code statique
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
+## Installation
 
 ```sh
-npm run dev
+  npm install
 ```
 
-### Compile and Minify for Production
 
-```sh
-npm run build
+## Commandes disponibles
+
+### Développement avec rechargement à chaud
+
+```ssh
+    npm run dev
 ```
 
-### Run Headed Component Tests with [Cypress Component Testing](https://on.cypress.io/component)
+### Compilation pour la production
 
-```sh
-npm run test:unit:dev # or `npm run test:unit` for headless testing
+```ssh
+    npm run build
 ```
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+### Lancer les tests
 
-```sh
-npm run test:e2e:dev
+```ssh
+    npm run test
 ```
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
+### Linting avec ESLint
 
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
+```ssh
+    npm run lint
 ```
 
-### Lint with [ESLint](https://eslint.org/)
 
-```sh
-npm run lint
-```
+## Déploiement
+Le déploiement est automatisé via GitHub Actions. Lors d'un push sur la branche main, le workflow suivant est exécuté :
+
+
+1. Installation des dépendances 
+2. Vérification du code avec ESLint 
+3. Build du projet 
+4. Déploiement des fichiers via FTPS vers le serveur de production
+
+Le site est accessible à l'adresse : https://portal.triathlontoulousemetropole.com/
