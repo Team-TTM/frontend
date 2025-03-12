@@ -54,6 +54,11 @@ const routes = [
     path : '/users/StagePage',
     name : 'StagePage',
     component: StagePage
+  },
+  {
+    path: "/users/profil",
+    name: "Profil",
+    component: ProfilPageAdherent,
   }
 ];
 
