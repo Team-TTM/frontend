@@ -265,6 +265,9 @@
             'Content-Type': 'application/json'
           }
         });
+        if(response.status !== 200){
+          this.$router.push('/');
+        }
         this.adherents = response.data;
         this.adherentsFiltres = [...this.adherents];
       }
