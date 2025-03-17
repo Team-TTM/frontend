@@ -24,12 +24,25 @@
   </footer>
 </template>
 
-<script setup>
+<script>
 
-import LogoTTM from "@/components/LogoTTM.vue";
-import BoutonsHeader from "@/components/boutonsHeader.vue";
+import LogoTTM from '@/components/LogoTTM.vue';
+import BoutonsHeader from '@/components/boutonsHeader.vue';
+
+export default {
+  components: {
+    LogoTTM,
+    BoutonsHeader,
+  },
+  mounted() {
+    const token = this.$route.query?.token;
+    if (token) {
+      this.$store.dispatch("login", token);
+      console.log("Token stocké :", this.$store.getters.isAuthenticated, this.$store.getters.getToken);
+    }
+  },
+};
 </script>
-
 <style scoped>
 
 .instagram-newsletter-container{
