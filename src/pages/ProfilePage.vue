@@ -61,12 +61,9 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
 import axios from "axios";
 import LogoTTM from "@/components/LogoTTM.vue";
-import GoogleBouton from "@/components/boutons authentification/BoutonGoogle.vue";
-import FacebookBouton from "@/components/boutons authentification/BoutonFacebook.vue";
+import {useStore} from 'vuex';
 
 const store = useStore();
 
@@ -87,8 +84,9 @@ const profil = ref({
 onMounted(async () => {
   try {
     const uri = "/users/adherent";
-    const token = store.getters["getToken"];
-    const response = await axios.post(uri, {}, {
+    const token = store.getters.getToken;
+    console.log(token);
+    const response = await axios.get(uri, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
