@@ -48,6 +48,22 @@
           <button class="validate-button" @click.prevent="validerProfil">Valider</button>
         </form>
       </div>
+      <!-- Boutons Google et Facebook -->
+      <div class="social-buttons">
+        <div v-if="isGoogleConnected" class="connected">
+          ✓ <GoogleBouton />
+        </div>
+        <div v-else>
+          <GoogleBouton />
+        </div>
+
+        <div v-if="isFacebookConnected" class="connected">
+          ✓ <FacebookBouton />
+        </div>
+        <div v-else>
+          <FacebookBouton />
+        </div>
+      </div>
     </main>
   </div>
 
@@ -60,11 +76,15 @@
 
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import axios from "axios";
 import LogoTTM from "@/components/LogoTTM.vue";
+import GoogleBouton from "@/components/boutons authentification/BoutonGoogle.vue";
+import FacebookBouton from "@/components/boutons authentification/BoutonFacebook.vue";
 
-const router = useRouter();
+const store = useStore();
 
 // Données du profil
 const profil = ref({
@@ -78,12 +98,26 @@ const profil = ref({
   categorie: "",
 });
 
-// Fonction pour soumettre les données
-const validerProfil = () => {
-  console.log("Profil validé :", profil.value);
-  router.push("/profil"); // Redirige vers la page profil après validation
-};
-</script>
+
+// Récupération des données utilisateur lors du montage du composant
+onMounted(async () => {
+  try {
+    const uri = "/users/adherent";
+    const token = store.getters["getToken"];
+    const response = await axios.post(uri, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      validateStatus: () => true, // Accepter tous les statuts HTTP
+    });
+
+    console.log("Réponse de l'API :", response.data);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des données :", error);
+  }
+});
+</script>----------------------------------------------------------------------------
 
 <style scoped>
 /* Titre bien positionné */
@@ -181,6 +215,23 @@ const validerProfil = () => {
 
 .content {
   margin-top: 140px; /* Ajustez cette valeur selon vos besoins */
+}
+
+.social-buttons {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.connected {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  color: green;
 }
 
 @media (max-width: 768px) {

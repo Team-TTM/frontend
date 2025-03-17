@@ -8,6 +8,8 @@ import EntrainementPage from "@/pages/EntrainementPage.vue";
 import HomePage from "@/pages/HomePage.vue";
 import EventPage from "@/pages/EventPage.vue";
 import StagePage from "@/pages/StagePage.vue";
+import ProfilePage from "@/pages/ProfilePage.vue";
+
 const routes = [
   {
     path: '/', // La route racine correspond à la page d'accueil
@@ -56,9 +58,9 @@ const routes = [
     component: StagePage
   },
   {
-    path: "/users/profil",
-    name: "Profil",
-    component: ProfilPageAdherent,
+    path: "/users/ProfilPage",
+    name: "ProfilPage",
+    component: ProfilePage,
   }
 ];
 
