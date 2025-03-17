@@ -48,22 +48,6 @@
           <button class="validate-button" @click.prevent="validerProfil">Valider</button>
         </form>
       </div>
-      <!-- Boutons Google et Facebook -->
-      <div class="social-buttons">
-        <div v-if="isGoogleConnected" class="connected">
-          ✓ <GoogleBouton />
-        </div>
-        <div v-else>
-          <GoogleBouton />
-        </div>
-
-        <div v-if="isFacebookConnected" class="connected">
-          ✓ <FacebookBouton />
-        </div>
-        <div v-else>
-          <FacebookBouton />
-        </div>
-      </div>
     </main>
   </div>
 
@@ -215,23 +199,6 @@ onMounted(async () => {
 
 .content {
   margin-top: 140px; /* Ajustez cette valeur selon vos besoins */
-}
-
-.social-buttons {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.connected {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-weight: bold;
-  color: green;
 }
 
 @media (max-width: 768px) {
