@@ -1,6 +1,7 @@
 <template>
   <header>
     <LogoTTM />
+    <boutons-header />
   </header>
 
   <div id="app">
@@ -14,12 +15,12 @@
             <label for="licence">N° de licence (cliquez ici pour télécharger la licence)</label>
             <input id="licence" type="text" v-model="profil.licence" />
 
-            <input type="text" placeholder="Nom" v-model="profil.nom" />
-            <input type="text" placeholder="Prénom" v-model="profil.prenom" />
-            <input type="text" placeholder="Genre" v-model="profil.genre" />
-            <input type="email" placeholder="Email" v-model="profil.email" />
-            <input type="date" v-model="profil.dateNaissance" />
-            <input type="tel" placeholder="Téléphone" v-model="profil.telephone" />
+            <input type="text" v-model="profil.nom" :readonly="!editMode" />
+            <input type="text" v-model="profil.prenom" :readonly="!editMode" />
+            <input type="text" v-model="profil.licence" :readonly="!editMode" />
+            <input type="email" v-model="profil.email" :readonly="!editMode" />
+            <input type="date" v-model="profil.dateNaissance" :readonly="!editMode" />
+            <input type="tel" v-model="profil.telephone" :readonly="!editMode" />
           </div>
 
           <!-- Section Droite -->
@@ -46,6 +47,9 @@
           </div>
           <!-- Bouton Valider en bas à droite -->
           <button class="validate-button" @click.prevent="validerProfil">Valider</button>
+          <button class="edit-button" @click="editMode ? sauvegarderProfil() : editMode = true">
+            {{ editMode ? "Sauvegarder" : "Modifier" }}
+          </button>
         </form>
       </div>
     </main>
@@ -64,8 +68,10 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import LogoTTM from "@/components/LogoTTM.vue";
 import {useStore} from 'vuex';
+import BoutonsHeader from "@/components/boutonsHeader.vue";
 
 const store = useStore();
+const editMode = ref(false);
 
 // Données du profil
 const profil = ref({
@@ -86,6 +92,7 @@ onMounted(async () => {
     const uri = "/users/adherent";
     const token = store.getters.getToken;
     console.log(token);
+
     const response = await axios.get(uri, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -95,10 +102,42 @@ onMounted(async () => {
     });
 
     console.log("Réponse de l'API :", response.data);
+
+    profil.value = {
+      licence: response.data.licence || "",
+      nom: response.data.nom || "",
+      prenom: response.data.prenom || "",
+      genre: response.data.genre || "",
+      email: response.data.email || "",
+      dateNaissance: response.data.dateNaissance || "",
+      telephone: response.data.telephone || "",
+      categorie: response.data.categorie || "",
+    };
   } catch (error) {
     console.error("Erreur lors de la récupération des données :", error);
   }
 });
+
+const sauvegarderProfil = async () => {
+  if (!editMode.value) return; // Ne sauvegarder que si on est en mode édition
+
+  try {
+    const uri = "/users/adherent";
+    const token = store.getters.getToken;
+
+    await axios.put(uri, profil.value, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Profil mis à jour avec succès !");
+    editMode.value = false; // Repasser en mode lecture seule
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du profil :", error);
+  }
+};
 </script>----------------------------------------------------------------------------
 
 <style scoped>
@@ -197,6 +236,20 @@ onMounted(async () => {
 
 .content {
   margin-top: 140px; /* Ajustez cette valeur selon vos besoins */
+}
+
+.edit-button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.edit-button:hover {
+  background-color: #218838;
 }
 
 @media (max-width: 768px) {
