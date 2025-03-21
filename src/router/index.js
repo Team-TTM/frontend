@@ -8,6 +8,7 @@ import EntrainementPage from "@/pages/EntrainementPage.vue";
 import HomePage from "@/pages/HomePage.vue";
 import EventPage from "@/pages/EventPage.vue";
 import StagePage from "@/pages/StagePage.vue";
+import DetailEventPage from "@/pages/DetailEventPage.vue";
 const routes = [
   {
     path: '/', // La route racine correspond à la page d'accueil
@@ -46,10 +47,18 @@ const routes = [
   },
 
   {
-    path : '/users/EventPage',
-    name : 'EventPage',
-    component : EventPage
+    path: "/users/EventPage",
+    name: "EventPage",
+    component: EventPage,
+    props: route => ({ eventData: route.query })
   },
+
+  {
+    path : '/users/DetailEventPage',
+    name : 'DetailEventPage',
+    component : DetailEventPage
+  },
+
   {
     path : '/users/StagePage',
     name : 'StagePage',
