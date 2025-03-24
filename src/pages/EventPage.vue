@@ -57,7 +57,7 @@ export default defineComponent({
     <div class="main-container">
       <div class="principal-container">
         <h2>Liste des événements</h2>
-        <router-link to="/users/DetailEventPage">
+        <router-link to="/users/CreateEventPage">
           <button class="button">Créer un évènement</button>
         </router-link>
         <div v-if="events.length === 0">
