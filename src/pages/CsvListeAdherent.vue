@@ -27,6 +27,11 @@
             <input type="checkbox" v-model="filtreLicenceValide" @change="filtrerAdherents" />
             <span>Afficher seulement les licences valides</span>
           </label>
+
+          <label for="fileUpload">Choisissez un fichier :</label>
+          <input type="file" id="fileUpload" accept=".xls,.xlsx" @change="handleFileUpload" />
+          <button @click="uploadCSV" :disabled="!file">Importer</button>
+          <p v-if="message" :class="messageType">{{ message }}</p>
         </div>
 
         <div class="container-liste-adherent">
@@ -150,15 +155,7 @@ export default {
   data() {
     return {
       adherents: [
-        {
-          numeroLicence: "B81769C7180418MCAFRA", prenom: "Jean", nom: "Dupont", statut: true, type: "B - Lic. club - Compétition - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "06 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
-        },
-        {
-          numeroLicence: "B789012C654321MRAFRA", prenom: "Sophie", nom: "Martin", statut: true, type: "D - Licence club - Loisir - S. & V.", demiTarif: true, horsClub: false, categorie: "Junior", anneeBlanche: true, pratique: "Ne pratique pas", nomUsage: "Martin", dateNaissance: "2002-07-14", sexe: "Femme", profession: "Étudiante", adressePrincipale: "22 rue des Lilas", details: "Bâtiment A", lieuDit: "Quartier Saint-Pierre", codePostal: "69001", ville: "Lyon", pays: "France", telephone: "04 56 78 90 12", mobile: "06 23 45 67 89", email: "sophie.martin@example.com", urgenceTelephone: "06 54 32 10 98", saison: ["2023/2024"]
-        },
-        {
-          numeroLicence: "B34567C8901234MRAFRA", prenom: "Paul", nom: "Lemoine", statut: false, type: "C - Lic. club - Loisir - Jeune", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "06 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
-        }
+
       ],
       licences: {
         "A - Lic. club - Compétition - Jeune": "A - Lic. club - Compétition - Jeune",
@@ -175,6 +172,9 @@ export default {
       rechercheTexte: "",
       colonneTriee: null,
       ordreTriAscendant: true, // Sens du tri (true = ascendant, false = descendant)
+      file: null,
+      message: "",
+      messageType: "", // success ou error
     };
   },
   methods: {
@@ -191,6 +191,7 @@ export default {
     convertirBoolenEnOuiNon(value) {
       return value ? 'Oui' : 'Non';
     },
+
     convertirSexe(sexe) {
       if (sexe === 'F') {
         return 'Femme';
@@ -208,17 +209,17 @@ export default {
         return "Compétition - S. & V.";
       } else if (type.includes("Compétition - Jeune")) {
         return "Compétition - Jeune";
-      } else if (type.includes("Loisir - S. & V.")){
+      } else if (type.includes("Loisir - S. & V.")) {
         return "Loisir - S. & V.";
-      } else if (type.includes("Loisir - Jeune")){
+      } else if (type.includes("Loisir - Jeune")) {
         return "Loisir - Jeune";
-      } else if (type.includes("Paratriathlon - Lic. club - Compétition  - S. & V.")){
+      } else if (type.includes("Paratriathlon - Lic. club - Compétition  - S. & V.")) {
         return "Paratriathlon - Compétition  - S. & V.";
-      } else if (type.includes("Paratriathlon - Lic. club - Compétition - Jeune")){
+      } else if (type.includes("Paratriathlon - Lic. club - Compétition - Jeune")) {
         return "Paratriathlon - Compétition - Jeune";
-      } else if (type.includes("Paratriathlon - Lic. club - Loisir  - S. & V.")){
+      } else if (type.includes("Paratriathlon - Lic. club - Loisir  - S. & V.")) {
         return "Paratriathlon - Loisir  - S. & V.";
-      } else if (type.includes("Paratriathlon - Lic. club - Loisir - Jeune")){
+      } else if (type.includes("Paratriathlon - Lic. club - Loisir - Jeune")) {
         return "Paratriathlon - Loisir - Jeune";
       } else if (type.includes("Dirigeant")) {
         return "Dirigeant";
@@ -279,6 +280,62 @@ export default {
         if (valeurA < valeurB) return this.ordreTriAscendant ? -1 : 1;
         return 0;
       });
+    },
+    handleFileUpload(event) {
+      this.file = event.target.files[0];
+      console.log(event);
+    },
+    async uploadCSV() {
+      const uri = "/api/import/adherent";
+
+      if (!this.file) {
+        this.message = "Veuillez sélectionner un fichier.";
+        this.messageType = "error";
+        return;
+      }
+
+      let formData = new FormData();
+      formData.append("excel", this.file); // Doit correspondre à "excel" défini dans l'OpenAPI
+
+      try {
+        const token = this.$store.getters['getToken'];
+        console.log(token);
+
+        const response = await axios.post(uri, {excel: this.file}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log(response.status);
+        if (response.status === 200) {
+          this.message = `Exportation réussie ! ${response.data.add} ajout(s), ${response.data.update} mise(s) à jour.`;
+          this.messageType = "success";
+        } else {
+          console.error("Erreur de récupération :", response.status);
+          this.$router.push("/");
+        }
+
+      } catch (error) {
+        if (error.response) {
+          switch (error.response.status) {
+            case 400:
+              this.message = "Erreur de format ou données invalides.";
+              break;
+            case 401:
+              this.message = "Non autorisé. Vérifiez votre connexion.";
+              break;
+            case 500:
+              this.message = "Erreur interne du serveur.";
+              break;
+            default:
+              this.message = "Une erreur inconnue est survenue.";
+          }
+        } else {
+          this.message = "Impossible de contacter le serveur.";
+        }
+        this.messageType = "error";
+      }
     }
   },
   computed: {
@@ -294,6 +351,13 @@ export default {
     },
   },
 
+  /*async mounted() {
+    try {
+      this.adherentsFiltres = [...this.adherents];
+    } catch (error) {
+      console.error("Erreur :", error);
+    }
+  },*/
 
   async mounted() {
     const uri = "/users/getAllAdherents";
@@ -306,26 +370,19 @@ export default {
           'Content-Type': 'application/json'
         }
       });
-      if(response.status !== 200){
+      if (response.status !== 200) {
         this.$router.push('/');
       }
+      await this.uploadCSV();
       this.adherents = response.data;
       this.adherentsFiltres = [...this.adherents];
 
-    }
-    catch
-      (error)
-    {
+    } catch
+      (error) {
       console.error("Erreur lors de la requête :", error);
     }
-  }
-  /*async mounted() {
-    try {
-      this.adherentsFiltres = [...this.adherents];
-    } catch (error) {
-      console.error("Erreur :", error);
-    }
-  }*/
+  },
+
 };
 </script>
 
@@ -552,5 +609,12 @@ header a {
 .recherche-input::placeholder {
   color: #aaa; /* Couleur du texte de placeholder */
   font-style: italic; /* Style en italique */
+}
+
+.success {
+  color: green;
+}
+.error {
+  color: red;
 }
 </style>
