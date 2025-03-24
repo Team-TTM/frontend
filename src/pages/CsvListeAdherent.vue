@@ -304,7 +304,7 @@ export default {
         const response = await axios.post(uri, {excel: this.file}, {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'multipart/form-data',
           }
         });
         console.log(response.status);
