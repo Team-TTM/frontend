@@ -8,17 +8,17 @@
       <div class="principal-container">
         <div class="detail-event-container">
           <h2>Créer un évènement</h2>
-          <div class="input-div">
-            <p>Titre :</p>
-            <input type="text" v-model="event.title" required />
-            <p>Date :</p>
-            <input type="date" v-model="event.registrationEndDate" required />
-            <p>Description</p>
-            <textarea v-model="event.description" required/>
-            <div class="button-div">
-              <button class="button" @click="createEvent">Créer</button>
+            <div class="input-div">
+              <p>Titre :</p>
+              <input type="text" v-model="event.title" required />
+              <p>Date :</p>
+              <input type="date" v-model="event.registrationEndDate" required />
+              <p>Description</p>
+              <textarea v-model="event.description" required/>
+              <div class="button-div">
+                <button class="button" @click="createEvent">Créer</button>
+              </div>
             </div>
-          </div>
         </div>
       </div>
     </div>
@@ -156,6 +156,7 @@ export default {
         );
 
         alert('Évènement créé avec succès !');
+        this.$router.push({name:"EventPage"});
 
       } catch (error) {
         console.error('Erreur:', error.response ? error.response.data : error.message);
