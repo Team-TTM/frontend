@@ -6,7 +6,7 @@
     </header>
     <div class="main-container">
       <div class="principal-container">
-        <div class="detail-event-container">
+        <div class="info-event-container">
           <h2>Créer un évènement</h2>
             <div class="input-div">
               <p>Titre :</p>
@@ -14,7 +14,8 @@
               <p>Date :</p>
               <input type="date" v-model="event.endAt" required />
               <p>Description</p>
-              <textarea v-model="event.description" required/>
+              <textarea rows="10" cols="30" v-model="event.description" required />
+              <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
               <div class="button-div">
                 <button class="button" @click="createEvent">Créer</button>
               </div>
@@ -27,6 +28,13 @@
 </template>
 
 <style scoped>
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: bold;
+}
 
 .principal-container {
   display: flex;
@@ -45,32 +53,12 @@
   overflow-y: auto; /* Permet un défilement vertical si le contenu dépasse */
 }
 
-.detail-event-container{
+.info-event-container{
   display : flex;
   width : 44vw;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-}
-
-.uploaded-preview-container {
-  margin-top: 10px;
-  border-radius: 10px;
-  max-width: 300px;
-}
-
-.uploaded-preview {
-  max-width: 100%;
-  border-radius: 10px;
-}
-
-.description-container{
-  width:50%;
-}
-
-.description-container textarea {
-  resize: none;
 }
 
 .button{
@@ -81,7 +69,8 @@
   border-radius : 10px;
   background-color: #b52b1d;
   color:#ffffff;
-  font-size: 11px;
+  font-size: 10px;
+  font-weight: bold;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   transition-duration: 0.4s;
   text-align : center;
@@ -116,12 +105,14 @@ export default {
         name: '',
         description: "",
         endAt: null,
-      }
+      },
+      errorMessage : "",
     };
   },
   methods:{
     async createEvent(){
       const uri = "/api/events";
+      this.errorMessage = "";
       try {
         const token = this.$store.getters['getToken'];
         console.log("Token récupéré du store: ", token);
@@ -129,6 +120,23 @@ export default {
         if (!token) {
           return;
         }
+
+        if (!this.event.name.trim()) {
+          this.errorMessage = "Le nom de l'évènement doit être rempli.";
+          return;
+        }
+
+        if(!this.event.endAt){
+          this.errorMessage = "La date de fin d'inscription doit être remplie.";
+          return;
+        }
+
+        if(!this.event.description.trim()){
+          this.errorMessage = "La description doit être remplie.";
+          return;
+        }
+
+
 
         const eventData = {
           event:{
@@ -155,7 +163,10 @@ export default {
         this.$router.push({name:"EventPage"});
 
       } catch (error) {
-        console.error('Erreur:', error.response ? error.response.data : error.message);
+        this.errorMessage = error.response
+            ? error.response.data.error || "Une erreur est survenue."
+            : error.message;
+        console.error("Erreur:", this.errorMessage);
       }
     }
   }
