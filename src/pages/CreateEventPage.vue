@@ -10,9 +10,9 @@
           <h2>Créer un évènement</h2>
             <div class="input-div">
               <p>Titre :</p>
-              <input type="text" v-model="event.title" required />
+              <input type="text" v-model="event.name" required />
               <p>Date :</p>
-              <input type="date" v-model="event.registrationEndDate" required />
+              <input type="date" v-model="event.endAt" required />
               <p>Description</p>
               <textarea v-model="event.description" required/>
               <div class="button-div">
@@ -113,9 +113,9 @@ export default {
   data() {
     return {
       event: {
-        title: '',
+        name: '',
         description: "",
-        registrationEndDate: ''
+        endAt: null,
       }
     };
   },
@@ -127,18 +127,14 @@ export default {
         console.log("Token récupéré du store: ", token);
 
         if (!token) {
-          alert('Vous devez être connecté pour créer un événement.');
           return;
         }
 
         const eventData = {
           event:{
-            name: this.event.title,
+            name: this.event.name,
             description: this.event.description,
-            endAt: this.event.registrationEndDate,
-            dirigeantId: null,
-            createdAT: null,
-            participants: []
+            endAt: this.event.endAt,
           }
         };
 
@@ -160,7 +156,6 @@ export default {
 
       } catch (error) {
         console.error('Erreur:', error.response ? error.response.data : error.message);
-        alert("Erreur lors de la création de l'événement.");
       }
     }
   }
