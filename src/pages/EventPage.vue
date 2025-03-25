@@ -8,19 +8,25 @@ export default defineComponent({
   components: { BoutonsHeader, LogoTTM },
   data() {
     return {
-      events: [], // Stocke les événements récupérés
+      events: [],
     };
   },
   async mounted() {
     await this.fetchEvents();
   },
   methods: {
+    goToDetail(event) {
+      if (!event || !event.eventId) {
+        console.error("Erreur : l'eventId est manquant !");
+        return;
+      }
+      this.$router.push({ name: "DetailEventPage", params: { eventId: event.eventId } });
+    },
     async fetchEvents() {
       const uri = "/api/events";
       try {
         const token = this.$store.getters["getToken"];
         if (!token) {
-          alert("Veuillez vous connecter pour voir les événements.");
           this.$router.push("/");
           return;
         }
@@ -41,7 +47,6 @@ export default defineComponent({
         }
       } catch (error) {
         console.error("Erreur lors de la requête :", error);
-        alert("Impossible de récupérer les événements.");
       }
     },
   },
@@ -64,7 +69,7 @@ export default defineComponent({
           <p>Aucun événement disponible.</p>
         </div>
         <div class="event-container">
-          <div v-for="event in events" :key="event.id" class="event-item">
+          <div v-for="event in events" :key="event.eventId" class="event-item" @click="goToDetail(event)">
             <h3>{{ event.name }}</h3>
             <p><strong>Date de fin :</strong> {{ event.endAt }}</p>
             <p>{{ event.description }}</p>
