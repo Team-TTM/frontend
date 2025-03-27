@@ -14,26 +14,26 @@ export default defineComponent({
         eventId : null,
         dirigeantId : null,
         name: '',
-        description: "",
+        description: '',
         createdAt : '',
-        endAt: null,
-        participants: [],
+        endAt: '',
+        participants : [],
       },
-      editableEvent: {
-        eventId : null,
-        dirigeantId : null,
-        name: '',
-        description: "",
-        createdAt : '',
-        endAt: null,
-        participants: [],
-      }
     };
   },
   async mounted() {
     await this.fetchEvent();
   },
   methods: {
+
+    formatEventDate(dateString) {
+      if (!dateString) return null; // Vérifie si la date est null
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    },
     async saveChanges(){
       const uri = "/api/events";
         const token = this.$store.getters['getToken'];
@@ -43,17 +43,17 @@ export default defineComponent({
           return;
         }
 
-        const eventData = {
-          editableEvent: {
-            eventId: this.editableEvent.eventId,
-            dirigeantId: this.editableEvent.dirigeantId,
-            name: this.editableEvent.name,
-            description: this.editableEvent.description,
-            createdAt: this.editableEvent.createdAt,
-            endAt: this.editableEvent.endAt,
-            participants: this.editableEvent.participants,
+      console.log("eventId:", this.event.eventId); // Vérifie la valeur avant l'envoi
+
+      const eventData = {
+          event:{
+            eventId: this.event.eventId,
+            name: this.event.name,
+            description: this.event.description,
+            endAt: this.event.endAt,
           }
         };
+
 
         console.log("Données envoyées :", eventData);
 
@@ -63,7 +63,7 @@ export default defineComponent({
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
+              "Content-Type":"application/json"
             }
           }
         );
@@ -76,9 +76,6 @@ export default defineComponent({
     },
     startEditing(){
       this.isEditing = true
-    },
-    editEvent(){
-
     },
     async deleteEvent() {
       if (!confirm("Voulez-vous vraiment supprimer cet événement ?")) return;
@@ -145,18 +142,18 @@ export default defineComponent({
           <h2>Détail de l'évènement</h2>
           <div v-if="!isEditing">
             <p><strong>Titre :</strong> {{ event.name }}</p>
-            <p><strong>Date :</strong> {{ event.createdAt }}</p>
+            <p><strong>Date :</strong> {{ this.formatEventDate(event.endAt) }}</p>
             <p><strong>Description :</strong> {{ event.description }}</p>
             <button class="bouton" @click="startEditing">Editer</button>
             <button class="bouton" @click="deleteEvent">Supprimer</button>
           </div>
           <div class="input-container" v-else>
             <p>Nom de l'évènement : </p>
-            <input v-model="editableEvent.name" title="Nom de l'évènement">
+            <input v-model="event.name" title="Nom de l'évènement">
             <p>Date de fin d'inscription : </p>
-            <input v-model="editableEvent.createdAt" type="date" title="Date de fin d'inscription">
+            <input v-model="event.endAt" type="date" title="Date de fin d'inscription">
             <p>Description : </p>
-            <textarea rows="10" cols="30" v-model="editableEvent.description" title="Description"/>
+            <textarea rows="10" cols="30" v-model="event.description" title="Description"/>
             <button class="bouton" @click="saveChanges">Enregistrer</button>
             <button class="bouton" @click="cancelEditing">Annuler</button>
           </div>
