@@ -15,6 +15,14 @@ export default defineComponent({
     await this.fetchEvents();
   },
   methods: {
+    formatEventDate(dateString) {
+      if (!dateString) return null; // Vérifie si la date est null
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    },
     goToDetail(event) {
       if (!event || !event.eventId) {
         console.error("Erreur : l'eventId est manquant !");
@@ -71,7 +79,7 @@ export default defineComponent({
         <div class="event-container">
           <div v-for="event in events" :key="event.eventId" class="event-item" @click="goToDetail(event)">
             <h3>{{ event.name }}</h3>
-            <p><strong>Date de fin :</strong> {{ event.endAt }}</p>
+            <p><strong>Date de fin d'inscription :</strong> {{ this.formatEventDate(event.endAt) }}</p>
             <p>{{ event.description }}</p>
           </div>
         </div>
