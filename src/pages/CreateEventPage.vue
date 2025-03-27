@@ -16,8 +16,8 @@
               <p>Description</p>
               <textarea rows="10" cols="30" v-model="event.description" required />
               <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-              <div class="button-div">
-                <button class="button" @click="createEvent">Créer</button>
+              <div class="bouton-creer-div">
+                <button class="bouton-creer" @click="createEvent">Créer</button>
               </div>
             </div>
         </div>
@@ -61,27 +61,34 @@
   align-items: center;
 }
 
-.button{
-  width :6vw;
-  height: 4vh;
+.bouton-creer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   border: none;
   border-radius : 10px;
   background-color: #b52b1d;
   color:#ffffff;
-  font-size: 10px;
+  padding: 1vw 2vw;
   font-weight: bold;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   transition-duration: 0.4s;
-  text-align : center;
   text-transform: uppercase;
   margin: 10px;
+  white-space: nowrap;
 }
 
-.button:hover{
+.bouton-creer:hover{
   background-color: #ffffff;
   color:#b52b1d;
   box-shadow : 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.bouton-creer-div{
+  display : flex;
+  justify-content : center;
+  align-items : center;
 }
 
 .input-div{
@@ -135,8 +142,6 @@ export default {
           this.errorMessage = "La description doit être remplie.";
           return;
         }
-
-
 
         const eventData = {
           event:{
