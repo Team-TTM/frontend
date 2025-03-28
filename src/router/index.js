@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import AuthentificationPage from '@/pages/AuthentificationPage.vue'; // Assurez-vous que le chemin est correct
 import VerifyLicencePage from '@/pages/VerifyLicencePage.vue'; // Si une page "Signup" existe
+import InscriptionPage from '@/pages/InscriptionPage.vue';
+import connexionPage from '@/pages/ConnexionPage.vue';
 import ConnectedPage from "@/pages/ConnectedPage.vue";
 import CsvListeAdherent from "@/pages/CsvListeAdherent.vue";
 import ClubPage from "@/pages/ClubPage.vue";
@@ -79,6 +81,16 @@ const routes = [
     path : '/users/StagePage',
     name : 'StagePage',
     component: StagePage
+  },
+  {
+    path: '/users/inscription',
+    name: 'Inscription',
+    component: InscriptionPage
+  },
+  {
+    path: '/users/connexion',
+    name: 'Connexion',
+    component: connexionPage
   }
 ];
 
