@@ -33,9 +33,6 @@
               <button @click="uploadCSV" :disabled="!file" class="import-button"
                       :class="file ? 'active-import' : 'disabled-import'">Importer</button>
             </div>
-
-            <!-- Message de statut -->
-
             <p v-if="message" :class="messageType" class="status-message">{{ message }}</p>
           </div>
         </div>
@@ -154,7 +151,7 @@ export default {
   components: {BoutonsHeader, LogoTTM},
   data() {
     return {
-      adherents: [
+      adherents: [/*
         {
           numeroLicence: "B81769C7180418MCAFRA", prenom: "Jean", nom: "Dupont", statut: true, type: "B - Lic. club - Compétition - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "6 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
         },
@@ -187,7 +184,7 @@ export default {
         },
         {
           numeroLicence: "D75417C8901234MRAFRA", prenom: "Romain", nom: "Jean", statut: false, type: "D - Licence club - Loisir - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "6 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
-        }
+        }*/
       ],
       licences: {
         "A - Lic. club - Compétition - Jeune": "A - Lic. club - Compétition - Jeune",
@@ -386,16 +383,16 @@ export default {
     },
   },
 
-  async mounted() {
+  /*async mounted() {
     try {
       await this.uploadCSV();
       this.adherentsFiltres = [...this.adherents];
     } catch (error) {
       console.error("Erreur :", error);
     }
-  },
+  },*/
 
-  /*async mounted() {
+  async mounted() {
     const uri = "/users/getAllAdherents";
     try {
       const token = this.$store.getters['getToken'];
@@ -418,7 +415,7 @@ export default {
       console.error("Erreur lors de la requête :", error);
     }
   },
-*/
+
 };
 </script>
 
