@@ -244,6 +244,6 @@ main{
 /* Responsive */
 @media (max-width: 1024px) {
   .main-container {
-    width: 95%;
+    width: 100%;
   }
 }
