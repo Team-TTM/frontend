@@ -25,7 +25,6 @@ export default defineComponent({
     },
     goToDetail(event) {
       if (!event || !event.eventId) {
-        console.error("Erreur : l'eventId est manquant !");
         return;
       }
       this.$router.push({ name: "DetailEventPage", params: { eventId: event.eventId } });

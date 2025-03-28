@@ -25,7 +25,12 @@ export default defineComponent({
     await this.fetchEvent();
   },
   methods: {
-
+    goToEdit() {
+      if (!this.event || !this.event.eventId) {
+        return;
+      }
+      this.$router.push({ name: "EditEventPage", params: { eventId: this.event.eventId } });
+    },
     formatEventDate(dateString) {
       if (!dateString) return null; // Vérifie si la date est null
       const date = new Date(dateString);
@@ -33,49 +38,6 @@ export default defineComponent({
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const year = date.getFullYear();
       return `${day}/${month}/${year}`;
-    },
-    async saveChanges(){
-      const uri = "/api/events";
-        const token = this.$store.getters['getToken'];
-        console.log("Token récupéré du store: ", token);
-
-        if (!token) {
-          return;
-        }
-
-      console.log("eventId:", this.event.eventId); // Vérifie la valeur avant l'envoi
-
-      const eventData = {
-          event:{
-            eventId: this.event.eventId,
-            name: this.event.name,
-            description: this.event.description,
-            endAt: this.event.endAt,
-          }
-        };
-
-
-        console.log("Données envoyées :", eventData);
-
-        await axios.put(
-          uri,
-          eventData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type":"application/json"
-            }
-          }
-        );
-
-        alert('Évènement modifié avec succès !');
-        this.$router.push({name: "EventPage"});
-    },
-    cancelEditing(){
-      this.isEditing = false
-    },
-    startEditing(){
-      this.isEditing = true
     },
     async deleteEvent() {
       if (!confirm("Voulez-vous vraiment supprimer cet événement ?")) return;
@@ -140,22 +102,12 @@ export default defineComponent({
       <div class="principal-container">
         <div class="detail-event-container">
           <h2>Détail de l'évènement</h2>
-          <div v-if="!isEditing">
+          <div>
             <p><strong>Titre :</strong> {{ event.name }}</p>
             <p><strong>Date :</strong> {{ this.formatEventDate(event.endAt) }}</p>
             <p><strong>Description :</strong> {{ event.description }}</p>
-            <button class="bouton" @click="startEditing">Editer</button>
+            <button class="bouton" @click="goToEdit">Editer</button>
             <button class="bouton" @click="deleteEvent">Supprimer</button>
-          </div>
-          <div class="input-container" v-else>
-            <p>Nom de l'évènement : </p>
-            <input v-model="event.name" title="Nom de l'évènement">
-            <p>Date de fin d'inscription : </p>
-            <input v-model="event.endAt" type="date" title="Date de fin d'inscription">
-            <p>Description : </p>
-            <textarea rows="10" cols="30" v-model="event.description" title="Description"/>
-            <button class="bouton" @click="saveChanges">Enregistrer</button>
-            <button class="bouton" @click="cancelEditing">Annuler</button>
           </div>
         </div>
       </div>
@@ -213,14 +165,6 @@ export default defineComponent({
   flex-direction: column;
   justify-content: start;
   align-items: center;
-}
-
-.input-container{
-  display : flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin : 10px;
 }
 
 </style>
