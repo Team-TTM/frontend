@@ -1,14 +1,17 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import AuthentificationPage from '@/pages/AuthentificationPage.vue'; // Assurez-vous que le chemin est correct
 import VerifyLicencePage from '@/pages/VerifyLicencePage.vue'; // Si une page "Signup" existe
-import ConnectedPage from "@/pages/ConnectedPage.vue";
-import CsvListeAdherent from "@/pages/CsvListeAdherent.vue";
-import ClubPage from "@/pages/ClubPage.vue";
-import EntrainementPage from "@/pages/EntrainementPage.vue";
-import HomePage from "@/pages/HomePage.vue";
-import EventPage from "@/pages/EventPage.vue";
-import StagePage from "@/pages/StagePage.vue";
-import CreateEventPage from "@/pages/CreateEventPage.vue";
+import ConnectedPage from '@/pages/ConnectedPage.vue';
+import CsvListeAdherent from '@/pages/CsvListeAdherent.vue';
+import ClubPage from '@/pages/ClubPage.vue';
+import EntrainementPage from '@/pages/EntrainementPage.vue';
+import HomePage from '@/pages/HomePage.vue';
+import EventPage from '@/pages/EventPage.vue';
+import StagePage from '@/pages/StagePage.vue';
+import CreateEventPage from '@/pages/CreateEventPage.vue';
+import InscriptionPage from '@/pages/InscriptionPage.vue';
+import connexionPage from '@/pages/ConnexionPage.vue';
+
 const routes = [
   {
     path: '/', // La route racine correspond à la page d'accueil
@@ -63,6 +66,16 @@ const routes = [
     path : '/users/StagePage',
     name : 'StagePage',
     component: StagePage
+  },
+  {
+    path: '/users/inscription',
+    name: 'Inscription',
+    component: InscriptionPage
+  },
+  {
+    path: '/users/connexion',
+    name: 'Connexion',
+    component: connexionPage
   }
 ];
 

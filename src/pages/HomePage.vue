@@ -24,24 +24,26 @@
   </footer>
 </template>
 
-<script>
-
+<script setup>
+import {onMounted} from 'vue';
 import LogoTTM from '@/components/LogoTTM.vue';
 import BoutonsHeader from '@/components/boutonsHeader.vue';
+import {useLoadingBar} from 'naive-ui';
+import {useStore} from 'vuex';
 
-export default {
-  components: {
-    LogoTTM,
-    BoutonsHeader,
-  },
-  mounted() {
-    const token = this.$route.query?.token;
-    if (token) {
-      this.$store.dispatch("login", token);
-      console.log("Token stocké :", this.$store.getters.isAuthenticated, this.$store.getters.getToken);
-    }
-  },
-};
+const loadingBar = useLoadingBar();
+const store = useStore();
+
+
+onMounted(() => {
+  const token = new URLSearchParams(window.location.search).get('token');
+  loadingBar.finish();
+
+  if (token) {
+    store.dispatch('login', token);
+    console.log('Token stocké :', store.getters.isAuthenticated, store.getters.getToken);
+  }
+});
 </script>
 <style scoped>
 
@@ -109,14 +111,6 @@ p{
   font-weight: bold;
   text-transform: uppercase;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-#instagram{
-  color:greenyellow;
-}
-
-#newsletter{
-  color:pink;
 }
 
 
