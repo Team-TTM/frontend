@@ -1,5 +1,5 @@
 <template>
-  <div id="page-container">
+  <div id="page-container" class="page-container">
     <header>
       <LogoTTM/>
       <boutons-header/>
@@ -7,26 +7,37 @@
     <div class="main-container">
       <h1 class="titre">Liste des Adhérents</h1>
       <div class="panel-adherents">
+
         <div class="filters-container">
-          <input
-            type="text"
-            v-model="rechercheTexte"
-            class="recherche-input"
-            placeholder="Rechercher"
-            @input="filtrerAdherents"
+          <input type="text" v-model="rechercheTexte" class="recherche-input"
+                 placeholder="Rechercher" @input="filtrerAdherents"
           />
+
           <select ref="combobox" v-model="typeLicenceSelectionnee"  class="combobox" @change="filtrerAdherents">
             <option value="">Tous les types de licence ({{ totalAdherents }})</option>
             <option v-for="(label, key) in licences" :key="key" :value="key">
-              {{ label }} ({{ occurrences[key] || 0 }})
+              {{ label.replace(/(Lic\. club - |Licence club - )/, '') }} ({{ occurrences[key] || 0 }})
             </option>
-
           </select>
 
           <label class="checkbox-container">
             <input type="checkbox" v-model="filtreLicenceValide" @change="filtrerAdherents" />
             <span>Afficher seulement les licences valides</span>
           </label>
+
+          <div class="import-container">
+            <label for="fileUpload" class="label-text">Importer un fichier :</label>
+            <div class="button-container">
+              <input type="file" id="fileUpload" accept=".xls,.xlsx" @change="handleFileUpload" class="file-input"/>
+
+              <button @click="uploadCSV" :disabled="!file" class="import-button"
+                      :class="file ? 'active-import' : 'disabled-import'">Importer</button>
+            </div>
+
+            <!-- Message de statut -->
+
+            <p v-if="message" :class="messageType" class="status-message">{{ message }}</p>
+          </div>
         </div>
 
         <div class="container-liste-adherent">
@@ -34,26 +45,22 @@
             <table class="table">
               <thead>
               <tr>
-                <th @click="trierAdherents('numeroLicence')"
-                    :class="{'trie-asc': colonneTriee === 'numeroLicence' && ordreTriAscendant,
+                <th @click="trierAdherents('numeroLicence')" :class="{'trie-asc': colonneTriee === 'numeroLicence' && ordreTriAscendant,
                'trie-desc': colonneTriee === 'numeroLicence' && !ordreTriAscendant}">
                   Numéro Licence
                 </th>
 
-                <th @click="trierAdherents('prenom')"
-                    :class="{'trie-asc': colonneTriee === 'prenom' && ordreTriAscendant,
+                <th @click="trierAdherents('prenom')" :class="{'trie-asc': colonneTriee === 'prenom' && ordreTriAscendant,
                'trie-desc': colonneTriee === 'prenom' && !ordreTriAscendant}">
                   Prénom
                 </th>
 
-                <th @click="trierAdherents('nom')"
-                    :class="{'trie-asc': colonneTriee === 'nom' && ordreTriAscendant,
+                <th @click="trierAdherents('nom')" :class="{'trie-asc': colonneTriee === 'nom' && ordreTriAscendant,
                'trie-desc': colonneTriee === 'nom' && !ordreTriAscendant}">
                   Nom
                 </th>
 
-                <th @click="trierAdherents('ville')"
-                    :class="{'trie-asc': colonneTriee === 'ville' && ordreTriAscendant,
+                <th @click="trierAdherents('ville')" :class="{'trie-asc': colonneTriee === 'ville' && ordreTriAscendant,
                'trie-desc': colonneTriee === 'ville' && !ordreTriAscendant}">
                   Ville
                 </th>
@@ -64,14 +71,12 @@
                   Mobile
                 </th>
 
-                <th @click="trierAdherents('email')"
-                    :class="{'trie-asc': colonneTriee === 'email' && ordreTriAscendant,
+                <th @click="trierAdherents('email')" :class="{'trie-asc': colonneTriee === 'email' && ordreTriAscendant,
                'trie-desc': colonneTriee === 'email' && !ordreTriAscendant}">
                   Email
                 </th>
 
-                <th @click="trierAdherents('statut')"
-                    :class="{'trie-asc': colonneTriee === 'statut' && ordreTriAscendant,
+                <th @click="trierAdherents('statut')" :class="{'trie-asc': colonneTriee === 'statut' && ordreTriAscendant,
                'trie-desc': colonneTriee === 'statut' && !ordreTriAscendant}">
                   Statut
                 </th>
@@ -151,13 +156,37 @@ export default {
     return {
       adherents: [
         {
-          numeroLicence: "B81769C7180418MCAFRA", prenom: "Jean", nom: "Dupont", statut: true, type: "B - Lic. club - Compétition - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "06 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
+          numeroLicence: "B81769C7180418MCAFRA", prenom: "Jean", nom: "Dupont", statut: true, type: "B - Lic. club - Compétition - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "6 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
         },
         {
-          numeroLicence: "B789012C654321MRAFRA", prenom: "Sophie", nom: "Martin", statut: true, type: "D - Licence club - Loisir - S. & V.", demiTarif: true, horsClub: false, categorie: "Junior", anneeBlanche: true, pratique: "Ne pratique pas", nomUsage: "Martin", dateNaissance: "2002-07-14", sexe: "Femme", profession: "Étudiante", adressePrincipale: "22 rue des Lilas", details: "Bâtiment A", lieuDit: "Quartier Saint-Pierre", codePostal: "69001", ville: "Lyon", pays: "France", telephone: "04 56 78 90 12", mobile: "06 23 45 67 89", email: "sophie.martin@example.com", urgenceTelephone: "06 54 32 10 98", saison: ["2023/2024"]
+          numeroLicence: "B789012C654321MRAFRA", prenom: "Sophie", nom: "Martin", statut: true, type: "A - Lic. club - Compétition - Jeune", demiTarif: true, horsClub: false, categorie: "Junior", anneeBlanche: true, pratique: "Ne pratique pas", nomUsage: "Martin", dateNaissance: "2002-07-14", sexe: "Femme", profession: "Étudiante", adressePrincipale: "22 rue des Lilas", details: "Bâtiment A", lieuDit: "Quartier Saint-Pierre", codePostal: "69001", ville: "Lyon", pays: "France", telephone: "04 56 78 90 12", mobile: "6 23 45 67 89", email: "sophie.martin@example.com", urgenceTelephone: "06 54 32 10 98", saison: ["2023/2024"]
         },
         {
-          numeroLicence: "B34567C8901234MRAFRA", prenom: "Paul", nom: "Lemoine", statut: false, type: "C - Lic. club - Loisir - Jeune", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "06 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
+          numeroLicence: "B34567C8901234MRAFRA", prenom: "Paul", nom: "Lemoine", statut: false, type: "D - Licence club - Loisir - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "6 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
+        },{
+          numeroLicence: "B4576107180418LCAFRA", prenom: "Luc", nom: "Leroux", statut: true, type: "B - Lic. club - Compétition - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "6 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
+        },
+        {
+          numeroLicence: "B749012C654321MRAFRA", prenom: "Sophie", nom: "Eric", statut: true, type: "A - Lic. club - Loisir - Jeune", demiTarif: true, horsClub: false, categorie: "Junior", anneeBlanche: true, pratique: "Ne pratique pas", nomUsage: "Martin", dateNaissance: "2002-07-14", sexe: "Femme", profession: "Étudiante", adressePrincipale: "22 rue des Lilas", details: "Bâtiment A", lieuDit: "Quartier Saint-Pierre", codePostal: "69001", ville: "Lyon", pays: "France", telephone: "04 56 78 90 12", mobile: "6 23 45 67 89", email: "sophie.martin@example.com", urgenceTelephone: "06 54 32 10 98", saison: ["2023/2024"]
+        },
+        {
+          numeroLicence: "B34517C8901234MRAFRA", prenom: "Romain", nom: "Jean", statut: false, type: "D - Licence club - Loisir - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "6 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
+        },{
+          numeroLicence: "B41769C7180418MCAFRA", prenom: "Jean", nom: "Dupont", statut: true, type: "B - Lic. club - Compétition - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "6 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
+        },
+        {
+          numeroLicence: "B789012C654321MRAFRA", prenom: "Sophie", nom: "Martin", statut: true, type: "A - Lic. club - Compétition - Jeune", demiTarif: true, horsClub: false, categorie: "Junior", anneeBlanche: true, pratique: "Ne pratique pas", nomUsage: "Martin", dateNaissance: "2002-07-14", sexe: "Femme", profession: "Étudiante", adressePrincipale: "22 rue des Lilas", details: "Bâtiment A", lieuDit: "Quartier Saint-Pierre", codePostal: "69001", ville: "Lyon", pays: "France", telephone: "04 56 78 90 12", mobile: "6 23 45 67 89", email: "sophie.martin@example.com", urgenceTelephone: "06 54 32 10 98", saison: ["2023/2024"]
+        },
+        {
+          numeroLicence: "A34567C8901234MRAFRA", prenom: "Paul", nom: "Lemoine", statut: false, type: "D - Licence club - Loisir - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "6 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
+        },{
+          numeroLicence: "C1576107180418LCAFRA", prenom: "Luc", nom: "Leroux", statut: true, type: "B - Lic. club - Compétition - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "6 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
+        },
+        {
+          numeroLicence: "C654012C654321MRAFRA", prenom: "Sophie", nom: "Eric", statut: true, type: "A - Lic. club - Loisir - Jeune", demiTarif: true, horsClub: false, categorie: "Junior", anneeBlanche: true, pratique: "Ne pratique pas", nomUsage: "Martin", dateNaissance: "2002-07-14", sexe: "Femme", profession: "Étudiante", adressePrincipale: "22 rue des Lilas", details: "Bâtiment A", lieuDit: "Quartier Saint-Pierre", codePostal: "69001", ville: "Lyon", pays: "France", telephone: "04 56 78 90 12", mobile: "6 23 45 67 89", email: "sophie.martin@example.com", urgenceTelephone: "06 54 32 10 98", saison: ["2023/2024"]
+        },
+        {
+          numeroLicence: "D75417C8901234MRAFRA", prenom: "Romain", nom: "Jean", statut: false, type: "D - Licence club - Loisir - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "6 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
         }
       ],
       licences: {
@@ -175,9 +204,15 @@ export default {
       rechercheTexte: "",
       colonneTriee: null,
       ordreTriAscendant: true, // Sens du tri (true = ascendant, false = descendant)
+      file: null,
+      message: "",
+      messageType: "", // success ou error
     };
   },
   methods: {
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
     afficherDetails(numeroLicence) {
       this.adherentSelectionne = this.adherentSelectionne === numeroLicence ? null : numeroLicence;
     },
@@ -191,6 +226,7 @@ export default {
     convertirBoolenEnOuiNon(value) {
       return value ? 'Oui' : 'Non';
     },
+
     convertirSexe(sexe) {
       if (sexe === 'F') {
         return 'Femme';
@@ -208,17 +244,17 @@ export default {
         return "Compétition - S. & V.";
       } else if (type.includes("Compétition - Jeune")) {
         return "Compétition - Jeune";
-      } else if (type.includes("Loisir - S. & V.")){
+      } else if (type.includes("Loisir - S. & V.")) {
         return "Loisir - S. & V.";
-      } else if (type.includes("Loisir - Jeune")){
+      } else if (type.includes("Loisir - Jeune")) {
         return "Loisir - Jeune";
-      } else if (type.includes("Paratriathlon - Lic. club - Compétition  - S. & V.")){
+      } else if (type.includes("Paratriathlon - Lic. club - Compétition  - S. & V.")) {
         return "Paratriathlon - Compétition  - S. & V.";
-      } else if (type.includes("Paratriathlon - Lic. club - Compétition - Jeune")){
+      } else if (type.includes("Paratriathlon - Lic. club - Compétition - Jeune")) {
         return "Paratriathlon - Compétition - Jeune";
-      } else if (type.includes("Paratriathlon - Lic. club - Loisir  - S. & V.")){
+      } else if (type.includes("Paratriathlon - Lic. club - Loisir  - S. & V.")) {
         return "Paratriathlon - Loisir  - S. & V.";
-      } else if (type.includes("Paratriathlon - Lic. club - Loisir - Jeune")){
+      } else if (type.includes("Paratriathlon - Lic. club - Loisir - Jeune")) {
         return "Paratriathlon - Loisir - Jeune";
       } else if (type.includes("Dirigeant")) {
         return "Dirigeant";
@@ -279,6 +315,62 @@ export default {
         if (valeurA < valeurB) return this.ordreTriAscendant ? -1 : 1;
         return 0;
       });
+    },
+    handleFileUpload(event) {
+      this.file = event.target.files[0];
+      console.log(event);
+    },
+    async uploadCSV() {
+      const uri = "/api/import/adherent";
+
+      if (!this.file) {
+        this.message = "Veuillez sélectionner un fichier.";
+        this.messageType = "error";
+        return;
+      }
+
+      let formData = new FormData();
+      formData.append("excel", this.file); // Doit correspondre à "excel" défini dans l'OpenAPI
+
+      try {
+        const token = this.$store.getters['getToken'];
+        console.log(token);
+
+        const response = await axios.post(uri, {excel: this.file}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          }
+        });
+        console.log(response.status);
+        if (response.status === 200) {
+          this.message = `Importation réussie ! ${response.data.add} ajout(s), ${response.data.update} mise(s) à jour.`;
+          this.messageType = "success";
+        } else {
+          console.error("Erreur de récupération :", response.status);
+          this.$router.push("/");
+        }
+
+      } catch (error) {
+        if (error.response) {
+          switch (error.response.status) {
+            case 400:
+              this.message = "Erreur de format ou données invalides.";
+              break;
+            case 401:
+              this.message = "Non autorisé. Vérifiez votre connexion.";
+              break;
+            case 500:
+              this.message = "Erreur interne du serveur.";
+              break;
+            default:
+              this.message = "Une erreur inconnue est survenue.";
+          }
+        } else {
+          this.message = "Impossible de contacter le serveur.";
+        }
+        this.messageType = "error";
+      }
     }
   },
   computed: {
@@ -294,8 +386,16 @@ export default {
     },
   },
 
-
   async mounted() {
+    try {
+      await this.uploadCSV();
+      this.adherentsFiltres = [...this.adherents];
+    } catch (error) {
+      console.error("Erreur :", error);
+    }
+  },
+
+  /*async mounted() {
     const uri = "/users/getAllAdherents";
     try {
       const token = this.$store.getters['getToken'];
@@ -306,34 +406,30 @@ export default {
           'Content-Type': 'application/json'
         }
       });
-      if(response.status !== 200){
+      if (response.status !== 200) {
         this.$router.push('/');
       }
+      await this.uploadCSV();
       this.adherents = response.data;
       this.adherentsFiltres = [...this.adherents];
 
-    }
-    catch
-      (error)
-    {
+    } catch
+      (error) {
       console.error("Erreur lors de la requête :", error);
     }
-  }
-  /*async mounted() {
-    try {
-      this.adherentsFiltres = [...this.adherents];
-    } catch (error) {
-      console.error("Erreur :", error);
-    }
-  }*/
+  },
+*/
 };
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Playfair+Display:wght@700&display=swap');
 
+
+.page-container {
+  overflow: auto;
+}
 .titre {
   position: relative;
   background-color: rgba(255, 255, 255, 0.95);
@@ -351,11 +447,7 @@ export default {
   letter-spacing: 1px;
 }
 
-
-
-
 .panel-adherents {
-
   margin-top:10px;
   width: 95%;
   max-width: 1400px;
@@ -380,9 +472,23 @@ export default {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+
 }
 
+/* Ajouter une barre de défilement personnalisée pour une meilleure expérience utilisateur */
+.filters-container::-webkit-scrollbar {
+  height: 8px; /* Hauteur de la barre de défilement */
+}
 
+.filters-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* Couleur du "thumb" de la barre */
+  border-radius: 4px;
+}
+
+.filters-container::-webkit-scrollbar-track {
+  background-color: transparent; /* Couleur du fond de la barre */
+}
 
 .combobox {
   padding: 8px; /* Ajoute un espace intérieur */
@@ -394,7 +500,6 @@ export default {
 }
 
 .checkbox-container {
-
   display: flex;
   align-items: center;
   font-size: 16px;
@@ -413,14 +518,25 @@ export default {
   overflow: hidden;
 }
 
-
+thead {
+  position: sticky;
+  top: 0;
+  background: white; /* S'assurer que l'en-tête ne soit pas transparent */
+  z-index: 10; /* Mettre l'en-tête au-dessus du reste */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optionnel: Ajoute une ombre pour démarquer l'en-tête */
+}
 
 th {
+  position: sticky;
   cursor: pointer;
-  position: relative;
+  top: 0;
+  z-index: 10; /* Mettre l'en-tête au-dessus du reste */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optionnel: Ajoute une ombre pour démarquer l'en-tête */
   padding: 10px;
   user-select: none;
-  border-radius: 5px; /* Coins arrondis */
+  border-radius: 5px;
+  background: #f3f4f6; /* Couleur de fond */
+  text-align: left;
   transition: all 0.2s ease-in-out;
 }
 
@@ -462,6 +578,7 @@ th.non-triable::after {
 }
 
 
+
 td {
   padding: 12px;
   border-bottom: 1px solid #e0e0e0;
@@ -477,8 +594,9 @@ tr:hover {
   transition: background 0.3s ease;
 }
 .table-wrapper {
-  max-height: 60vh;
+  max-height: 500px;
   overflow-y: auto;
+
 }
 .table-wrapper::-webkit-scrollbar {
   width: 8px;
@@ -553,4 +671,83 @@ header a {
   color: #aaa; /* Couleur du texte de placeholder */
   font-style: italic; /* Style en italique */
 }
+
+
+/* Conteneur principal */
+.import-container {
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Label */
+.label-text {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #4B5563;
+  margin-bottom: 0.5rem;
+}
+
+/* Conteneur des boutons */
+.button-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+/* Input file invisible */
+.file-input {
+  padding: 0.5rem 1rem;
+  background-color: #2563EB;
+  color: white;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+}
+
+.file-input:hover {
+  background-color: #1D4ED8;
+}
+
+/* Bouton Importer */
+.import-button {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+/* État actif du bouton Importer */
+.active-import {
+  background-color: #10B981;
+  color: white;
+}
+
+.active-import:hover {
+  background-color: #059669;
+}
+
+/* État désactivé du bouton Importer */
+.disabled-import {
+  background-color: #D1D5DB;
+  color: #6B7280;
+  cursor: not-allowed;
+}
+
+.disabled-import:hover {
+  background-color: #D1D5DB;
+}
+
+/* Message de statut */
+.status-message {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
 </style>
