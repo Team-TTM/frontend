@@ -1,9 +1,10 @@
-import { createStore } from "vuex";
+import {createStore} from 'vuex';
 
 export const store = createStore({
   state() {
     return {
-      token: localStorage.getItem("auth_token") || null,
+      token: null,
+      role: null
     };
   },
 
@@ -14,26 +15,33 @@ export const store = createStore({
     getToken(state) {
       return state.token;
     },
-
+    getRole(state) {
+      return state.role;
+    }
   },
 
   mutations: {
     setAuthData(state,  token ) {
       state.token = token;
-      localStorage.setItem("auth_token", token);
     },
     logout(state) {
       state.token = null;
-      localStorage.removeItem("auth_token");
     },
+    setRole(state, role) {
+      state.role = role;
+    }
   },
 
   actions: {
     login({ commit }, token) {
       commit("setAuthData", token);
     },
+    setUser({commit}, user) {
+      commit('setRole', user);
+    },
     logout({ commit }) {
       commit("logout");
     },
+
   },
 });

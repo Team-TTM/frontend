@@ -8,19 +8,32 @@ export default defineComponent({
   components: { BoutonsHeader, LogoTTM },
   data() {
     return {
-      events: [], // Stocke les événements récupérés
+      events: [],
     };
   },
   async mounted() {
     await this.fetchEvents();
   },
   methods: {
+    formatEventDate(dateString) {
+      if (!dateString) return null; // Vérifie si la date est null
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    },
+    goToDetail(event) {
+      if (!event || !event.eventId) {
+        return;
+      }
+      this.$router.push({ name: "DetailEventPage", params: { eventId: event.eventId } });
+    },
     async fetchEvents() {
       const uri = "/api/events";
       try {
         const token = this.$store.getters["getToken"];
         if (!token) {
-          alert("Veuillez vous connecter pour voir les événements.");
           this.$router.push("/");
           return;
         }
@@ -41,7 +54,6 @@ export default defineComponent({
         }
       } catch (error) {
         console.error("Erreur lors de la requête :", error);
-        alert("Impossible de récupérer les événements.");
       }
     },
   },
@@ -57,16 +69,16 @@ export default defineComponent({
     <div class="main-container">
       <div class="principal-container">
         <h2>Liste des événements</h2>
-        <router-link to="/users/DetailEventPage">
+        <router-link to="/users/CreateEventPage">
           <button class="button">Créer un évènement</button>
         </router-link>
         <div v-if="events.length === 0">
           <p>Aucun événement disponible.</p>
         </div>
         <div class="event-container">
-          <div v-for="event in events" :key="event.id" class="event-item">
+          <div v-for="event in events" :key="event.eventId" class="event-item" @click="goToDetail(event)">
             <h3>{{ event.name }}</h3>
-            <p><strong>Date de fin :</strong> {{ event.endAt }}</p>
+            <p><strong>Date de fin d'inscription :</strong> {{ this.formatEventDate(event.endAt) }}</p>
             <p>{{ event.description }}</p>
           </div>
         </div>

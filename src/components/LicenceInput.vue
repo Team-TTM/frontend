@@ -16,6 +16,7 @@
 
 <script>
 import axios from "axios";
+import {userRole} from '@/enums/userRole.js';
 
 export default {
   data() {
@@ -84,6 +85,7 @@ export default {
     const token = this.$route.query.token;
     if (token) {
       this.$store.dispatch("login", token);
+      this.$router.dispatch('login', userRole.USER);
       console.log("Token stocké :", this.$store.getters.isAuthenticated, this.$store.getters.getToken);
     }
   }

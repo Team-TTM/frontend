@@ -1,3 +1,97 @@
+<script>
+import axios from 'axios';
+import BoutonsHeader from "@/components/boutonsHeader.vue";
+import LogoTTM from "@/components/LogoTTM.vue";
+import {defineComponent} from "vue";
+
+export default defineComponent({
+  components: { BoutonsHeader, LogoTTM },
+  props: ["eventId"],
+  data() {
+    return {
+      isEditing: false,
+      event: {
+        eventId : null,
+        dirigeantId : null,
+        name: '',
+        description: '',
+        createdAt : '',
+        endAt: '',
+        participants : [],
+      },
+    };
+  },
+  async mounted() {
+    await this.fetchEvent();
+  },
+  methods: {
+    goToEdit() {
+      if (!this.event || !this.event.eventId) {
+        return;
+      }
+      this.$router.push({ name: "EditEventPage", params: { eventId: this.event.eventId } });
+    },
+    formatEventDate(dateString) {
+      if (!dateString) return null; // Vérifie si la date est null
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    },
+    async deleteEvent() {
+      if (!confirm("Voulez-vous vraiment supprimer cet événement ?")) return;
+      try {
+        const token = this.$store.getters["getToken"];
+        if (!token) {
+          alert("Veuillez vous connecter pour supprimer cet événement.");
+          this.$router.push("/");
+          return;
+        }
+
+        await axios.delete(`/api/events/${this.eventId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        alert("Événement supprimé !");
+        this.$router.push("/users/EventPage");
+      } catch (error) {
+        console.error("Erreur lors de la suppression :", error);
+        alert("Une erreur est survenue lors de la suppression.");
+      }
+    },
+    async fetchEvent() {
+      const uri = `/api/events/${this.eventId}`;
+      try {
+        const token = this.$store.getters["getToken"];
+        if (!token) {
+          alert("Veuillez vous connecter pour voir les événements.");
+          this.$router.push("/");
+          return;
+        }
+
+        const response = await axios.get(uri, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 200) {
+          console.log("Données récupérées :", response.data);
+          this.event = response.data.event;
+        } else {
+          console.error("Erreur de récupération :", response.status);
+          this.$router.push("/");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la requête :", error);
+      }
+    },
+  },
+});
+</script>
+
 <template>
   <div id="page-container">
     <header>
@@ -7,17 +101,13 @@
     <div class="main-container">
       <div class="principal-container">
         <div class="detail-event-container">
-          <h2>Créer un évènement</h2>
-          <div class="input-div">
-            <p>Titre :</p>
-            <input type="text" v-model="event.title" required />
-            <p>Date :</p>
-            <input type="date" v-model="event.registrationEndDate" required />
-            <p>Description</p>
-            <textarea v-model="event.description" required/>
-            <div class="button-div">
-              <button class="button" @click="createEvent">Créer</button>
-            </div>
+          <h2>Détail de l'évènement</h2>
+          <div>
+            <p><strong>Titre :</strong> {{ event.name }}</p>
+            <p><strong>Date :</strong> {{ this.formatEventDate(event.endAt) }}</p>
+            <p><strong>Description :</strong> {{ event.description }}</p>
+            <button class="bouton" @click="goToEdit">Editer</button>
+            <button class="bouton" @click="deleteEvent">Supprimer</button>
           </div>
         </div>
       </div>
@@ -27,6 +117,29 @@
 </template>
 
 <style scoped>
+
+.bouton{
+  width : fit-content;
+  height: 4vh;
+  cursor: pointer;
+  border: none;
+  border-radius : 10px;
+  background-color: #b52b1d;
+  color:#ffffff;
+  font-size: min(5vw, 16px);
+  font-weight: bold;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  transition-duration: 0.4s;
+  text-align : center;
+  text-transform: uppercase;
+  margin: 10px;
+}
+
+.bouton:hover{
+  background-color: #ffffff;
+  color:#b52b1d;
+  box-shadow : 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
 
 .principal-container {
   display: flex;
@@ -47,123 +160,11 @@
 
 .detail-event-container{
   display : flex;
+  flex-wrap: wrap;
   width : 44vw;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
-
 }
 
-.uploaded-preview-container {
-  margin-top: 10px;
-  border-radius: 10px;
-  max-width: 300px;
-}
-
-.uploaded-preview {
-  max-width: 100%;
-  border-radius: 10px;
-}
-
-.description-container{
-  width:50%;
-}
-
-.description-container textarea {
-  resize: none;
-}
-
-.button{
-  width :6vw;
-  height: 4vh;
-  cursor: pointer;
-  border: none;
-  border-radius : 10px;
-  background-color: #b52b1d;
-  color:#ffffff;
-  font-size: 11px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  transition-duration: 0.4s;
-  text-align : center;
-  text-transform: uppercase;
-  margin: 10px;
-}
-
-.button:hover{
-  background-color: #ffffff;
-  color:#b52b1d;
-  box-shadow : 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-}
-
-.input-div{
-  display:flex;
-  flex-grow: 1;
-  flex-direction: column;
-  align-content: center;
-}
 </style>
-
-<script>
-import axios from 'axios';
-import BoutonsHeader from "@/components/boutonsHeader.vue";
-import LogoTTM from "@/components/LogoTTM.vue";
-
-export default {
-  components: {LogoTTM, BoutonsHeader},
-  data() {
-    return {
-      event: {
-        title: '',
-        description: "",
-        registrationEndDate: ''
-      }
-    };
-  },
-  methods:{
-    async createEvent(){
-      const uri = "/api/events";
-      try {
-        const token = this.$store.getters['getToken'];
-        console.log("Token récupéré du store: ", token);
-
-        if (!token) {
-          alert('Vous devez être connecté pour créer un événement.');
-          return;
-        }
-
-        const eventData = {
-          event:{
-            name: this.event.title,
-            description: this.event.description,
-            endAt: this.event.registrationEndDate,
-            dirigeantId: null,
-            createdAT: null,
-            participants: []
-          }
-        };
-
-        console.log("Données envoyées :", eventData);
-
-        await axios.post(
-          uri,
-          eventData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-
-        alert('Évènement créé avec succès !');
-
-      } catch (error) {
-        console.error('Erreur:', error.response ? error.response.data : error.message);
-        alert("Erreur lors de la création de l'événement.");
-      }
-    }
-  }
-};
-</script>
-
-
