@@ -33,7 +33,8 @@
               <button @click="uploadCSV" :disabled="!file" class="import-button"
                       :class="file ? 'active-import' : 'disabled-import'">Importer</button>
             </div>
-            <p v-if="message" :class="messageType" class="status-message">{{ message }}</p>
+            <div v-if="isLoading" class="loader"></div>
+            <p v-if="!isLoading && message" :class="messageType" class="status-message">{{ message }}</p>
           </div>
         </div>
 
@@ -204,7 +205,12 @@ export default {
       file: null,
       message: "",
       messageType: "", // success ou error
+      isLoading: false,
     };
+  },
+  async mounted() {
+    await this.getallAdherents();
+    await this.uploadCSV();
   },
   methods: {
     triggerFileInput() {
@@ -279,7 +285,6 @@ export default {
           return nomPrenomLicence.includes(searchText);
         });
       }
-
       // Mettre à jour adherentsFiltres
       this.adherentsFiltres = filteredAdherents;
     },
@@ -317,6 +322,34 @@ export default {
       this.file = event.target.files[0];
       console.log(event);
     },
+    async getallAdherents() {
+      const uri = "/users/getAllAdherents";
+      try {
+        const token = this.$store.getters["getToken"];
+        console.log(token);
+
+        if (!token) {
+          alert("Veuillez vous connecter voir les adhérents.");
+          this.$router.push("/");
+          return;
+        }
+        const response = await axios.get(uri, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        if (response.status !== 200) {
+          this.$router.push('/');
+        }
+        this.adherents = response.data;
+        this.adherentsFiltres = [...this.adherents];
+
+      } catch
+        (error) {
+        console.error("Erreur lors de la requête :", error);
+      }
+    },
     async uploadCSV() {
       const uri = "/api/import/adherent";
 
@@ -325,7 +358,7 @@ export default {
         this.messageType = "error";
         return;
       }
-
+      this.isLoading = true;
       let formData = new FormData();
       formData.append("excel", this.file); // Doit correspondre à "excel" défini dans l'OpenAPI
 
@@ -367,6 +400,8 @@ export default {
           this.message = "Impossible de contacter le serveur.";
         }
         this.messageType = "error";
+      } finally {
+        this.isLoading = false; // Cache le loader une fois fini
       }
     }
   },
@@ -391,31 +426,6 @@ export default {
       console.error("Erreur :", error);
     }
   },*/
-
-  async mounted() {
-    const uri = "/users/getAllAdherents";
-    try {
-      const token = this.$store.getters['getToken'];
-      console.log(token);
-      const response = await axios.get(uri, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      if (response.status !== 200) {
-        this.$router.push('/');
-      }
-      await this.uploadCSV();
-      this.adherents = response.data;
-      this.adherentsFiltres = [...this.adherents];
-
-    } catch
-      (error) {
-      console.error("Erreur lors de la requête :", error);
-    }
-  },
-
 };
 </script>
 
@@ -746,5 +756,20 @@ header a {
   font-size: 0.875rem;
   font-weight: 600;
 }
+.loader {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #3498db; /* Bleu */
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 
 </style>
