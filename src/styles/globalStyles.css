@@ -6,6 +6,7 @@
 
 html,body{
   height: 100%;
+  width: 100%;
 }
 
 /* Mise en page globale */
@@ -63,12 +64,8 @@ footer {
   width:100vw;
   height: 100vh;
   min-height : 70px;
+  min-width : 90vw;
   background-color: darkgray;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  margin-bottom: 60px;
-  max-height: 80vh; /* Ajustez cette valeur selon vos besoins */
-  overflow-y: auto;
 }
 
 main{
@@ -208,16 +205,20 @@ main{
 }
 
 #PageText{
-  height: auto;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin: auto;
+  justify-content: start;
+  align-items: start;
+  height: 65vh;
   background-color: rgba(255, 255, 255, 0.9);
   padding: 12px 24px;
-  font-weight: bold;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   z-index: 1000;
-  color:red;
-  font-size: 20px;
+  font-size: 18px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
@@ -238,9 +239,11 @@ main{
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+
+
 /* Responsive */
 @media (max-width: 1024px) {
   .main-container {
-    width: 95%;
+    width: 100%;
   }
 }
