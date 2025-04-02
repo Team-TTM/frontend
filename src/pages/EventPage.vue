@@ -1,11 +1,10 @@
 <script>
 import axios from "axios";
 import { defineComponent } from "vue";
-import LogoTTM from "@/components/LogoTTM.vue";
-import BoutonsHeader from "@/components/boutonsHeader.vue";
+import HeaderComponent from "@/components/HeaderComponent.vue";
 
 export default defineComponent({
-  components: { BoutonsHeader, LogoTTM },
+  components: {HeaderComponent},
   data() {
     return {
       events: [],
@@ -62,10 +61,7 @@ export default defineComponent({
 
 <template>
   <div id="page-container">
-    <header>
-      <LogoTTM />
-      <BoutonsHeader />
-    </header>
+    <HeaderComponent/>
     <div class="main-container">
       <div class="principal-container">
         <h2>Liste des événements</h2>

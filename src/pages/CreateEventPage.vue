@@ -1,9 +1,6 @@
 <template>
   <div id="page-container">
-    <header>
-      <LogoTTM />
-      <boutons-header />
-    </header>
+    <Header/>
     <div class="main-container">
       <div class="principal-container">
         <div class="info-event-container">
@@ -103,9 +100,10 @@
 import axios from 'axios';
 import BoutonsHeader from "@/components/boutonsHeader.vue";
 import LogoTTM from "@/components/LogoTTM.vue";
+import HeaderComponent from "@/components/HeaderComponent.vue";
 
 export default {
-  components: {LogoTTM, BoutonsHeader},
+  components: {Header: HeaderComponent, LogoTTM, BoutonsHeader},
   data() {
     return {
       event: {

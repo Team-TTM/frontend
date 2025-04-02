@@ -1,6 +1,6 @@
 <template>
   <header>
-    <LogoTTM/>
+    <img alt="Vue logo" class="logo" height="240" src="../assets/logo/logottm.svg" width="1748"/>
   </header>
 
   <div class="container-connexion">
