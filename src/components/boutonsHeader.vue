@@ -31,7 +31,7 @@
   height: 10vh;
   width: 175vh;
   padding : 1em;
-  margin-right: 110px;
+  margin-right: 10px;
   border:none;
   border-radius: 10px;
 }
