@@ -61,6 +61,7 @@ export default {
             break;
           case 200:
             this.goodMessage = response.data.message;
+            this.$store.commit('setRole', U)
             this.$router.push('/users/csvListeAdherent');
             break;
           default:

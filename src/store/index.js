@@ -3,14 +3,14 @@ import {createStore} from 'vuex';
 export const store = createStore({
   state() {
     return {
-      token: null,
-      role: null
+      token: sessionStorage.getItem('token') || null,
+      role: sessionStorage.getItem('role') || null,
     };
   },
 
   getters: {
     isAuthenticated(state) {
-      return state.token !== null && state.token !== undefined;
+      return state.token !== null && state.role !== null;
     },
     getToken(state) {
       return state.token;
@@ -21,14 +21,17 @@ export const store = createStore({
   },
 
   mutations: {
-    setAuthData(state,  token ) {
+    setAuthData(state, token) {
       state.token = token;
+      sessionStorage.setItem('token', token);
     },
-    logout(state) {
-      state.token = null;
+    logout() {
+      sessionStorage.setItem('token', null);
+      sessionStorage.setItem('role', null);
     },
     setRole(state, role) {
       state.role = role;
+      sessionStorage.setItem('role', role);
     }
   },
 

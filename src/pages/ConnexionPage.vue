@@ -46,14 +46,13 @@ import {useMessage} from 'naive-ui';
 import {ref} from 'vue';
 import {useLoadingBar} from 'naive-ui'
 import axios from 'axios';
-import {useStore} from 'vuex';
+import {store} from '@/store/index';
 import {useRouter} from 'vue-router';
 import {userRole} from '@/enums/userRole.js';
 import LogoTTM from '@/components/LogoTTM.vue';
-
+import {onMounted} from 'vue';
 const router = useRouter();
 
-const store = useStore();
 const loadingBar = useLoadingBar()
 const formRef = ref(null);
 const rPasswordFormItemRef = ref(null);
@@ -111,6 +110,10 @@ function handlePasswordInput() {
     rPasswordFormItemRef.value?.validate({trigger: 'password-input'});
   }
 }
+
+onMounted(() => {
+  loadingBar.finish();
+});
 
 function handleValidateButtonClick(e) {
   const url = '/api/auth/sign-in';

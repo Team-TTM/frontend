@@ -3,6 +3,7 @@ import { RouterView } from 'vue-router';
 </script>
 
 <template>
+  <n-config-provider>
   <n-loading-bar-provider>
     <n-message-provider>
       <RouterView/>
@@ -11,6 +12,7 @@ import { RouterView } from 'vue-router';
       © 2025 - Site TTM | Auteur | Support
     </footer>
   </n-loading-bar-provider>
+  </n-config-provider>
 </template>
 
 <style scoped>
