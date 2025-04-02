@@ -1,5 +1,4 @@
 <template>
-  <header-auth/>
   <div class="container-connexion">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
       <h1>Se connecter </h1>
@@ -128,7 +127,6 @@ function handleValidateButtonClick(e) {
           const role = response.data.role;
           await store.dispatch('login', token);
           await store.dispatch('setUser', role);
-          console.log(store.getters.getRole);
           await router.push({name: 'Home'});
         } else {
           loadingBar.error();

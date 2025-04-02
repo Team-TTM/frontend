@@ -1,6 +1,5 @@
 <template>
   <div id="page-container" class="page-container">
-    <HeaderComponent/>
     <div class="main-container">
       <h1 class="titre">Liste des Adhérents</h1>
       <div class="panel-adherents">

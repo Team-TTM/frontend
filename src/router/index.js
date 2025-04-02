@@ -112,6 +112,7 @@ const router = createRouter({
   routes,
 });
 router.beforeEach((to, from) => {
+  console.log(store.getters.isAuthenticated);
   switch (to.name) {
     case 'Inscription':
     case 'Connexion':

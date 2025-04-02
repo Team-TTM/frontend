@@ -118,7 +118,6 @@ export default defineComponent({
 
 <template>
 <div id="page-container">
-  <HeaderComponent/>
   <div class="main-container">
     <div class="principal-container">
       <div class="detail-event-container">

@@ -25,9 +25,11 @@ export const store = createStore({
       state.token = token;
       sessionStorage.setItem('token', token);
     },
-    logout() {
+    logout(state) {
       sessionStorage.setItem('token', null);
       sessionStorage.setItem('role', null);
+      state.role = null;
+      state.token = null;
     },
     setRole(state, role) {
       state.role = role;

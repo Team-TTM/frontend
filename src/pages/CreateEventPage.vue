@@ -1,6 +1,5 @@
 <template>
   <div id="page-container">
-    <HeaderComponent/>
     <div class="main-container">
       <div class="principal-container">
         <div class="info-event-container">

@@ -16,6 +16,7 @@
   width: auto; /* Garde le ratio */
 }
 
+
 </style>
 <script setup>
 </script>

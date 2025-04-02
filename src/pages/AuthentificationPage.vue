@@ -1,5 +1,4 @@
 <template>
-  <HeaderAuth></HeaderAuth>
   <div class="container-connexion">
     <n-card id="card" title="Authentification">
       <n-space vertical>

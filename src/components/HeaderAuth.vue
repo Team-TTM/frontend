@@ -1,12 +1,12 @@
 <template>
-  <header>
+  <div>
     <img alt="Vue logo" class="logo" height="240" src="../assets/logo/logottm.svg" width="1748"/>
-  </header>
+  </div>
 </template>
 
 <style scoped>
-header {
+div {
+  padding: 20px;
   height: 150px;
-  position: relative;
 }
 </style>

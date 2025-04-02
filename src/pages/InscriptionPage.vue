@@ -1,5 +1,4 @@
 <template>
-  <header-auth/>
   <div class="container-connexion">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
       <h1>S'inscrire</h1>
@@ -69,8 +68,6 @@ import {useLoadingBar} from 'naive-ui'
 import axios from 'axios';
 import {store} from '@/store/index';
 import {useRouter} from 'vue-router';
-import {userRole} from '@/enums/userRole.js';
-import HeaderAuth from '@/components/HeaderAuth.vue';
 
 const router = useRouter();
 
