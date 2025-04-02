@@ -374,6 +374,7 @@ export default {
         if (response.status === 200) {
           this.message = `Importation réussie ! ${response.data.add} ajout(s), ${response.data.update} mise(s) à jour.`;
           this.messageType = "success";
+          await this.getallAdherents();
         } else {
           console.error("Erreur de récupération :", response.status);
           this.$router.push("/");
