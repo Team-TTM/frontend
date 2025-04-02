@@ -6,34 +6,42 @@
 
   <div id="app">
     <main class="main-container">
-      <h1 class="title">Éditer le profil</h1>
+
       <div class="content">
-        <!-- Formulaire de profil -->
-        <form class="profile-form">
+
+        <form class="profile-form" @submit.prevent>
+          <h1 class="title">Éditer le profil</h1>
           <!-- Section Gauche -->
           <div class="left-section">
             <label for="licence">N° de licence (cliquez ici pour télécharger la licence)</label>
-            <input id="licence" type="text" v-model="profil.licence" />
+            <input id="licence" type="text" v-model="profil.licence" readonly/>
 
             <input type="text" v-model="profil.nom" :readonly="!editMode" />
             <input type="text" v-model="profil.prenom" :readonly="!editMode" />
-            <input type="text" v-model="profil.licence" :readonly="!editMode" />
             <input type="email" v-model="profil.email" :readonly="!editMode" />
-            <input type="date" v-model="profil.dateNaissance" :readonly="!editMode" />
+            <input type="date" v-model="formattedDateNaissance" :readonly="!editMode" />
             <input type="tel" v-model="profil.telephone" :readonly="!editMode" />
           </div>
 
           <!-- Section Droite -->
           <div class="right-section">
             <!-- Radios en colonne -->
-            <div class="categorie">
-              <label><input type="radio" v-model="profil.categorie" value="Loisir" /> Loisir</label>
-              <label><input type="radio" v-model="profil.categorie" value="Compétition" /> Compétition</label>
-              <label><input type="radio" v-model="profil.categorie" value="Triathlon Court" /> Triathlon court (XS/S/M)</label>
-              <label><input type="radio" v-model="profil.categorie" value="Triathlon Long" /> Triathlon long (L/XL/XXL)</label>
-              <label><input type="radio" v-model="profil.categorie" value="Handisports" /> Handisports</label>
+            <div class="pratique-container">
+              <h2 class="pratique-title">Pratique</h2>
+              <div class="radio-group">
+                <label v-for="option in options" :key="option" class="radio-label">
+                  <input
+                    type="radio"
+                    name="pratique"
+                    :value="option"
+                    v-model="profil.pratique"
+                    class="form-radio"
+                    :disabled="!editMode"
+                  />
+                  <span>{{ option }}</span>
+                </label>
+              </div>
             </div>
-
 
             <div class="buttons-container">
               <router-link to="/users/performances">
@@ -45,11 +53,12 @@
               </router-link>
             </div>
           </div>
-          <!-- Bouton Valider en bas à droite -->
-          <button class="validate-button" @click.prevent="validerProfil">Valider</button>
-          <button class="edit-button" @click="editMode ? sauvegarderProfil() : editMode = true">
-            {{ editMode ? "Sauvegarder" : "Modifier" }}
-          </button>
+
+          <div class="action-buttons">
+            <button class="edit-button" @click="toggleEditMode">
+              {{ editMode ? "Sauvegarder" : "Modifier" }}
+            </button>
+          </div>
         </form>
       </div>
     </main>
@@ -60,85 +69,126 @@
   </footer>
 </template>
 
-
-
-
-<script setup>
-import { ref, onMounted } from "vue";
+<script>
 import axios from "axios";
 import LogoTTM from "@/components/LogoTTM.vue";
 import {useStore} from 'vuex';
 import BoutonsHeader from "@/components/boutonsHeader.vue";
 
-const store = useStore();
-const editMode = ref(false);
-
-// Données du profil
-const profil = ref({
-  licence: "",
-  nom: "",
-  prenom: "",
-  genre: "",
-  email: "",
-  dateNaissance: "",
-  telephone: "",
-  categorie: "",
-});
-
-
-// Récupération des données utilisateur lors du montage du composant
-onMounted(async () => {
-  try {
-    const uri = "/users/adherent";
-    const token = store.getters.getToken;
-    console.log(token);
-
-    const response = await axios.get(uri, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+export default {
+  components: {
+    LogoTTM,
+    BoutonsHeader,
+  },
+  data() {
+    return {
+      editMode: false,
+      profil: {
+        licence: "",
+        nom: "",
+        prenom: "",
+        genre: "",
+        email: "",
+        dateNaissance: "",
+        telephone: "",
+        pratique: "",
       },
-      validateStatus: () => true, // Accepter tous les statuts HTTP
-    });
-
-    console.log("Réponse de l'API :", response.data);
-
-    profil.value = {
-      licence: response.data.licence || "",
-      nom: response.data.nom || "",
-      prenom: response.data.prenom || "",
-      genre: response.data.genre || "",
-      email: response.data.email || "",
-      dateNaissance: response.data.dateNaissance || "",
-      telephone: response.data.telephone || "",
-      categorie: response.data.categorie || "",
+      options: [
+        "Compétition de manière régulière",
+        "Compétition occasionnelle",
+        "Entrainement",
+        "Ne pratique pas",
+      ],
     };
-  } catch (error) {
-    console.error("Erreur lors de la récupération des données :", error);
-  }
-});
+  },
+  computed: {
+    token() {
+      return useStore().getters.getToken;
+    },
+    formattedDateNaissance() {
+      return this.profil.dateNaissance ? this.formatDate(this.profil.dateNaissance) : "";
+    },
+  },
+  mounted() {
+    this.recupererProfil();
+  },
+  methods: {
+    toggleEditMode() {
+      if (this.editMode) {
+        this.sauvegarderProfil();
+      } else {
+        this.editMode = true;
+      }
+    },
+    formatDate(isoString) {
+      if (!isoString) return '';
+      const date = new Date(isoString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${year}-${month}-${day}`;
+    },
+    async recupererProfil() {
+      const uri = "/users/adherent";
+      try {
+        if (!this.token) {
+          throw new Error("Token d'authentification non disponible");
+        }
 
-const sauvegarderProfil = async () => {
-  if (!editMode.value) return; // Ne sauvegarder que si on est en mode édition
+        const response = await axios.get(uri, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+            "Content-Type": "application/json",
+          },
+          validateStatus: () => true,
+        });
+        console.log(response.data)
+        if (response.status !== 200) {
+          throw new Error(`Erreur API: ${response.status} - ${response.data.message || "Réponse inattendue"}`);
+        }
 
-  try {
-    const uri = "/users/adherent";
-    const token = store.getters.getToken;
+        this.profil = {
+          licence: response.data.numeroLicence || "",
+          nom: response.data.nom || "",
+          prenom: response.data.prenom || "",
+          genre: response.data.genre || "",
+          email: response.data.email || "",
+          dateNaissance: response.data.dateNaissance || "",
+          telephone: response.data.telephone || "",
+          pratique: response.data.pratique || "",
+        };
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données utilisateur :", error);
+      }
+    },
 
-    await axios.put(uri, profil.value, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    async sauvegarderProfil() {
+      const uri = "/users/adherent";
+      try {
 
-    console.log("Profil mis à jour avec succès !");
-    editMode.value = false; // Repasser en mode lecture seule
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour du profil :", error);
-  }
+        if (!this.token) {
+          throw new Error("Token d'authentification non disponible");
+        }
+
+        const response = await axios.put(uri, this.profil, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status !== 200) {
+          throw new Error(`Échec de la mise à jour : ${response.status} - ${response.data.message || "Erreur inconnue"}`);
+        }
+        console.log("Profil mis à jour avec succès !");
+        this.editMode = false;
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour du profil :", error);
+      }
+    },
+  },
 };
-</script>----------------------------------------------------------------------------
+</script>
 
 <style scoped>
 /* Titre bien positionné */
@@ -211,31 +261,58 @@ const sauvegarderProfil = async () => {
   background-color: #5a6268;
 }
 
-/* Radios en colonne */
-.categorie {
+
+
+
+.content {
+  margin-top: 140px; /* Ajustez cette valeur selon vos besoins */
+}
+
+
+@media (max-width: 768px) {
+  .profile-form {
+    grid-template-columns: 1fr; /* Une seule colonne sur les petits écrans */
+  }
+  .validate-button {
+    justify-self: center; /* Centrer le bouton sur les petits écrans */
+  }
+}
+
+.pratique-container {
+  padding: 16px;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.pratique-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.radio-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* Bouton Valider en bas à droite */
-.validate-button {
-  grid-column: span 2; /* Étend sur toute la largeur */
-  background-color: #007bff;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  justify-self: end;
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.validate-button:hover {
-  background-color: #0056b3;
+.form-radio {
+  color: #1e40af; /* Couleur bleu pour les boutons radio */
 }
 
-.content {
-  margin-top: 140px; /* Ajustez cette valeur selon vos besoins */
+action-buttons {
+  display: flex;
+  justify-content: flex-end; /* Aligne les boutons à droite */
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%; /* Assure que le conteneur prend toute la largeur disponible */
 }
 
 .edit-button {
@@ -245,20 +322,13 @@ const sauvegarderProfil = async () => {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 15px;
+  position: absolute; /* Positionne le bouton relativement à son conteneur */
+  right: 20px; /* Aligne le bouton à 20px du côté droit */
+  bottom: 20px; /* Aligne le bouton en bas à droite, vous pouvez ajuster si nécessaire */
 }
 
-.edit-button:hover {
+.edit-button:hover :hover {
   background-color: #218838;
-}
-
-@media (max-width: 768px) {
-  .profile-form {
-    grid-template-columns: 1fr; /* Une seule colonne sur les petits écrans */
-  }
-  .validate-button {
-    justify-self: center; /* Centrer le bouton sur les petits écrans */
-  }
 }
 </style>
 
