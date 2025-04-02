@@ -3,6 +3,17 @@
 import LogoTTM from "@/components/LogoTTM.vue";
 import BoutonsHeader from "@/components/boutonsHeader.vue";
 import {User} from '@vicons/fa'
+import {LogOutSharp as Disconnect} from '@vicons/material'
+import {store} from '@/store/index.js';
+import {useRouter} from 'vue-router';
+
+const router = useRouter();
+const disconnect = async () => {
+  await store.dispatch('logout');
+  await router.push({name: 'Accueil-auth'});
+}
+
+
 
 </script>
 
@@ -15,6 +26,12 @@ import {User} from '@vicons/fa'
         <User/>
       </router-link>
     </n-icon>
+    <n-icon :style="{ color: 'black' }" class="profil-icon" size="40" @click="disconnect">
+      <router-link to="/profil">
+        <Disconnect/>
+      </router-link>
+    </n-icon>
+
   </div>
 
 </template>
