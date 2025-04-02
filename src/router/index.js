@@ -13,6 +13,7 @@ import StagePage from "@/pages/StagePage.vue";
 import CreateEventPage from "@/pages/CreateEventPage.vue";
 import DetailEventPage from "@/pages/DetailEventPage.vue";
 import EditEventPage from "@/pages/EditEventPage.vue";
+import ProfilePage from "@/pages/ProfilePage.vue";
 const routes = [
   {
     path: '/', // La route racine correspond à la page d'accueil
@@ -81,6 +82,11 @@ const routes = [
     path : '/users/StagePage',
     name : 'StagePage',
     component: StagePage
+  },
+  {
+    path: "/profil",
+    name: "Profil",
+    component: ProfilePage
   },
   {
     path: '/users/inscription',
