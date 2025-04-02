@@ -1,9 +1,14 @@
 <template>
-    <LogoTTM/>
+  <HeaderAuth></HeaderAuth>
   <div class="container-connexion">
     <n-card id="card" title="Authentification">
       <n-space vertical>
-        <n-button class="btn" size="large" @click="loginWithGoogle">
+        <n-button :theme-overrides="{
+                textColorHover: '#ff5733',
+                borderHover: '1px solid #ff5733',
+                backgroundColorHover: '#ffeeee'
+                 }" class="btn" size="large"
+                  @click="loginWithGoogle">
           Continuer avec Google
           <template #icon>
             <n-icon>
@@ -11,7 +16,12 @@
             </n-icon>
           </template>
         </n-button>
-        <n-button class="btn" size="large" @click="loginWithFacebook">
+        <n-button :theme-overrides="{
+                textColorHover: '#1877F2',
+                borderHover: '1px solid #1877F2',
+                backgroundColorHover: '#1877F2'
+                 }" class="btn" size="large"
+                  @click="loginWithFacebook">
           Continuer avec Facebook
           <template #icon>
             <n-icon>
@@ -42,13 +52,13 @@
 
 
 <script setup>
-import LogoTTM from '@/components/LogoTTM.vue';
 import {LogoGoogle as Google} from '@vicons/ionicons5'
 import {FacebookF as Facebook} from '@vicons/fa'
 import {EmailFilled as Mail} from '@vicons/material'
 import {useRouter} from 'vue-router';
 import {useLoadingBar} from 'naive-ui'
 import {onMounted} from 'vue'
+import HeaderAuth from '@/components/HeaderAuth.vue';
 
 const loadingBar = useLoadingBar()
 const router = useRouter();
@@ -75,6 +85,7 @@ const signUp = async () => {
 
 <style scoped>
 
+
 .container-connexion {
   background: #F0F0F0;
   width: 100%;
@@ -94,24 +105,6 @@ const signUp = async () => {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-}
-
-.container-btn {
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#form-connexion {
-  background: #dddddd;
-  border-radius: 5px;
-  width: 100%;
-  padding: 20px;
-  max-width: 500px;
-  min-width: 300px;
-  margin: auto 20px;
 }
 
 .btn {

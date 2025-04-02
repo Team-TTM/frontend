@@ -15,7 +15,6 @@ import DetailEventPage from '@/pages/DetailEventPage.vue';
 import EditEventPage from '@/pages/EditEventPage.vue';
 import {store} from '@/store/index';
 import {userRole} from '@/enums/userRole.js';
-import {useLoadingBar} from 'naive-ui'
 
 const routes = [
   {
@@ -112,7 +111,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-const loadingBar = useLoadingBar()
 router.beforeEach((to, from) => {
 
   switch (to.name) {
@@ -123,10 +121,8 @@ router.beforeEach((to, from) => {
       return true;
     default:
       if (store.getters.isAuthenticated) {
-        loadingBar.finish()
         return true;
       } else {
-        loadingBar.error()
         return {name: 'Accueil-auth'};
       }
   }

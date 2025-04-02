@@ -6,7 +6,7 @@
 <style scoped>
 
 .logo-container{
-  height: 100%; /* S'adapte à la hauteur du header */
+  height: 100%;
   display: flex;
   align-items: center;
 }
