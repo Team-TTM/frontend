@@ -24,6 +24,7 @@
 
 .container-buttons{
   display: flex;
+  overflow: auto;
   justify-content: space-around;
   align-items: center;
   background-color: #ffffff;
