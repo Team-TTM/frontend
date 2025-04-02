@@ -2,9 +2,8 @@
   <div id="page-container" class="page-container">
     <Header/>
     <div class="main-container">
-      <h1 class="titre">Liste des Adhérents</h1>
       <div class="panel-adherents">
-
+        <h1 class="titre">Liste des Adhérents</h1>
         <div class="filters-container">
           <input type="text" v-model="rechercheTexte" class="recherche-input"
                  placeholder="Rechercher" @input="filtrerAdherents"
@@ -206,6 +205,14 @@ export default {
       isLoading: false,
     };
   },
+  /*async mounted() {
+    try {
+      await this.uploadCSV();
+      this.adherentsFiltres = [...this.adherents];
+    } catch (error) {
+      console.error("Erreur :", error);
+    }
+  },*/
   async mounted() {
     await this.getallAdherents();
     await this.uploadCSV();
@@ -416,15 +423,6 @@ export default {
       return this.adherents.length;
     },
   },
-
-  /*async mounted() {
-    try {
-      await this.uploadCSV();
-      this.adherentsFiltres = [...this.adherents];
-    } catch (error) {
-      console.error("Erreur :", error);
-    }
-  },*/
 };
 </script>
 
@@ -440,7 +438,6 @@ export default {
   position: relative;
   background-color: rgba(255, 255, 255, 0.95);
   padding: 8px 22px;
-  margin-top: 30px;
   font-size: 26px;
   font-weight: bold;
   text-align: center;
@@ -448,7 +445,6 @@ export default {
   color: #2C3E50; /* Bleu profond */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
-  border: 2px solid #2c3e50; /* Doré doux */
   z-index: 1000;
   letter-spacing: 1px;
 }
