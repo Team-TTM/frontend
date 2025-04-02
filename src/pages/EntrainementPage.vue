@@ -1,6 +1,4 @@
 <script setup>
-import LogoTTM from "@/components/LogoTTM.vue";
-import BoutonsHeader from "@/components/boutonsHeader.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 </script>
 

@@ -49,7 +49,6 @@ import axios from 'axios';
 import {useStore} from 'vuex';
 import {useRouter} from 'vue-router';
 import {userRole} from '@/enums/userRole.js';
-import LogoTTM from '@/components/LogoTTM.vue';
 
 const router = useRouter();
 

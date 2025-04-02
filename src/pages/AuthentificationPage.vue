@@ -43,7 +43,6 @@
 
 
 <script setup>
-import LogoTTM from '@/components/LogoTTM.vue';
 import {LogoGoogle as Google} from '@vicons/ionicons5'
 import {FacebookF as Facebook} from '@vicons/fa'
 import {EmailFilled as Mail} from '@vicons/material'

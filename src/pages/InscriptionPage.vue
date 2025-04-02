@@ -72,7 +72,6 @@ import {useLoadingBar} from 'naive-ui'
 import axios from 'axios';
 import {useStore} from 'vuex';
 import {useRouter} from 'vue-router';
-import LogoTTM from '@/components/LogoTTM.vue';
 import {userRole} from '@/enums/userRole.js';
 
 const router = useRouter();

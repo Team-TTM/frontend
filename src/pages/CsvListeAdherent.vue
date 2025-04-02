@@ -1,6 +1,6 @@
 <template>
   <div id="page-container" class="page-container">
-    <Header/>
+    <HeaderComponent/>
     <div class="main-container">
       <h1 class="titre">Liste des Adhérents</h1>
       <div class="panel-adherents">
@@ -141,12 +141,10 @@
 
 <script>
 
-import LogoTTM from "@/components/LogoTTM.vue";
 import axios from "axios";
-import BoutonsHeader from "@/components/boutonsHeader.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 export default {
-  components: {Header: HeaderComponent, BoutonsHeader, LogoTTM},
+  components: {HeaderComponent},
   data() {
     return {
       adherents: [/*

@@ -23,8 +23,6 @@
 
 <script setup>
 import {onMounted} from 'vue';
-import LogoTTM from '@/components/LogoTTM.vue';
-import BoutonsHeader from '@/components/boutonsHeader.vue';
 import {useLoadingBar} from 'naive-ui';
 import {useStore} from 'vuex';
 import HeaderComponent from "@/components/HeaderComponent.vue";
