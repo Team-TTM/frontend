@@ -1,8 +1,5 @@
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" height="240" src="../assets/logo/logottm.svg" width="1748"/>
-  </header>
-
+  <header-auth/>
   <div class="container-connexion">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
       <h1>S'inscrire</h1>
@@ -73,6 +70,7 @@ import axios from 'axios';
 import {store} from '@/store/index';
 import {useRouter} from 'vue-router';
 import {userRole} from '@/enums/userRole.js';
+import HeaderAuth from '@/components/HeaderAuth.vue';
 
 const router = useRouter();
 
@@ -180,8 +178,8 @@ function handleValidateButtonClick(e) {
           const authHeader = response.headers.authorization;
           const token = authHeader.split(' ')[1];
           await store.dispatch('login', token);
-          await store.dispatch('login', userRole.USER);
-          await router.push('HomePage');
+          await store.dispatch('setUser', userRole.USER);
+          await router.push({name: 'Home'});
         } else {
           loadingBar.error();
           message.error(response.data.message);

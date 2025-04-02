@@ -112,8 +112,8 @@ const router = createRouter({
   routes,
 });
 router.beforeEach((to, from) => {
-
   switch (to.name) {
+
     case 'Inscription':
     case 'Connexion':
     case 'Verify-licence':

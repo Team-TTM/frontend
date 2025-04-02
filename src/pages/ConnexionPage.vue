@@ -1,7 +1,5 @@
 <template>
-  <header>
-    <LogoTTM/>
-  </header>
+  <header-auth/>
   <div class="container-connexion">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
       <h1>Se connecter </h1>
@@ -51,6 +49,7 @@ import {useRouter} from 'vue-router';
 import {userRole} from '@/enums/userRole.js';
 import LogoTTM from '@/components/LogoTTM.vue';
 import {onMounted} from 'vue';
+import HeaderAuth from '@/components/HeaderAuth.vue';
 const router = useRouter();
 
 const loadingBar = useLoadingBar()
@@ -128,10 +127,9 @@ function handleValidateButtonClick(e) {
         if (response.status === 200) {
           const authHeader = response.headers.authorization;
           const token = authHeader.split(' ')[1];
-          store.dispatch('login', token);
-          await store.dispatch('login', userRole.USER);
-          console.log(response.data);
-          await router.push('HomePage');
+          await store.dispatch('login', token);
+          await store.dispatch('setUser', userRole.USER);
+          await router.push({name: 'Home'});
         } else {
           loadingBar.error();
           message.error(response.data.message);

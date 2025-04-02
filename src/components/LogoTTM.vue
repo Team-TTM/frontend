@@ -1,5 +1,5 @@
 <template>
-  <router-link to="/users/HomePage" class="logo-container">
+  <router-link class="logo-container" to="/">
     <img alt="Vue logo" class="logo" height="240" src="../assets/logo/logottm.svg" width="1748"/>
   </router-link>
 </template>
