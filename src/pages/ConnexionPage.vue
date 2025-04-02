@@ -128,6 +128,7 @@ function handleValidateButtonClick(e) {
           const role = response.data.role;
           await store.dispatch('login', token);
           await store.dispatch('setUser', role);
+          console.log(store.getters.getRole);
           await router.push({name: 'Home'});
         } else {
           loadingBar.error();

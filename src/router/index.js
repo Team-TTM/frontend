@@ -113,7 +113,6 @@ const router = createRouter({
 });
 router.beforeEach((to, from) => {
   switch (to.name) {
-
     case 'Inscription':
     case 'Connexion':
     case 'Verify-licence':
