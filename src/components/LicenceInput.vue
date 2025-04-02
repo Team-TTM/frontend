@@ -2,7 +2,7 @@
   <p  v-if="errorMessage" class="error-message" style="font-size:15px;">
     {{ errorMessage }}
   </p>
-  <p v-if="goodMessage" class="good-message" style="font-size:15px;">
+  <p v-if="goodMessage" class="good-message" style="font-size:15px;">f
     {{ goodMessage }}
   </p>
   <input
@@ -17,6 +17,7 @@
 <script>
 import axios from "axios";
 import {userRole} from '@/enums/userRole.js';
+import {useMessage} from 'naive-ui';
 
 export default {
   data() {
@@ -24,6 +25,7 @@ export default {
       licenceValue: '',
       errorMessage: '',
       goodMessage: '',
+      message: useMessage(),
     };
   },
   methods: {
@@ -61,8 +63,9 @@ export default {
             break;
           case 200:
             this.goodMessage = response.data.message;
-            this.$store.commit('setRole', U)
+            this.$store.commit('setRole', response.data.role);
             this.$router.push('/users/csvListeAdherent');
+            this.message.succes(response.data.message);
             break;
           default:
             this.errorMessage = "Une erreur inconnue est survenue.";

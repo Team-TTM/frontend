@@ -177,8 +177,9 @@ function handleValidateButtonClick(e) {
         if (response.status === 201) {
           const authHeader = response.headers.authorization;
           const token = authHeader.split(' ')[1];
+          const role = response.data.role;
           await store.dispatch('login', token);
-          await store.dispatch('setUser', userRole.USER);
+          await store.dispatch('setUser', role);
           await router.push({name: 'Home'});
         } else {
           loadingBar.error();

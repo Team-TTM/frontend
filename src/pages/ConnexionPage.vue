@@ -46,8 +46,6 @@ import {useLoadingBar} from 'naive-ui'
 import axios from 'axios';
 import {store} from '@/store/index';
 import {useRouter} from 'vue-router';
-import {userRole} from '@/enums/userRole.js';
-import LogoTTM from '@/components/LogoTTM.vue';
 import {onMounted} from 'vue';
 import HeaderAuth from '@/components/HeaderAuth.vue';
 const router = useRouter();
@@ -127,8 +125,9 @@ function handleValidateButtonClick(e) {
         if (response.status === 200) {
           const authHeader = response.headers.authorization;
           const token = authHeader.split(' ')[1];
+          const role = response.data.role;
           await store.dispatch('login', token);
-          await store.dispatch('setUser', userRole.USER);
+          await store.dispatch('setUser', role);
           await router.push({name: 'Home'});
         } else {
           loadingBar.error();
