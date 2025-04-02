@@ -1,6 +1,6 @@
 <template>
   <header>
-    <LogoTTM/>
+    <img alt="Vue logo" class="logo" height="240" src="../assets/logo/logottm.svg" width="1748"/>
   </header>
 
   <div class="container-connexion">
@@ -72,7 +72,6 @@ import {useLoadingBar} from 'naive-ui'
 import axios from 'axios';
 import {store} from '@/store/index';
 import {useRouter} from 'vue-router';
-import LogoTTM from '@/components/LogoTTM.vue';
 import {userRole} from '@/enums/userRole.js';
 
 const router = useRouter();
