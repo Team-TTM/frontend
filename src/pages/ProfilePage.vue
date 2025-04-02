@@ -8,10 +8,9 @@
     <main class="main-container">
 
       <div class="content">
-
+        <h1 class="titre">Éditer le profil</h1>
         <form class="profile-form" @submit.prevent>
-          <h1 class="title">Éditer le profil</h1>
-          <!-- Section Gauche -->
+
           <div class="left-section">
             <label for="licence">N° de licence (cliquez ici pour télécharger la licence)</label>
             <input id="licence" type="text" v-model="profil.licence" readonly/>
@@ -21,9 +20,9 @@
             <input type="email" v-model="profil.email" :readonly="!editMode" />
             <input type="date" v-model="formattedDateNaissance" :readonly="!editMode" />
             <input type="tel" v-model="profil.telephone" :readonly="!editMode" />
+            <input type="tel" v-model="profil.urgenceTelephone" :readonly="!editMode" />
           </div>
 
-          <!-- Section Droite -->
           <div class="right-section">
             <!-- Radios en colonne -->
             <div class="pratique-container">
@@ -42,23 +41,15 @@
                 </label>
               </div>
             </div>
-
             <div class="buttons-container">
               <router-link to="/users/performances">
                 <button class="btn">Performances</button>
               </router-link>
-
-              <router-link to="/users/donnees_medicales">
-                <button class="btn">Données médicales</button>
-              </router-link>
             </div>
           </div>
-
-          <div class="action-buttons">
-            <button class="edit-button" @click="toggleEditMode">
-              {{ editMode ? "Sauvegarder" : "Modifier" }}
-            </button>
-          </div>
+          <button class="edit-button" @click="toggleEditMode">
+            {{ editMode ? "Sauvegarder" : "Modifier" }}
+          </button>
         </form>
       </div>
     </main>
@@ -92,6 +83,7 @@ export default {
         dateNaissance: "",
         telephone: "",
         pratique: "",
+        urgenceTelephone: "",
       },
       options: [
         "Compétition de manière régulière",
@@ -156,6 +148,7 @@ export default {
           dateNaissance: response.data.dateNaissance || "",
           telephone: response.data.telephone || "",
           pratique: response.data.pratique || "",
+          urgenceTelephone: response.data.urgenceTelephone || "",
         };
       } catch (error) {
         console.error("Erreur lors de la récupération des données utilisateur :", error);
@@ -191,20 +184,19 @@ export default {
 </script>
 
 <style scoped>
-/* Titre bien positionné */
-.title {
-  position: fixed;
-  top: 70px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 12px 24px;
-  font-size: 24px;
+.titre {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 8px 22px;
+  font-size: 26px;
   font-weight: bold;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  font-family: 'Playfair Display', serif;
+  color: #2C3E50; /* Bleu profond */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
   z-index: 1000;
+  letter-spacing: 1px;
 }
 
 /* Formulaire structuré en deux colonnes */
@@ -239,14 +231,13 @@ export default {
   justify-content: flex-start;
 }
 
-/* Boutons Performances et Données Médicales */
+/* Boutons Performances*/
 .buttons-container {
   display: flex;
   justify-content: flex-start;
   gap: 10px;
   margin-bottom: 15px;
-  margin-top: 50px;
-}
+  margin-top: 50px;}
 
 .btn {
   background-color: #6c757d;
@@ -261,11 +252,9 @@ export default {
   background-color: #5a6268;
 }
 
-
-
-
 .content {
-  margin-top: 140px; /* Ajustez cette valeur selon vos besoins */
+  margin-top: 60px;
+  margin-bottom: 20px;
 }
 
 
@@ -307,28 +296,22 @@ export default {
   color: #1e40af; /* Couleur bleu pour les boutons radio */
 }
 
-action-buttons {
-  display: flex;
-  justify-content: flex-end; /* Aligne les boutons à droite */
-  gap: 10px;
-  margin-top: 20px;
-  width: 100%; /* Assure que le conteneur prend toute la largeur disponible */
-}
 
+/* Bouton Valider en bas à droite */
 .edit-button {
-  background-color: #28a745;
+  grid-column: span 2; /* Étend sur toute la largeur */
+  background-color: #007bff;
   color: white;
   padding: 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  position: absolute; /* Positionne le bouton relativement à son conteneur */
-  right: 20px; /* Aligne le bouton à 20px du côté droit */
-  bottom: 20px; /* Aligne le bouton en bas à droite, vous pouvez ajuster si nécessaire */
+  justify-self: end;
 }
 
-.edit-button:hover :hover {
-  background-color: #218838;
+.edit-button:hover {
+  background-color: #0056b3;
 }
+
 </style>
 
