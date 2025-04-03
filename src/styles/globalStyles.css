@@ -270,15 +270,16 @@ main{
 }
 
 .panel-adherents {
-  margin-top:10px;
+  position: relative;
+  top: -100px;
   width: 95%;
   max-width: 1400px;
-  max-height: 450px;
+  max-height: 400px;
   height: 75vh;
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow: auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -459,12 +460,12 @@ tr:hover {
   margin: auto;
 }
 
-.statut-actif-adherent {
+.statut-actif {
   background-color: green;
   box-shadow: 0 0 8px rgba(0, 128, 0, 0.8);
 }
 
-.statut-inactif-adherent {
+.statut-inactif {
   background-color: red;
   box-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
 }
