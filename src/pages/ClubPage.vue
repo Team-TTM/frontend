@@ -1,14 +1,10 @@
 <script setup>
-import LogoTTM from "@/components/LogoTTM.vue";
-import BoutonsHeader from "@/components/boutonsHeader.vue";
+import HeaderComponent from "@/components/HeaderComponent.vue";
 </script>
 
 <template>
   <div id="page-container">
-    <header>
-      <LogoTTM/>
-      <boutons-header/>
-    </header>
+    <HeaderComponent/>
     <div class="main-container">
       <div id="PageText">
         Vous êtes sur la page de club

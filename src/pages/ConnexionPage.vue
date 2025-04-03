@@ -1,6 +1,6 @@
 <template>
   <header>
-    <LogoTTM/>
+    <img alt="Vue logo" class="logo" height="240" src="../assets/logo/logottm.svg" width="1748"/>
   </header>
   <div class="container-connexion">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
@@ -49,7 +49,6 @@ import axios from 'axios';
 import {useStore} from 'vuex';
 import {useRouter} from 'vue-router';
 import {userRole} from '@/enums/userRole.js';
-import LogoTTM from '@/components/LogoTTM.vue';
 
 const router = useRouter();
 

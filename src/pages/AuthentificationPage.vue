@@ -1,6 +1,6 @@
 <template>
   <header>
-    <LogoTTM/>
+    <img alt="Vue logo" class="logo" height="240" src="../assets/logo/logottm.svg" width="1748"/>
   </header>
   <div class="container-connexion">
     <n-space id="form-connexion" align="center" vertical>
@@ -43,7 +43,6 @@
 
 
 <script setup>
-import LogoTTM from '@/components/LogoTTM.vue';
 import {LogoGoogle as Google} from '@vicons/ionicons5'
 import {FacebookF as Facebook} from '@vicons/fa'
 import {EmailFilled as Mail} from '@vicons/material'
