@@ -1,9 +1,13 @@
 <template>
   <div class="main-container">
     <div id="PageText">
-      Vous êtes sur la page d'accueil
-      <router-link to="/users/csvListeAdherent">
-        <button id="bouton">Accéder à la BD</button>
+      <h1>
+        Vous êtes sur la page d'accueil
+      </h1>
+      <h2>
+        Vous êtes connecter en tant que {{ role }}
+      </h2>
+      <router-link v-if="role !== userRole.USER" id="bouton" to="/users/csvListeAdherent">
       </router-link>
     </div>
   </div>
@@ -13,13 +17,17 @@
 </template>
 
 <script setup>
-import {onMounted} from 'vue';
+import {computed, onMounted} from 'vue';
 import {useLoadingBar} from 'naive-ui';
 import {useStore} from 'vuex';
+import {userRole} from '@/enums/userRole.js';
 
 const loadingBar = useLoadingBar();
 const store = useStore();
 
+const role = computed(() => {
+  return store.getters.getRole;
+})
 
 onMounted(() => {
   const token = new URLSearchParams(window.location.search).get('token');
@@ -97,24 +105,6 @@ p{
   font-weight: bold;
   text-transform: uppercase;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-
-#container-instagram{
-  height: 90vh;
-  width: 50vw;
-  margin: 10px;
-  background-color: #444444;
-  border-radius: 10px;
-  z-index:11;
-}
-#container-newsletter{
-  height: 90vh;
-  width: 50vw;
-  margin: 10px;
-  background-color: green;
-  border-radius: 10px;
-  z-index:10;
 }
 
 
