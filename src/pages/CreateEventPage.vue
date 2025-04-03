@@ -10,8 +10,12 @@
             <n-input v-model:value="event.name" clearable style="width: 100%" placeholder="Entrez le nom" />
 
             <p>Date de fin d'inscription :</p>
-            <n-date-picker v-model:value="event.endAt" type="date" placeholder="Sélectionnez une date" style="width: 100%" />
-
+            <n-date-picker
+              v-model:formatted-value="event.endAt"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              clearable
+            />
             <p>Description :</p>
             <n-input
                 v-model:value="event.description"
@@ -93,7 +97,6 @@ export default {
         description: "",
         createdAt: "",
         endAt: null,
-        participants: [],
         type: "",
         nombreMax: null,
         lieu: "",
@@ -135,13 +138,15 @@ export default {
         }
       }
 
+      this.event.endAt = this.event.endAt.toLocaleString("fr-FR", { timeZone: "Europe/Paris" })
+
       try {
         const response = await axios.post("/api/events", { event: this.event }, {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         });
 
         if (response.status === 201) {
-          this.message.success("Évènement créé avec succès !");
+          this.message.success("L'évènement a été créé avec succès !");
           this.$router.push({ name: "EventPage" });
         } else {
           this.message.error(response.data.message || "Une erreur est survenue.");

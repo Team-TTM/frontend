@@ -2,7 +2,6 @@
 import axios from 'axios';
 import {defineComponent} from "vue";
 import {useMessage} from "naive-ui";
-import { mapGetters} from 'vuex';
 
 export default defineComponent({
   props: ["eventId"],
@@ -57,7 +56,7 @@ export default defineComponent({
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        this.message.success("Événement supprimé !");
+        this.message.success("Vous avez supprimé l'évènement !");
         this.$router.push("/users/EventPage");
       } catch (err) {
         if (err.response) {
@@ -215,8 +214,11 @@ export default defineComponent({
           <h2>Détail de l'évènement</h2>
           <div>
             <p><strong>Titre :</strong> {{ event.name }}</p>
-            <p><strong>Date :</strong> {{ event.endAt }}</p>
+            <p><strong>Date de fin d'inscription :</strong> {{ event.endAt }}</p>
             <p><strong>Description :</strong> {{ event.description }}</p>
+            <p><strong>Type d'évènement :</strong> {{ event.type }}</p>
+            <p><strong>Nombre maximum :</strong> {{ event.nombreMax}}</p>
+            <p><strong>Lieu :</strong> {{ event.lieu }}</p>
               <button v-if="getRole() === 'dirigeant'" class="bouton" @click="goToEdit">Editer</button>
               <button v-if="getRole() === 'dirigeant'" class="bouton" @click="deleteEvent">Supprimer</button>
             <button v-if="getRole() === 'user'" class="bouton" @click="isSubscribed ? unsubscribeEvent() : subscribeEvent()">

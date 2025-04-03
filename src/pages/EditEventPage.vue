@@ -2,19 +2,19 @@
 
 import axios from 'axios';
 import {defineComponent} from "vue";
+import {useMessage} from 'naive-ui';
 
 export default defineComponent({
   props: ["eventId"],
   data() {
     return {
-       event: {
+      event: {
         eventId : null,
         dirigeantId : null,
         name: '',
         description: '',
         createdAt : null,
         endAt: null,
-        participants : [],
         type : '',
         nombreMax : null,
         lieu : ''
@@ -42,6 +42,7 @@ export default defineComponent({
         }
       ],
       errorMessage : "",
+      message: useMessage()
     };
   },
   async mounted(){
@@ -135,19 +136,19 @@ export default defineComponent({
         const rawEventId = this.$route.params.eventId;
         this.event.eventId = parseInt(rawEventId, 10);
 
+        const localDate = this.event.endAt.toLocaleString("fr-FR", { timeZone: "Europe/Paris" })
+
         const eventData = {
           event:{
             eventId: this.event.eventId,
             name: this.event.name,
             description: this.event.description,
-            endAt: this.event.endAt,
+            endAt: localDate,
             type: this.event.type,
             nombreMax: this.event.nombreMax,
             lieu: this.event.lieu
           }
         };
-
-        console.log("Données envoyées :", eventData);
 
         await axios.put(
           uri,
@@ -159,14 +160,17 @@ export default defineComponent({
             }
           }
         );
-
-        alert('Évènement modifié avec succès !');
+        this.message.success("L'évènement a été modifié avec succès !");
         this.$router.push({name: "EventPage"});
 
-      } catch (error) {
-        this.errorMessage = error.response
-          ? error.response.data.error || "Une erreur est survenue."
-          : error.message;
+      } catch (err) {
+        if (err.response) {
+          this.message.error(err.response?.data.error || 'Une erreur est survenue.');
+        } else if (err.request) {
+          this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
+        } else {
+          this.message.error('Une erreur inconnue est survenue.');
+        }
       }
     },
   },
@@ -186,7 +190,8 @@ export default defineComponent({
           <p>Date de fin d'inscription :</p>
           <n-date-picker
             v-model:formatted-value="event.endAt"
-            type="date"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
             clearable
           />
 

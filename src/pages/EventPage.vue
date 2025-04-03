@@ -64,7 +64,6 @@ export default defineComponent({
             <h3>{{ event.name }}</h3>
             <p><strong>Date de fin d'inscription :<br> </strong> {{ event.endAt }}</p>
             <p><strong>Description : <br></strong>{{ event.description }}</p>
-            <p><strong>Participants : </strong>{{ event.participants }}</p>
             <p><strong>Type : </strong>{{ event.type }}</p>
             <p><strong>Nombre maximum : </strong>{{ event.nombreMax }}</p>
             <p><strong>Lieu : </strong>{{ event.lieu }}</p>
