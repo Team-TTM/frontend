@@ -22,7 +22,7 @@ export default defineComponent({
         lieu : ''
       },
       message : useMessage(),
-      events: [],
+      eventsRegistered: [],
     };
   },
   async mounted() {
@@ -30,7 +30,6 @@ export default defineComponent({
     await this.checkSubscription();
 
   },
-
   methods: {
     goToEdit() {
       if (!this.event || !this.event.eventId) {
@@ -111,7 +110,6 @@ export default defineComponent({
           this.$router.push("/");
           return;
         }
-
         const response = await axios.get(uri, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -119,10 +117,9 @@ export default defineComponent({
         });
 
         if (response.status === 200) {
-          console.log("Evenements ou l'user est inscrit:", response.data.events);
-          this.events = response.data.events;
-          this.isSubscribed = response.data.events.some(event => event.eventId === this.eventId);
-
+          console.log("Evenements ou l'user est inscrit:", response.data);
+          this.eventsRegistered = response.data.events;
+          this.isSubscribed = this.eventsRegistered.some(event => Number(event.eventId) === Number(this.eventId));
         } else {
           console.error("Erreur de récupération :", response.status);
           this.$router.push("/");
