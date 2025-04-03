@@ -1,5 +1,4 @@
 <template>
-  <HeaderComponent/>
   <div class="main-container">
     <div id="PageText">
       Vous êtes sur la page d'accueil

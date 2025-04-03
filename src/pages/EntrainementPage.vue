@@ -4,7 +4,6 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
 
 <template>
   <div id="page-container">
-    <HeaderComponent/>
     <div class="main-container">
       <div id="PageText">
         Vous êtes sur la page des entrainements

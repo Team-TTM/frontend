@@ -1,10 +1,8 @@
 <script setup>
-import HeaderComponent from "@/components/HeaderComponent.vue";
 </script>
 
 <template>
   <div id="page-container">
-    <HeaderComponent/>
     <div class="main-container">
       <div id="PageText">
         Vous êtes sur la page de stage

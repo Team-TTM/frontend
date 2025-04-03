@@ -11,6 +11,7 @@ export default defineComponent({
     };
   },
   async mounted() {
+
     await this.fetchEvents();
   },
   methods: {
@@ -30,8 +31,9 @@ export default defineComponent({
     },
     async fetchEvents() {
       const uri = "/api/events";
+      const token = this.$store.getters['getToken'];
+      console.log('event', token);
       try {
-        const token = this.$store.getters["getToken"];
         if (!token) {
           this.$router.push("/");
           return;
@@ -40,7 +42,6 @@ export default defineComponent({
         const response = await axios.get(uri, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         });
 
@@ -61,7 +62,6 @@ export default defineComponent({
 
 <template>
   <div id="page-container">
-    <HeaderComponent/>
     <div class="main-container">
       <div class="principal-container">
         <h2>Liste des événements</h2>
