@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" height="240" src="../assets/logo/logottm.svg" width="1748"/>
-  </header>
-
   <div class="container-connexion">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
       <h1>S'inscrire</h1>
@@ -70,14 +66,11 @@ import {useMessage} from 'naive-ui';
 import {ref} from 'vue';
 import {useLoadingBar} from 'naive-ui'
 import axios from 'axios';
-import {useStore} from 'vuex';
+import {store} from '@/store/index';
 import {useRouter} from 'vue-router';
-import LogoTTM from '@/components/LogoTTM.vue';
-import {userRole} from '@/enums/userRole.js';
 
 const router = useRouter();
 
-const store = useStore();
 const loadingBar = useLoadingBar()
 const formRef = ref(null);
 const rPasswordFormItemRef = ref(null);
@@ -181,9 +174,10 @@ function handleValidateButtonClick(e) {
         if (response.status === 201) {
           const authHeader = response.headers.authorization;
           const token = authHeader.split(' ')[1];
+          const role = response.data.role;
           await store.dispatch('login', token);
-          await store.dispatch('login', userRole.USER);
-          await router.push('HomePage');
+          await store.dispatch('setUser', role);
+          await router.push({name: 'Home'});
         } else {
           loadingBar.error();
           message.error(response.data.message);
@@ -220,7 +214,7 @@ function handleValidateButtonClick(e) {
   padding: 20px;
   max-width: 500px;
   min-width: 300px;
-  background: #dddddd;
+  background: #ffffff;
   margin: auto 20px;
 }
 </style>

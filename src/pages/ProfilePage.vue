@@ -1,9 +1,4 @@
 <template>
-  <header>
-    <LogoTTM />
-    <boutons-header />
-  </header>
-
   <div id="app">
     <main class="main-container">
 

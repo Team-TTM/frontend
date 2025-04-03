@@ -1,7 +1,4 @@
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" height="240" src="../assets/logo/logottm.svg" width="1748"/>
-  </header>
   <div id="app">
     <main class="main-container">
       <h1>
@@ -23,7 +20,6 @@
 
 <script setup>
 import LicenceInput from '@/components/LicenceInput.vue';
-import LogoTTM from "@/components/LogoTTM.vue";
 </script>
 
 <style scoped>
