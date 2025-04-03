@@ -91,13 +91,13 @@ export default defineComponent({
           this.$router.push("/");
         }
       } catch (err) {
-      if (err.response) {
-        this.message.error(err.response?.data.error || 'Une erreur est survenue.');
-      } else if (err.request) {
-        this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
-      } else {
-        this.message.error('Une erreur inconnue est survenue.');
-      }
+        if (err.response) {
+          this.message.error(err.response?.data.error || 'Une erreur est survenue.');
+        } else if (err.request) {
+          this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
+        } else {
+          this.message.error('Une erreur inconnue est survenue.');
+        }
       }
     },
     async subscribeEvent() {
