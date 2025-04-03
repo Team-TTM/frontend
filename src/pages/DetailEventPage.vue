@@ -217,7 +217,8 @@ export default defineComponent({
             <p><strong>Date de fin d'inscription :</strong> {{ event.endAt }}</p>
             <p><strong>Description :</strong> {{ event.description }}</p>
             <p><strong>Type d'évènement :</strong> {{ event.type }}</p>
-            <p><strong>Nombre maximum :</strong> {{ event.nombreMax}}</p>
+            <p><strong>Nombre maximum : </strong> {{ event.nombreMax}}</p>
+            <p><strong>Participants : </strong> {{event.participants}}</p>
             <p><strong>Lieu :</strong> {{ event.lieu }}</p>
               <button v-if="getRole() === 'dirigeant'" class="bouton" @click="goToEdit">Editer</button>
               <button v-if="getRole() === 'dirigeant'" class="bouton" @click="deleteEvent">Supprimer</button>
