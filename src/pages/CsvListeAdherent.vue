@@ -12,7 +12,7 @@
           <select ref="combobox" v-model="typeLicenceSelectionnee"  class="combobox" @change="filtrerAdherents">
             <option value="">Tous les types de licence ({{ totalAdherents }})</option>
             <option v-for="(label, key) in licences" :key="key" :value="key">
-              {{ label.replace(/(Lic\. club - |Licence club - )/, '') }} ({{ occurrences[key] || 0 }})
+              {{ String(label).replace(/(Lic\. club - |Licence club - )/, '') }}
             </option>
           </select>
 
@@ -180,14 +180,14 @@ export default {
           numeroLicence: "D75417C8901234MRAFRA", prenom: "Romain", nom: "Jean", statut: false, type: "D - Licence club - Loisir - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "6 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
         }*/
       ],
-      licences: {
+      licences: [{
         "A - Lic. club - Compétition - Jeune": "A - Lic. club - Compétition - Jeune",
         "B - Lic. club - Compétition - S. & V.": "B - Lic. club - Compétition - S. & V.",
         "C - Lic. club - Loisir - Jeune": "C - Lic. club - Loisir - Jeune",
         "D - Licence club - Loisir - S. & V.": "D - Licence club - Loisir - S. & V.",
         "F - Paratriathlon - Lic. club - Compétition  - S. & V.": "F - Paratriathlon - Lic. club - Compétition  - S. & V.",
         "G - Lic. club - Dirigeant": "G - Lic. club - Dirigeant"
-      },
+      }],
       adherentsFiltres: [],
       adherentSelectionne: null,
       typeLicenceSelectionnee: "",
@@ -321,8 +321,8 @@ export default {
 
         this.message = "Veuillez sélectionner un fichier.";
         this.messageType = "error";
-        return;
         this.process = false;
+        return;
       }
 
       let formData = new FormData();
