@@ -138,7 +138,7 @@ export default {
         }
       }
 
-    this.event.endAt = this.event.endAt.toLocaleString("fr-FR", { timeZone: "Europe/Paris" })
+      this.event.endAt = this.event.endAt.toLocaleString("fr-FR", { timeZone: "Europe/Paris" })
 
       try {
         const response = await axios.post("/api/events", { event: this.event }, {
@@ -146,7 +146,7 @@ export default {
         });
 
         if (response.status === 201) {
-          this.message.success("Évènement créé avec succès !");
+          this.message.success("L'évènement a été créé avec succès !");
           this.$router.push({ name: "EventPage" });
         } else {
           this.message.error(response.data.message || "Une erreur est survenue.");

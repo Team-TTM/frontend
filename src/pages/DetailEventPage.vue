@@ -51,7 +51,7 @@ export default defineComponent({
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        this.message.success("Événement supprimé !");
+        this.message.success("Vous avez supprimé l'évènement !");
         this.$router.push("/users/EventPage");
       } catch (err) {
         if (err.response) {

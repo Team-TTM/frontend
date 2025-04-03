@@ -150,10 +150,6 @@ export default defineComponent({
           }
         };
 
-        console.log("Date envoyée", eventData.event.endAt);
-
-        console.log("Données envoyées :", eventData);
-
         await axios.put(
           uri,
           eventData,
@@ -164,8 +160,7 @@ export default defineComponent({
             }
           }
         );
-
-        alert('Évènement modifié avec succès !');
+        this.message.success("L'évènement a été modifié avec succès !");
         this.$router.push({name: "EventPage"});
 
       } catch (err) {
