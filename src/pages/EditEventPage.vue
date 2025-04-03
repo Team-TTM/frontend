@@ -42,54 +42,66 @@ export default defineComponent({
         }
       ],
       errorMessage : "",
-      message: useMessage()
+      message: useMessage(),
     };
+
   },
-  async mounted(){
-    const eventId = this.$route.params.eventId;
-    if (eventId) {
-      await this.fetchEvent();
-    } else {
-      console.error("L'eventId est manquant dans les paramètres de la route.");
-    }
+  async mounted() {
+    await this.fetchEvent();
   },
   methods: {
     cancelEditing(){
       this.$router.push({name:"EventPage"})
     },
-    formatEventDate(dateString) {
-      if (!dateString) return null; // Vérifie si la date est null
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
+    formatDate(date) {
+      if (!date) return null;
+
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const seconds = String(d.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
     async fetchEvent() {
-      const token = this.$store.getters['getToken'];
-      const eventId = this.$route.params.eventId;
-
+      const uri = `/api/events/${this.eventId}`;
       try {
-        if (!token || !eventId) {
+        const token = this.$store.getters["getToken"];
+        if (!token) {
+          alert("Veuillez vous connecter pouvoir acceder à vos événements.");
           this.$router.push("/");
           return;
         }
 
-        const response = await axios.get(`/api/events/${this.eventId}`, {
+        const response = await axios.get(uri, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         });
 
         if (response.status === 200) {
-          this.event = response.data;
+          console.log("Données récupérées :", response.data);
+          this.event = response.data.event;
+
+          if (this.event.endAt) {
+            this.event.endAt = this.formatDate(this.event.endAt);
+          }
+
         } else {
           console.error("Erreur de récupération :", response.status);
           this.$router.push("/");
         }
-      } catch (error) {
-        console.error("Erreur lors du chargement de l'événement :", error);
+      } catch (err) {
+        if (err.response) {
+          this.message.error(err.response?.data.error || 'Une erreur est survenue.');
+        } else if (err.request) {
+          this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
+        } else {
+          this.message.error('Une erreur inconnue est survenue.');
+        }
       }
     },
     async saveChanges(){
@@ -156,7 +168,6 @@ export default defineComponent({
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type":"application/json"
             }
           }
         );
@@ -303,6 +314,7 @@ export default defineComponent({
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 50vw;
   height: 65vh; /* Hauteur fixe, ajustable selon vos besoins */
   background-color: rgba(255, 255, 255, 0.9);
   padding: 12px 24px;
@@ -318,7 +330,7 @@ export default defineComponent({
 .detail-event-container{
   display : flex;
   max-width: 100%;
-  width : 44vw;
+  width : 50vw;
   flex-direction: column;
   justify-content: start;
   align-items: center;
