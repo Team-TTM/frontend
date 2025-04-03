@@ -180,7 +180,7 @@ function handleValidateButtonClick(e) {
           await router.push({name: 'Home'});
         } else {
           loadingBar.error();
-          message.error(response.data.message);
+          message.error(response.data.error);
         }
       } catch (err) {
         if (err.response) {
