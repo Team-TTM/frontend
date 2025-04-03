@@ -12,7 +12,7 @@
           <select ref="combobox" v-model="typeLicenceSelectionnee"  class="combobox" @change="filtrerAdherents">
             <option value="">Tous les types de licence ({{ totalAdherents }})</option>
             <option v-for="(label, key) in licences" :key="key" :value="key">
-              {{ label.replace(/(Lic\. club - |Licence club - )/, '') }}
+              {{ label.replace(/(Lic\. club - |Licence club - )/, '') }} ({{ occurrences[key] || 0 }})
             </option>
           </select>
 
@@ -145,7 +145,7 @@ import {useMessage} from 'naive-ui';
 export default {
   data() {
     return {
-      adherents: [
+      adherents: [/*
         {
           numeroLicence: "B81769C7180418MCAFRA", prenom: "Jean", nom: "Dupont", statut: true, type: "B - Lic. club - Compétition - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "6 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
         },
@@ -178,7 +178,7 @@ export default {
         },
         {
           numeroLicence: "D75417C8901234MRAFRA", prenom: "Romain", nom: "Jean", statut: false, type: "D - Licence club - Loisir - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "6 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
-        }
+        }*/
       ],
       licences: {
         "A - Lic. club - Compétition - Jeune": "A - Lic. club - Compétition - Jeune",
@@ -734,5 +734,20 @@ header a {
   font-size: 0.875rem;
   font-weight: 600;
 }
+.loader {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #3498db; /* Bleu */
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 
 </style>

@@ -1,7 +1,8 @@
 <script>
 import axios from 'axios';
 import {defineComponent} from "vue";
-import {useMessage} from 'naive-ui';
+import {useMessage} from "naive-ui";
+import { mapGetters} from 'vuex';
 
 export default defineComponent({
   props: ["eventId"],
@@ -13,8 +14,8 @@ export default defineComponent({
         dirigeantId : null,
         name: '',
         description: '',
-        createdAt : null,
-        endAt: null,
+        createdAt : '',
+        endAt: '',
         participants : [],
         type : '',
         nombreMax : null,
@@ -26,6 +27,7 @@ export default defineComponent({
   async mounted() {
     await this.fetchEvent();
   },
+
   methods: {
     goToEdit() {
       if (!this.event || !this.event.eventId) {
@@ -63,11 +65,11 @@ export default defineComponent({
         }
       }
     },
+
     async fetchEvent() {
       const uri = `/api/events/${this.eventId}`;
       try {
         const token = this.$store.getters["getToken"];
-        console.log("token",token);
         if (!token) {
           alert("Veuillez vous connecter pour voir les événements.");
           this.$router.push("/");
@@ -96,8 +98,70 @@ export default defineComponent({
       } else {
         this.message.error('Une erreur inconnue est survenue.');
       }
-    }
+      }
     },
+    async subscribeEvent() {
+      const uri = `/api/events/subscribe/${this.eventId}`;
+      try {
+        const token = this.$store.getters["getToken"];
+        console.log("token",token);
+        if (!token) {
+          alert("Veuillez vous connecter pour vous inscrire à un evenement.");
+          this.$router.push("/");
+          return;
+        }
+
+        const response = await axios.post(uri,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        console.log(response.status);
+        console.log("reponse", response.data)
+        if (response.status === 200) {
+          this.message = `Inscription réussie ! ${response.data}`;
+        } else {
+          console.error("Erreur de récupération :", response.status);
+          this.$router.push("/");
+        }
+      } catch (error) {
+        if (error.response) {
+          this.messageAlert.error(error.response?.data.error || 'Une erreur est survenue.');
+        } else if (error.request) {
+          this.messageAlert.error('Problème de connexion. Veuillez réessayer plus tard.');
+        } else {
+
+          this.messageAlert.error('Une erreur inconnue est survenue.');
+        }
+      }
+    },
+    async unsubscribeEvent() {
+      if (!confirm("Voulez-vous vraiment supprimer cet événement ?")) return;
+      try {
+        const token = this.$store.getters["getToken"];
+        if (!token) {
+          alert("Veuillez vous connecter pour vous désinscrire.");
+          this.$router.push("/");
+          return;
+        }
+
+        await axios.delete(`/api/events/unsubscribe/${this.eventId}`, {
+          headers: {Authorization: `Bearer ${token}`}
+        });
+
+        alert("Inscription supprimé !");
+        this.$router.push("/users/EventPage");
+      } catch (error) {
+        console.error("Erreur lors de la suppression :", error);
+        alert("Une erreur est survenue lors de la suppression.");
+      }
+    },
+
+    getRole() {
+      return this.$store.getters["getRole"];
+    }
+
   },
 });
 </script>
@@ -109,15 +173,17 @@ export default defineComponent({
         <div class="detail-event-container">
           <h2>Détail de l'évènement</h2>
           <div>
-            <h3>{{ event.name }}</h3>
-            <p><strong>Date de fin d'inscription : <br></strong> {{ event.endAt }}</p>
-            <p><strong>Description :</strong><br>{{ event.description }}</p>
-            <p><strong>Participants :</strong>{{ event.participants }}</p>
-            <p><strong>Type :</strong>{{ event.type }}</p>
-            <p><strong>Nombre maximum :</strong>{{ event.nombreMax }}</p>
-            <p><strong>Lieu :</strong>{{ event.lieu }}</p>
-            <button class="bouton" @click="goToEdit">Editer</button>
-            <button class="bouton" @click="deleteEvent">Supprimer</button>
+            <p><strong>Titre :</strong> {{ event.name }}</p>
+            <p><strong>Date :</strong> {{ this.formatEventDate(event.endAt) }}</p>
+            <p><strong>Description :</strong> {{ event.description }}</p>
+            <p>Rôle actuel : {{ getRole() }}</p>
+              <button v-if="getRole() === 'dirigeant'" class="bouton" @click="goToEdit">Editer</button>
+              <button v-if="getRole() === 'dirigeant'" class="bouton" @click="deleteEvent">Supprimer</button>
+
+              <button v-if="getRole() === 'user'" class="bouton" @click="subscribeEvent">Participer</button>
+              <button v-if="getRole() === 'user'" class="bouton" @click="unsubscribeEvent">Se désinscrire</button>
+
+
           </div>
         </div>
       </div>
