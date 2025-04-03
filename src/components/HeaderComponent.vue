@@ -27,7 +27,7 @@ defineProps({
   <div class="header">
     <LogoTTM />
       <boutons-header v-if="connected"/>
-      <n-icon class="bouton-icon" size="40" @click="goToProfile">
+    <n-icon v-if="connected" class="bouton-icon" size="40" @click="goToProfile">
         <User/>
       </n-icon>
       <n-icon v-if="connected" class="bouton-icon" size="40" @click="disconnect">
