@@ -9,6 +9,7 @@ export default defineComponent({
   data() {
     return {
       isEditing: false,
+      isSubscribed: false,
       event: {
         eventId : null,
         dirigeantId : null,
@@ -111,33 +112,34 @@ export default defineComponent({
           return;
         }
 
-        const response = await axios.post(uri,{
+        const response = await axios.post(uri,{},{
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         });
         console.log(response.status);
         console.log("reponse", response.data)
         if (response.status === 200) {
-          this.message = `Inscription réussie ! ${response.data}`;
+          this.isSubscribed = true;
+          this.message.success("Vous êtes inscrit à cet évènement");
+
         } else {
           console.error("Erreur de récupération :", response.status);
           this.$router.push("/");
         }
       } catch (error) {
         if (error.response) {
-          this.messageAlert.error(error.response?.data.error || 'Une erreur est survenue.');
+          this.message.error(error.response?.data.error || 'Une erreur est survenue.');
         } else if (error.request) {
-          this.messageAlert.error('Problème de connexion. Veuillez réessayer plus tard.');
+          this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
         } else {
 
-          this.messageAlert.error('Une erreur inconnue est survenue.');
+          this.message.error('Une erreur inconnue est survenue.');
         }
       }
     },
     async unsubscribeEvent() {
-      if (!confirm("Voulez-vous vraiment supprimer cet événement ?")) return;
+      if (!confirm("Voulez-vous vraiment vous désinscrire ?")) return;
       try {
         const token = this.$store.getters["getToken"];
         if (!token) {
@@ -149,12 +151,14 @@ export default defineComponent({
         await axios.delete(`/api/events/unsubscribe/${this.eventId}`, {
           headers: {Authorization: `Bearer ${token}`}
         });
-
-        alert("Inscription supprimé !");
+        this.isSubscribed = false;
+        this.message.success("Vous n'etes plus inscrit à l'evenement");;
         this.$router.push("/users/EventPage");
       } catch (error) {
-        console.error("Erreur lors de la suppression :", error);
-        alert("Une erreur est survenue lors de la suppression.");
+        if(error.response.status === 409) {
+          console.error("Erreur lors de la désinscription :", error);
+          this.message.warning("Vous etes deja désinscrit ")
+        }
       }
     },
 
@@ -174,15 +178,13 @@ export default defineComponent({
           <h2>Détail de l'évènement</h2>
           <div>
             <p><strong>Titre :</strong> {{ event.name }}</p>
-            <p><strong>Date :</strong> {{ this.formatEventDate(event.endAt) }}</p>
+            <p><strong>Date :</strong> {{ event.endAt }}</p>
             <p><strong>Description :</strong> {{ event.description }}</p>
-            <p>Rôle actuel : {{ getRole() }}</p>
               <button v-if="getRole() === 'dirigeant'" class="bouton" @click="goToEdit">Editer</button>
               <button v-if="getRole() === 'dirigeant'" class="bouton" @click="deleteEvent">Supprimer</button>
-
-              <button v-if="getRole() === 'user'" class="bouton" @click="subscribeEvent">Participer</button>
-              <button v-if="getRole() === 'user'" class="bouton" @click="unsubscribeEvent">Se désinscrire</button>
-
+              <button v-if="getRole() === 'user'" class="bouton" @click="isSubscribed ? unsubscribeEvent() : subscribeEvent()">
+                {{ isSubscribed ? "Se désinscrire" : "Participer" }}
+              </button>
 
           </div>
         </div>
