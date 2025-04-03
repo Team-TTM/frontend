@@ -10,8 +10,12 @@
             <n-input v-model:value="event.name" clearable style="width: 100%" placeholder="Entrez le nom" />
 
             <p>Date de fin d'inscription :</p>
-            <n-date-picker v-model:value="event.endAt" type="date" placeholder="Sélectionnez une date" style="width: 100%" />
-
+            <n-date-picker
+              v-model:formatted-value="event.endAt"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              clearable
+            />
             <p>Description :</p>
             <n-input
                 v-model:value="event.description"
@@ -93,7 +97,6 @@ export default {
         description: "",
         createdAt: "",
         endAt: null,
-        participants: [],
         type: "",
         nombreMax: null,
         lieu: "",
@@ -134,6 +137,8 @@ export default {
           return;
         }
       }
+
+    this.event.endAt = this.event.endAt.toLocaleString("fr-FR", { timeZone: "Europe/Paris" })
 
       try {
         const response = await axios.post("/api/events", { event: this.event }, {
