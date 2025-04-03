@@ -46,7 +46,6 @@ import axios from 'axios';
 import {store} from '@/store/index';
 import {useRouter} from 'vue-router';
 import {onMounted} from 'vue';
-import HeaderAuth from '@/components/HeaderAuth.vue';
 const router = useRouter();
 
 const loadingBar = useLoadingBar()
@@ -151,11 +150,11 @@ function handleValidateButtonClick(e) {
 .container-connexion {
   width: 100%;
   height: 100%;
+  padding: 50px;
+  background: #F0F0F0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 5px;
 }
 
 #form-connexion {
