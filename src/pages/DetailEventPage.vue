@@ -23,10 +23,13 @@ export default defineComponent({
         lieu : ''
       },
       message : useMessage(),
+      events: [],
     };
   },
   async mounted() {
     await this.fetchEvent();
+    await this.checkSubscription();
+
   },
 
   methods: {
@@ -72,6 +75,39 @@ export default defineComponent({
       try {
         const token = this.$store.getters["getToken"];
         if (!token) {
+          alert("Veuillez vous connecter pouvoir acceder à vos événements.");
+          this.$router.push("/");
+          return;
+        }
+
+        const response = await axios.get(uri, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          console.log("Données récupérées :", response.data);
+          this.event = response.data.event;
+        } else {
+          console.error("Erreur de récupération :", response.status);
+          this.$router.push("/");
+        }
+      } catch (err) {
+        if (err.response) {
+          this.message.error(err.response?.data.error || 'Une erreur est survenue.');
+        } else if (err.request) {
+          this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
+        } else {
+          this.message.error('Une erreur inconnue est survenue.');
+        }
+      }
+    },
+    async checkSubscription() {
+      const uri = `/api/events/subscribe`;
+      try {
+        const token = this.$store.getters["getToken"];
+        if (!token) {
           alert("Veuillez vous connecter pour voir les événements.");
           this.$router.push("/");
           return;
@@ -80,13 +116,14 @@ export default defineComponent({
         const response = await axios.get(uri, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         });
 
         if (response.status === 200) {
-          console.log("Données récupérées :", response.data);
-          this.event = response.data.event;
+          console.log("Evenements ou l'user est inscrit:", response.data.events);
+          this.events = response.data.events;
+          this.isSubscribed = response.data.events.some(event => event.eventId === this.eventId);
+
         } else {
           console.error("Erreur de récupération :", response.status);
           this.$router.push("/");
@@ -182,9 +219,9 @@ export default defineComponent({
             <p><strong>Description :</strong> {{ event.description }}</p>
               <button v-if="getRole() === 'dirigeant'" class="bouton" @click="goToEdit">Editer</button>
               <button v-if="getRole() === 'dirigeant'" class="bouton" @click="deleteEvent">Supprimer</button>
-              <button v-if="getRole() === 'user'" class="bouton" @click="isSubscribed ? unsubscribeEvent() : subscribeEvent()">
-                {{ isSubscribed ? "Se désinscrire" : "Participer" }}
-              </button>
+            <button v-if="getRole() === 'user'" class="bouton" @click="isSubscribed ? unsubscribeEvent() : subscribeEvent()">
+              {{ isSubscribed ? "Se désinscrire" : "Participer" }}
+            </button>
 
           </div>
         </div>
