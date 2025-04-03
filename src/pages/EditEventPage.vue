@@ -2,27 +2,56 @@
 
 import axios from 'axios';
 import {defineComponent} from "vue";
-import HeaderComponent from "@/components/HeaderComponent.vue";
+import {useMessage} from 'naive-ui';
 
 export default defineComponent({
-  components: {HeaderComponent},
   props: ["eventId"],
   data() {
     return {
-       event: {
+      event: {
         eventId : null,
         dirigeantId : null,
         name: '',
         description: '',
-        createdAt : '',
-        endAt: '',
-        participants : [],
+        createdAt : null,
+        endAt: null,
+        type : '',
+        nombreMax : null,
+        lieu : ''
       },
+      types : [
+        {
+          label: 'Course',
+          value: 'Course',
+        },
+        {
+          label: 'Déplacement',
+          value: 'Déplacement',
+        },
+        {
+          label: 'Soirée',
+          value: 'Soirée',
+        },
+        {
+          label: 'Stage',
+          value: 'Stage',
+        },
+        {
+          label: 'Entrainement',
+          value: 'Entrainement',
+        }
+      ],
       errorMessage : "",
+      message: useMessage()
     };
   },
-  mounted(){
-    this.fetchEvent();
+  async mounted(){
+    const eventId = this.$route.params.eventId;
+    if (eventId) {
+      await this.fetchEvent();
+    } else {
+      console.error("L'eventId est manquant dans les paramètres de la route.");
+    }
   },
   methods: {
     cancelEditing(){
@@ -37,17 +66,28 @@ export default defineComponent({
       return `${day}/${month}/${year}`;
     },
     async fetchEvent() {
+      const token = this.$store.getters['getToken'];
+      const eventId = this.$route.params.eventId;
+
       try {
-        const eventId = this.$route.params.eventId;
-        const token = this.$store.getters["getToken"];
+        if (!token || !eventId) {
+          this.$router.push("/");
+          return;
+        }
 
-        if (!eventId || !token) return;
-
-        const response = await axios.get(`/api/events/${eventId}`, {
-          headers: { Authorization: `Bearer ${token}` },
+        const response = await axios.get(`/api/events/${this.eventId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         });
 
-        this.event = response.data;
+        if (response.status === 200) {
+          this.event = response.data;
+        } else {
+          console.error("Erreur de récupération :", response.status);
+          this.$router.push("/");
+        }
       } catch (error) {
         console.error("Erreur lors du chargement de l'événement :", error);
       }
@@ -78,19 +118,37 @@ export default defineComponent({
           return;
         }
 
+        if(!this.event.type.trim()){
+          this.errorMessage = "Le type de l'évènement doit être rempli";
+          return;
+        }
+
+        if(!this.event.nombreMax){
+          this.errorMessage = "Le nombre maximum de participants doit être rempli";
+          return;
+        }
+
+        if(!this.event.lieu.trim()){
+          this.errorMessage = "Le lieu de l'évènement doit être rempli";
+          return;
+        }
+
         const rawEventId = this.$route.params.eventId;
         this.event.eventId = parseInt(rawEventId, 10);
+
+        const localDate = this.event.endAt.toLocaleString("fr-FR", { timeZone: "Europe/Paris" })
 
         const eventData = {
           event:{
             eventId: this.event.eventId,
             name: this.event.name,
             description: this.event.description,
-            endAt: this.event.endAt,
+            endAt: localDate,
+            type: this.event.type,
+            nombreMax: this.event.nombreMax,
+            lieu: this.event.lieu
           }
         };
-
-        console.log("Données envoyées :", eventData);
 
         await axios.put(
           uri,
@@ -102,14 +160,17 @@ export default defineComponent({
             }
           }
         );
-
-        alert('Évènement modifié avec succès !');
+        this.message.success("L'évènement a été modifié avec succès !");
         this.$router.push({name: "EventPage"});
 
-      } catch (error) {
-        this.errorMessage = error.response
-          ? error.response.data.error || "Une erreur est survenue."
-          : error.message;
+      } catch (err) {
+        if (err.response) {
+          this.message.error(err.response?.data.error || 'Une erreur est survenue.');
+        } else if (err.request) {
+          this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
+        } else {
+          this.message.error('Une erreur inconnue est survenue.');
+        }
       }
     },
   },
@@ -120,20 +181,64 @@ export default defineComponent({
 <div id="page-container">
   <div class="main-container">
     <div class="principal-container">
-      <div class="detail-event-container">
-        <h2>Détail de l'évènement</h2>
-        <div class="input-container">
-          <p>Nom de l'évènement : </p>
-          <input v-model="event.name" title="Nom de l'évènement">
-          <p>Date de fin d'inscription : </p>
-          <input v-model="event.endAt" type="date" title="Date de fin d'inscription" >
-          <p>Description : </p>
-          <textarea rows="10" cols="30" v-model="event.description" title="Description"/>
+      <n-form class="detail-event-container" :model="event" @submit.prevent="saveChanges">
+        <h2>Editer l'évènement </h2>
+        <div class="input-div">
+          <p>Nom de l'évènement :</p>
+          <n-input v-model:value="event.name" clearable style="width: 100%" placeholder="Entrez le nom" />
+
+          <p>Date de fin d'inscription :</p>
+          <n-date-picker
+            v-model:formatted-value="event.endAt"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            clearable
+          />
+
+          <p>Description :</p>
+          <n-input
+            v-model:value="event.description"
+            clearable
+            type="textarea"
+            placeholder="Entrez la description"
+            size="large"
+            :autosize="{ minRows: 3, maxRows: 5 }"
+            style="width: 100%"
+          />
+
+          <p>Type d'évènement :</p>
+          <n-select v-model:value="event.type" :options="types" style="width: 100%" placeholder="Choisissez un type" />
+
+          <p>Nombre maximum de participants :</p>
+          <n-input-number v-model:value="event.nombreMax" placeholder="Entrer le nombre maximum" :min="1" style="width: 100%" />
+
+          <p>Lieu :</p>
+          <n-input v-model:value="event.lieu" placeholder="Entrer le lieu" clearable style="width: 100%" />
+
           <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-          <button class="bouton" @click="saveChanges">Enregistrer</button>
-          <button class="bouton" @click="cancelEditing">Annuler</button>
+
+          <div class="div-buttons-container">
+            <div class="div-button-save">
+              <n-button :theme-overrides="{
+                  textColorHover: '#ff5733',
+                  borderHover: '1px solid #ff5733',
+                  backgroundColorHover: '#ffeeee'
+                   }" class="btn" @click="saveChanges">
+                Enregistrer
+              </n-button>
+            </div>
+            <div class="div-button-cancel">
+              <n-button :theme-overrides="{
+              textColorHover: '#ff5733',
+              borderHover: '1px solid #ff5733',
+              backgroundColorHover: '#ffeeee'
+              }" class="btn" @click="cancelEditing">
+                Annuler
+              </n-button>
+            </div>
+          </div>
         </div>
-      </div>
+      </n-form>
     </div>
   <footer>© 2025 - Site TTM | Auteur | Support</footer>
 </div>
@@ -141,6 +246,27 @@ export default defineComponent({
 </template>
 
 <style scoped>
+
+.btn {
+  display: flex;
+  justify-content: center;
+  background: white;
+}
+
+.div-buttons-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+}
+
+.div-button-save{
+  display: flex;
+}
+.div-button-cancel{
+  display: flex;
+}
 
 .error-message {
   color: red;
@@ -191,11 +317,12 @@ export default defineComponent({
 
 .detail-event-container{
   display : flex;
-  flex-wrap: wrap;
+  max-width: 100%;
   width : 44vw;
   flex-direction: column;
   justify-content: start;
   align-items: center;
+  overflow-x: auto;
 }
 
 .input-container{

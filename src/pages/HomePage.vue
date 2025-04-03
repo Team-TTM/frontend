@@ -6,14 +6,6 @@
         <button id="bouton">Accéder à la BD</button>
       </router-link>
     </div>
-    <div class="instagram-newsletter-container">
-      <div class="instagram-container">
-
-      </div>
-      <div class="newsletter-container">
-
-      </div>
-    </div>
   </div>
   <footer>
       © 2025 - Site TTM | Auteur | Support
@@ -24,7 +16,6 @@
 import {onMounted} from 'vue';
 import {useLoadingBar} from 'naive-ui';
 import {useStore} from 'vuex';
-import HeaderComponent from "@/components/HeaderComponent.vue";
 
 const loadingBar = useLoadingBar();
 const store = useStore();
