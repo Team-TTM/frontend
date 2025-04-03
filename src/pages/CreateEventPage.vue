@@ -103,6 +103,7 @@ export default {
         { label: "Déplacement", value: "Déplacement" },
         { label: "Soirée", value: "Soirée" },
         { label: "Stage", value: "Stage" },
+        { label: 'Entrainement', value: 'Entrainement' }
       ],
       errorMessage: "",
       message: useMessage(),
@@ -138,8 +139,6 @@ export default {
         const response = await axios.post("/api/events", { event: this.event }, {
           headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
         });
-
-        console.log("response statut", response.status);
 
         if (response.status === 201) {
           this.message.success("Évènement créé avec succès !");

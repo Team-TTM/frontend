@@ -17,7 +17,7 @@ export default defineComponent({
         endAt: null,
         participants : [],
         type : '',
-        nombreMax : '',
+        nombreMax : null,
         lieu : ''
       },
       message : useMessage(),
@@ -31,7 +31,11 @@ export default defineComponent({
       if (!this.event || !this.event.eventId) {
         return;
       }
-      this.$router.push({ name: "EditEventPage", params: { eventId: this.event.eventId } });
+      this.$router.push({
+        name: "EditEventPage",
+        params: { eventId: this.event.eventId },
+        state: { event: this.event }
+      });
     },
     async deleteEvent() {
       if (!confirm("Voulez-vous vraiment supprimer cet événement ?")) return;
@@ -106,7 +110,7 @@ export default defineComponent({
           <h2>Détail de l'évènement</h2>
           <div>
             <h3>{{ event.name }}</h3>
-            <p><strong>Date de fin d'inscription :</strong> {{ event.endAt }}</p>
+            <p><strong>Date de fin d'inscription : <br></strong> {{ event.endAt }}</p>
             <p><strong>Description :</strong><br>{{ event.description }}</p>
             <p><strong>Participants :</strong>{{ event.participants }}</p>
             <p><strong>Type :</strong>{{ event.type }}</p>

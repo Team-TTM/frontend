@@ -12,7 +12,7 @@ export default defineComponent({
         dirigeantId : null,
         name: '',
         description: '',
-        createdAt : Date.now(),
+        createdAt : null,
         endAt: null,
         participants : [],
         type : '',
@@ -36,12 +36,21 @@ export default defineComponent({
           label: 'Stage',
           value: 'Stage',
         },
+        {
+          label: 'Entrainement',
+          value: 'Entrainement',
+        }
       ],
       errorMessage : "",
     };
   },
   async mounted(){
-    await this.fetchEvent();
+    const eventId = this.$route.params.eventId;
+    if (eventId) {
+      await this.fetchEvent();
+    } else {
+      console.error("L'eventId est manquant dans les paramètres de la route.");
+    }
   },
   methods: {
     cancelEditing(){
@@ -65,9 +74,10 @@ export default defineComponent({
           return;
         }
 
-        const response = await axios.get(`/api/events/${eventId}`, {
+        const response = await axios.get(`/api/events/${this.eventId}`, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         });
 
@@ -168,14 +178,17 @@ export default defineComponent({
   <div class="main-container">
     <div class="principal-container">
       <n-form class="detail-event-container" :model="event" @submit.prevent="saveChanges">
-        <h2>Créer un évènement</h2>
-
+        <h2>Editer l'évènement </h2>
         <div class="input-div">
           <p>Nom de l'évènement :</p>
           <n-input v-model:value="event.name" clearable style="width: 100%" placeholder="Entrez le nom" />
 
           <p>Date de fin d'inscription :</p>
-          <n-date-picker v-model:value="event.endAt" type="date" placeholder="Sélectionnez une date" style="width: 100%" />
+          <n-date-picker
+            v-model:formatted-value="event.endAt"
+            type="date"
+            clearable
+          />
 
           <p>Description :</p>
           <n-input
