@@ -1,5 +1,5 @@
 <template>
-  <div class="container-connexion">
+    <div class="container-inscription">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
       <h1>S'inscrire</h1>
       <n-form-item label="Mail" path="mail">
@@ -198,24 +198,21 @@ function handleValidateButtonClick(e) {
 </script>
 
 <style scoped>
-.container-connexion {
+.container-inscription {
   width: 100%;
   height: 100%;
+    padding: 50px;
+    background: #F0F0F0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 5px;
 }
 
 #form-connexion {
+    padding: 20px;
   border-radius: 5px;
-  width: 100%;
-  padding: 20px;
-  max-width: 500px;
-  min-width: 300px;
+    width: 600px;
   background: #ffffff;
-  margin: auto 20px;
 }
 </style>
 

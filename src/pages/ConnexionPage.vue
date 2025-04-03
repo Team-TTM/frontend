@@ -1,5 +1,5 @@
 <template>
-  <div class="container-connexion">
+  <div class="container-inscription">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
       <h1>Se connecter </h1>
       <n-form-item label="Mail" path="mail">
@@ -147,7 +147,7 @@ function handleValidateButtonClick(e) {
 </script>
 
 <style scoped>
-.container-connexion {
+.container-inscription {
   width: 100%;
   height: 100%;
   padding: 50px;
@@ -158,13 +158,10 @@ function handleValidateButtonClick(e) {
 }
 
 #form-connexion {
-  border-radius: 5px;
-  width: 100%;
   padding: 20px;
-  max-width: 500px;
-  min-width: 300px;
+  border-radius: 5px;
+  width: 600px;
   background: #ffffff;
-  margin: auto 20px;
 }
 
 </style>
