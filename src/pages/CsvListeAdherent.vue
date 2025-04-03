@@ -12,7 +12,7 @@
           <select ref="combobox" v-model="typeLicenceSelectionnee"  class="combobox" @change="filtrerAdherents">
             <option value="">Tous les types de licence ({{ totalAdherents }})</option>
             <option v-for="(label, key) in licences" :key="key" :value="key">
-              {{ label.replace(/(Lic\. club - |Licence club - )/, '') }} ({{ occurrences[key] || 0 }})
+              {{ label.replace(/(Lic\. club - |Licence club - )/, '') }}
             </option>
           </select>
 
@@ -26,7 +26,7 @@
             <div class="button-container">
               <input type="file" id="fileUpload" accept=".xls,.xlsx" @change="handleFileUpload" class="file-input"/>
 
-              <button @click="uploadCSV" :disabled="!file" class="import-button"
+              <button :disabled="!file && !process" class="import-button" @click="uploadCSV"
                       :class="file ? 'active-import' : 'disabled-import'">Importer</button>
             </div>
             <p v-if="message" :class="messageType" class="status-message">{{ message }}</p>
@@ -80,7 +80,7 @@
               <template v-for="adherent in adherentsFiltres" :key="adherent.numeroLicence">
                 <tr class="info-adherent-container">
                   <td>{{ adherent.numeroLicence }}</td>
-                  <td>{{ adherent.prenom.toUpperCase() }}</td>
+                  <td>{{ adherent.prenom?.toUpperCase() }}</td>
                   <td>{{ adherent.nom }}</td>
                   <td>{{ adherent.ville }}</td>
                   <td>{{adherent.mobile}}</td>
@@ -141,12 +141,11 @@
 <script>
 
 import axios from "axios";
-import HeaderComponent from "@/components/HeaderComponent.vue";
+import {useMessage} from 'naive-ui';
 export default {
-  components: {HeaderComponent},
   data() {
     return {
-      adherents: [/*
+      adherents: [
         {
           numeroLicence: "B81769C7180418MCAFRA", prenom: "Jean", nom: "Dupont", statut: true, type: "B - Lic. club - Compétition - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Dupont", dateNaissance: "1985-03-22", sexe: "Homme", profession: "Ingénieur", adressePrincipale: "1 rue de Paris", details: "Appartement 12", lieuDit: "Quartier du Parc", codePostal: "75001", ville: "Paris", pays: "France", telephone: "01 23 45 67 89", mobile: "6 12 34 56 78", email: "jean.dupont@example.com", urgenceTelephone: "06 98 76 54 32", saison: ["2023/2024", "2024/2025"]
         },
@@ -179,7 +178,7 @@ export default {
         },
         {
           numeroLicence: "D75417C8901234MRAFRA", prenom: "Romain", nom: "Jean", statut: false, type: "D - Licence club - Loisir - S. & V.", demiTarif: false, horsClub: true, categorie: "Senior", anneeBlanche: false, pratique: "Compétition de manière régulière", nomUsage: "Lemoine", dateNaissance: "1978-11-05", sexe: "Homme", profession: "Médecin", adressePrincipale: "45 avenue de la République", details: "Appartement 3", lieuDit: "Centre-ville", codePostal: "13001", ville: "Marseille", pays: "France", telephone: "01 44 55 66 77", mobile: "6 76 54 32 10", email: "paul.lemoine@example.com", urgenceTelephone: "06 11 22 33 44", saison: ["2023/2024", "2024/2025"]
-        }*/
+        }
       ],
       licences: {
         "A - Lic. club - Compétition - Jeune": "A - Lic. club - Compétition - Jeune",
@@ -199,6 +198,8 @@ export default {
       file: null,
       message: "",
       messageType: "", // success ou error
+      messageAlert: useMessage(),
+      process: false
     };
   },
   methods: {
@@ -313,12 +314,15 @@ export default {
       console.log(event);
     },
     async uploadCSV() {
+      this.process = true;
       const uri = "/api/import/adherent";
 
       if (!this.file) {
+
         this.message = "Veuillez sélectionner un fichier.";
         this.messageType = "error";
         return;
+        this.process = false;
       }
 
       let formData = new FormData();
@@ -337,42 +341,51 @@ export default {
         console.log(response.status);
         if (response.status === 200) {
           this.message = `Importation réussie ! ${response.data.add} ajout(s), ${response.data.update} mise(s) à jour.`;
+          this.messageAlert.success(`Importation réussie ! ${response.data.add} ajout(s), ${response.data.update} mise(s) à jour.`);
           this.messageType = "success";
+          await this.fetchAdherents();
         } else {
           console.error("Erreur de récupération :", response.status);
           this.$router.push("/");
         }
-
       } catch (error) {
         if (error.response) {
-          switch (error.response.status) {
-            case 400:
-              this.message = "Erreur de format ou données invalides.";
-              break;
-            case 401:
-              this.message = "Non autorisé. Vérifiez votre connexion.";
-              break;
-            case 500:
-              this.message = "Erreur interne du serveur.";
-              break;
-            default:
-              this.message = "Une erreur inconnue est survenue.";
-          }
+          this.messageAlert.error(error.response?.data.error || 'Une erreur est survenue.');
+        } else if (error.request) {
+          this.messageAlert.error('Problème de connexion. Veuillez réessayer plus tard.');
         } else {
-          this.message = "Impossible de contacter le serveur.";
+          this.messageAlert.error('Une erreur inconnue est survenue.');
         }
-        this.messageType = "error";
+      } finally {
+        this.process = false;
       }
+    },
+    async fetchAdherents() {
+      const uri = '/api/adherent/all';
+      try {
+        const token = this.$store.getters['getToken'];
+        console.log(token);
+        const response = await axios.get(uri, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+        console.log(response)
+        if (response.status !== 200) {
+          this.$router.push('/');
+        }
+        await this.uploadCSV();
+        this.adherents = response.data;
+        this.adherentsFiltres = [...this.adherents];
+
+      } catch
+        (error) {
+        console.error('Erreur lors de la requête :', error);
+      }
+
     }
   },
   computed: {
-    occurrences() {
-      // Compte le nombre d'adhérents par type de licence
-      return this.adherents.reduce((acc, adherent) => {
-        acc[adherent.type] = (acc[adherent.type] || 0) + 1;
-        return acc;
-      }, {});
-    },
     totalAdherents() {
       return this.adherents.length;
     },
@@ -388,27 +401,7 @@ export default {
   },*/
 
   async mounted() {
-    const uri = "/users/getAllAdherents";
-    try {
-      const token = this.$store.getters['getToken'];
-      console.log(token);
-      const response = await axios.get(uri, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      if (response.status !== 200) {
-        this.$router.push('/');
-      }
-      await this.uploadCSV();
-      this.adherents = response.data;
-      this.adherentsFiltres = [...this.adherents];
-
-    } catch
-      (error) {
-      console.error("Erreur lors de la requête :", error);
-    }
+    this.fetchAdherents()
   },
 
 };

@@ -11,17 +11,25 @@ const isUserLoggedIn = computed(() => store.getters.isAuthenticated);
 <template>
   <n-config-provider>
   <n-loading-bar-provider>
-    <HeaderComponent :connected="isUserLoggedIn"/>
     <n-message-provider>
+      <HeaderComponent :connected="isUserLoggedIn"/>
       <RouterView/>
+      <footer>
+        © 2025 - Site TTM | Auteur | Support
+      </footer>
     </n-message-provider>
-    <footer>
-      © 2025 - Site TTM | Auteur | Support
-    </footer>
   </n-loading-bar-provider>
   </n-config-provider>
 </template>
 
 <style scoped>
-
+/*#content {
+  background: #F0F0F0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}*/
 </style>

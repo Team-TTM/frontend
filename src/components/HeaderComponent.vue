@@ -22,11 +22,11 @@ defineProps({
 <template>
   <div class="header">
     <LogoTTM />
-    <boutons-header v-show="connected"/>
-    <n-icon v-show="connected" class="bouton-icon" size="40">
+      <boutons-header v-if="connected"/>
+      <n-icon v-if="connected" class="bouton-icon" size="40">
         <User/>
     </n-icon>
-    <n-icon v-show="connected" class="bouton-icon" size="40" @click="disconnect">
+      <n-icon v-if="connected" class="bouton-icon" size="40" @click="disconnect">
         <Disconnect/>
     </n-icon>
   </div>
@@ -38,10 +38,9 @@ defineProps({
   display: flex;
   justify-content: space-around;
   align-items: center;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 150px;
+    max-height: 150px;
   background-color: #ffffff; /* Ajoutez une couleur de fond si nécessaire */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000;

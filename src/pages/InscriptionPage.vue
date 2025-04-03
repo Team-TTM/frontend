@@ -214,7 +214,7 @@ function handleValidateButtonClick(e) {
   padding: 20px;
   max-width: 500px;
   min-width: 300px;
-  background: #dddddd;
+  background: #ffffff;
   margin: auto 20px;
 }
 </style>

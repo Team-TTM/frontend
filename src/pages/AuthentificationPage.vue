@@ -57,7 +57,6 @@ import {EmailFilled as Mail} from '@vicons/material'
 import {useRouter} from 'vue-router';
 import {useLoadingBar} from 'naive-ui'
 import {onMounted} from 'vue'
-import HeaderAuth from '@/components/HeaderAuth.vue';
 
 const loadingBar = useLoadingBar()
 const router = useRouter();
@@ -85,21 +84,10 @@ const signUp = async () => {
 <style scoped>
 
 
-.container-connexion {
-  background: #F0F0F0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-}
-
 #card {
-  height: 600px;
+  background: #ffffff;
   width: 600px;
-  border-radius: 10px;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -110,6 +98,7 @@ const signUp = async () => {
   display: flex;
   justify-content: flex-start;
   background: white;
-  width: 250px
+  width: 300px;
+  height: 75px;
 }
 </style>
