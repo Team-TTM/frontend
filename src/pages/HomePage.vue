@@ -8,6 +8,7 @@
         Vous êtes connecter en tant que {{ role }}
       </h2>
       <router-link v-if="role !== userRole.USER" id="bouton" to="/users/csvListeAdherent">
+        accéder à la liste des adhérents
       </router-link>
     </div>
   </div>
@@ -41,39 +42,6 @@ onMounted(() => {
 </script>
 <style scoped>
 
-.instagram-newsletter-container{
-  display:flex;
-  flex-direction: row;
-  position:fixed;
-  height:70%;
-  width:100%;
-  margin-top:30px;
-  background-color: white;
-}
-
-.instagram-container{
-  display:flex;
-  height:90%;
-  width:80%;
-  background-color: white;
-  border-radius:10px;
-  margin-top: 40px;
-  margin-right: 10px;
-  margin-left: 20px;
-  /*box-shadow: -2px 3px 6px rgba(0, 0, 0, 0.8);*/
-}
-
-.newsletter-container{
-  display:flex;
-  height:90%;
-  width:80%;
-  background-color: white;
-  border-radius:10px;
-  margin-top: 40px;
-  margin-right: 20px;
-  margin-left: 10px;
-  /*box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.8);*/
-}
 
 #bouton{
   position:relative;
@@ -91,6 +59,10 @@ onMounted(() => {
   text-align : center;
   text-transform: uppercase;
   margin: 10px;
+  display: flex;
+  justify-content: center; /* Centre horizontalement */
+  align-items: center;
+  text-decoration: none;
 }
 
 #bouton:hover{

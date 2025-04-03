@@ -15,7 +15,7 @@ import DetailEventPage from '@/pages/DetailEventPage.vue';
 import EditEventPage from '@/pages/EditEventPage.vue';
 import {store} from '@/store/index';
 import {userRole} from '@/enums/userRole.js';
-import ProfilePage from "@/pages/ProfilePage.vue";
+import ProfilePage from '@/pages/ProfilePage.vue';
 
 const routes = [
   {
@@ -37,14 +37,14 @@ const routes = [
     path:'/users/csvListeAdherent',
     name: 'CsvListeAdherent',
     component: CsvListeAdherent,
-    beforeEnter: (to, from) => {
+    beforeEnter: () => {
       const role = store.getters.getRole;
       switch (role) {
         case userRole.ADMIN:
         case userRole.DIRIGEANT:
           return true;
         default:
-          return false;
+          return {name: 'Home'};
       }
     }
   },
