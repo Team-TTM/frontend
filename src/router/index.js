@@ -15,6 +15,7 @@ import DetailEventPage from '@/pages/DetailEventPage.vue';
 import EditEventPage from '@/pages/EditEventPage.vue';
 import {store} from '@/store/index';
 import {userRole} from '@/enums/userRole.js';
+import ProfilePage from "@/pages/ProfilePage.vue";
 
 const routes = [
   {
@@ -84,6 +85,11 @@ const routes = [
     component : EditEventPage,
     props : true,
   },
+  {
+    path : '/profile',
+    name : 'Profile',
+    component : ProfilePage,
+  },
 
   {
     path : '/users/StagePage',
@@ -91,7 +97,7 @@ const routes = [
     component: StagePage
   },
   {
-    path: '/inscription',
+    path: '/users/inscription',
     name: 'Inscription',
     component: InscriptionPage
   },

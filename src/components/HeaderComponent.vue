@@ -13,6 +13,10 @@ const disconnect = async () => {
   await router.push({name: 'Accueil-auth'});
 }
 
+const goToProfile = async () => {
+  await router.push({name: 'Profile'});
+}
+
 defineProps({
   connected: Boolean
 });
@@ -23,9 +27,9 @@ defineProps({
   <div class="header">
     <LogoTTM />
       <boutons-header v-if="connected"/>
-      <n-icon v-if="connected" class="bouton-icon" size="40">
+      <n-icon class="bouton-icon" size="40" @click="goToProfile">
         <User/>
-    </n-icon>
+      </n-icon>
       <n-icon v-if="connected" class="bouton-icon" size="40" @click="disconnect">
         <Disconnect/>
     </n-icon>
