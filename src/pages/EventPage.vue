@@ -1,11 +1,8 @@
 <script>
 import axios from "axios";
 import { defineComponent } from "vue";
-import LogoTTM from "@/components/LogoTTM.vue";
-import BoutonsHeader from "@/components/boutonsHeader.vue";
 
 export default defineComponent({
-  components: { BoutonsHeader, LogoTTM },
   data() {
     return {
       events: [],
@@ -15,14 +12,6 @@ export default defineComponent({
     await this.fetchEvents();
   },
   methods: {
-    formatEventDate(dateString) {
-      if (!dateString) return null; // Vérifie si la date est null
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
-    },
     goToDetail(event) {
       if (!event || !event.eventId) {
         return;
@@ -31,8 +20,9 @@ export default defineComponent({
     },
     async fetchEvents() {
       const uri = "/api/events";
+      const token = this.$store.getters['getToken'];
+
       try {
-        const token = this.$store.getters["getToken"];
         if (!token) {
           this.$router.push("/");
           return;
@@ -41,12 +31,10 @@ export default defineComponent({
         const response = await axios.get(uri, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         });
 
         if (response.status === 200) {
-          console.log("Données récupérées :", response.data);
           this.events = response.data.events;
         } else {
           console.error("Erreur de récupération :", response.status);
@@ -62,10 +50,6 @@ export default defineComponent({
 
 <template>
   <div id="page-container">
-    <header>
-      <LogoTTM />
-      <BoutonsHeader />
-    </header>
     <div class="main-container">
       <div class="principal-container">
         <h2>Liste des événements</h2>
@@ -78,8 +62,11 @@ export default defineComponent({
         <div class="event-container">
           <div v-for="event in events" :key="event.eventId" class="event-item" @click="goToDetail(event)">
             <h3>{{ event.name }}</h3>
-            <p><strong>Date de fin d'inscription :</strong> {{ this.formatEventDate(event.endAt) }}</p>
-            <p>{{ event.description }}</p>
+            <p><strong>Date de fin d'inscription :<br> </strong> {{ event.endAt }}</p>
+            <p><strong>Description : <br></strong>{{ event.description }}</p>
+            <p><strong>Type : </strong>{{ event.type }}</p>
+            <p><strong>Nombre maximum : </strong>{{ event.nombreMax }}</p>
+            <p><strong>Lieu : </strong>{{ event.lieu }}</p>
           </div>
         </div>
       </div>

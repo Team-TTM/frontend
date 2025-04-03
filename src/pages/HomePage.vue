@@ -1,22 +1,10 @@
 <template>
-  <header>
-    <LogoTTM/>
-    <boutons-header/>
-  </header>
   <div class="main-container">
     <div id="PageText">
       Vous êtes sur la page d'accueil
       <router-link to="/users/csvListeAdherent">
         <button id="bouton">Accéder à la BD</button>
       </router-link>
-    </div>
-    <div class="instagram-newsletter-container">
-      <div class="instagram-container">
-
-      </div>
-      <div class="newsletter-container">
-
-      </div>
     </div>
   </div>
   <footer>
@@ -26,8 +14,6 @@
 
 <script setup>
 import {onMounted} from 'vue';
-import LogoTTM from '@/components/LogoTTM.vue';
-import BoutonsHeader from '@/components/boutonsHeader.vue';
 import {useLoadingBar} from 'naive-ui';
 import {useStore} from 'vuex';
 

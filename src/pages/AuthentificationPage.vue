@@ -1,35 +1,43 @@
 <template>
-  <header>
-    <LogoTTM/>
-  </header>
   <div class="container-connexion">
-    <n-space id="form-connexion" align="center" vertical>
-      <h1> Bienvenue</h1>
+    <n-card id="card" title="Authentification">
+      <n-space vertical>
+        <n-button :theme-overrides="{
+                textColorHover: '#ff5733',
+                borderHover: '1px solid #ff5733',
+                backgroundColorHover: '#ffeeee'
+                 }" class="btn" size="large"
+                  @click="loginWithGoogle">
+          Continuer avec Google
+          <template #icon>
+            <n-icon>
+              <Google/>
+            </n-icon>
+          </template>
+        </n-button>
+        <n-button :theme-overrides="{
+                textColorHover: '#1877F2',
+                borderHover: '1px solid #1877F2',
+                backgroundColorHover: '#1877F2'
+                 }" class="btn" size="large"
+                  @click="loginWithFacebook">
+          Continuer avec Facebook
+          <template #icon>
+            <n-icon>
+              <Facebook/>
+            </n-icon>
+          </template>
+        </n-button>
+        <n-button class="btn" size="large" @click="signIn">Se connecter
+          <template #icon>
+            <n-icon>
+              <Mail/>
+            </n-icon>
+          </template>
+        </n-button>
+      </n-space>
       <n-divider/>
-      <n-button class="btn" size="large" @click="loginWithGoogle">Continuer avec Google
-        <template #icon>
-          <n-icon>
-            <Google/>
-          </n-icon>
-        </template>
-      </n-button>
-      <n-button class="btn" size="large" @click="loginWithFacebook"> Continuer avec Facebook
-        <template #icon>
-          <n-icon>
-            <Facebook/>
-          </n-icon>
-        </template>
-      </n-button>
-      <n-divider/>
-      <n-button class="btn" size="large" @click="signIn">Se connecter
-        <template #icon>
-          <n-icon>
-            <Mail/>
-          </n-icon>
-        </template>
-      </n-button>
-      <n-divider/>
-      <n-button class="btn" size="large" @click="signUp">
+      <n-button align="center" class="btn" size="large" @click="signUp">
         S'inscrire
         <template #icon>
           <n-icon>
@@ -37,19 +45,25 @@
           </n-icon>
         </template>
       </n-button>
-    </n-space>
+    </n-card>
   </div>
 </template>
 
 
 <script setup>
-import LogoTTM from '@/components/LogoTTM.vue';
 import {LogoGoogle as Google} from '@vicons/ionicons5'
 import {FacebookF as Facebook} from '@vicons/fa'
 import {EmailFilled as Mail} from '@vicons/material'
 import {useRouter} from 'vue-router';
+import {useLoadingBar} from 'naive-ui'
+import {onMounted} from 'vue'
 
+const loadingBar = useLoadingBar()
 const router = useRouter();
+
+onMounted(() => {
+  loadingBar.finish();
+});
 
 const loginWithFacebook = () => {
   window.location.href = '/users/auth/facebook';
@@ -60,37 +74,31 @@ const loginWithGoogle = () => {
 };
 
 const signIn = async () => {
-  await router.push('/users/connexion');
+  await router.push({name: 'Connexion'});
 };
 const signUp = async () => {
-  await router.push('/users/inscription');
+  await router.push({name: 'Inscription'});
 };
 </script>
 
 <style scoped>
 
-.container-connexion {
-  width: 100%;
-  height: 100%;
+
+#card {
+  background: #ffffff;
+  width: 600px;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 5px;
-}
-
-#form-connexion {
-  background: #dddddd;
-  border-radius: 5px;
-  width: 100%;
-  padding: 20px;
-  max-width: 500px;
-  min-width: 300px;
-  margin: auto 20px;
+  justify-content: flex-end;
 }
 
 .btn {
+  display: flex;
+  justify-content: flex-start;
   background: white;
-  width: 300px
+  width: 300px;
+  height: 75px;
 }
 </style>
