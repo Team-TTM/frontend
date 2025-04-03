@@ -1,8 +1,4 @@
 <template>
-  <header>
-    <LogoTTM/>
-    <boutons-header/>
-  </header>
   <div class="main-container">
     <div id="PageText">
       Vous êtes sur la page d'accueil
@@ -26,10 +22,9 @@
 
 <script setup>
 import {onMounted} from 'vue';
-import LogoTTM from '@/components/LogoTTM.vue';
-import BoutonsHeader from '@/components/boutonsHeader.vue';
 import {useLoadingBar} from 'naive-ui';
 import {useStore} from 'vuex';
+import HeaderComponent from "@/components/HeaderComponent.vue";
 
 const loadingBar = useLoadingBar();
 const store = useStore();
