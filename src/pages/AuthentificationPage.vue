@@ -1,5 +1,6 @@
 <template>
-  <div class="container-connexion">
+
+    <div id="authentification-container">
     <n-card id="card" title="Authentification">
       <n-space vertical>
         <n-button :theme-overrides="{
@@ -83,6 +84,16 @@ const signUp = async () => {
 
 <style scoped>
 
+#authentification-container {
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+    background: #F0F0F0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
 
 #card {
   background: #ffffff;
