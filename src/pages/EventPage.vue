@@ -1,28 +1,17 @@
 <script>
 import axios from "axios";
 import { defineComponent } from "vue";
-import HeaderComponent from "@/components/HeaderComponent.vue";
 
 export default defineComponent({
-  components: {HeaderComponent},
   data() {
     return {
       events: [],
     };
   },
   async mounted() {
-
     await this.fetchEvents();
   },
   methods: {
-    formatEventDate(dateString) {
-      if (!dateString) return null; // Vérifie si la date est null
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
-    },
     goToDetail(event) {
       if (!event || !event.eventId) {
         return;
@@ -32,7 +21,7 @@ export default defineComponent({
     async fetchEvents() {
       const uri = "/api/events";
       const token = this.$store.getters['getToken'];
-      console.log('event', token);
+
       try {
         if (!token) {
           this.$router.push("/");
@@ -46,7 +35,6 @@ export default defineComponent({
         });
 
         if (response.status === 200) {
-          console.log("Données récupérées :", response.data);
           this.events = response.data.events;
         } else {
           console.error("Erreur de récupération :", response.status);
@@ -74,8 +62,12 @@ export default defineComponent({
         <div class="event-container">
           <div v-for="event in events" :key="event.eventId" class="event-item" @click="goToDetail(event)">
             <h3>{{ event.name }}</h3>
-            <p><strong>Date de fin d'inscription :</strong> {{ this.formatEventDate(event.endAt) }}</p>
-            <p>{{ event.description }}</p>
+            <p><strong>Date de fin d'inscription :</strong> {{ event.end_at }}</p>
+            <p><strong>Description :<br></strong>{{ event.description }}</p>
+            <p><strong>Participants :</strong>{{ event.participants }}</p>
+            <p><strong>Type :</strong>{{ event.type }}</p>
+            <p><strong>Nombre maximum :</strong>{{ event.nombreMax }}</p>
+            <p><strong>Lieu :</strong>{{ event.lieu }}</p>
           </div>
         </div>
       </div>

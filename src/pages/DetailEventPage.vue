@@ -1,10 +1,9 @@
 <script>
 import axios from 'axios';
 import {defineComponent} from "vue";
-import HeaderComponent from "@/components/HeaderComponent.vue";
+import {useMessage} from 'naive-ui';
 
 export default defineComponent({
-  components: {HeaderComponent},
   props: ["eventId"],
   data() {
     return {
@@ -14,10 +13,14 @@ export default defineComponent({
         dirigeantId : null,
         name: '',
         description: '',
-        createdAt : '',
-        endAt: '',
+        createdAt : null,
+        endAt: null,
         participants : [],
+        type : '',
+        nombreMax : '',
+        lieu : ''
       },
+      message : useMessage(),
     };
   },
   async mounted() {
@@ -30,20 +33,12 @@ export default defineComponent({
       }
       this.$router.push({ name: "EditEventPage", params: { eventId: this.event.eventId } });
     },
-    formatEventDate(dateString) {
-      if (!dateString) return null; // Vérifie si la date est null
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
-    },
     async deleteEvent() {
       if (!confirm("Voulez-vous vraiment supprimer cet événement ?")) return;
       try {
         const token = this.$store.getters["getToken"];
         if (!token) {
-          alert("Veuillez vous connecter pour supprimer cet événement.");
+          this.message.error("Veuillez vous connecter pour supprimer cet événement.")
           this.$router.push("/");
           return;
         }
@@ -52,17 +47,23 @@ export default defineComponent({
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        alert("Événement supprimé !");
+        this.message.success("Événement supprimé !");
         this.$router.push("/users/EventPage");
-      } catch (error) {
-        console.error("Erreur lors de la suppression :", error);
-        alert("Une erreur est survenue lors de la suppression.");
+      } catch (err) {
+        if (err.response) {
+          this.message.error(err.response?.data.error || 'Une erreur est survenue.');
+        } else if (err.request) {
+          this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
+        } else {
+          this.message.error('Une erreur inconnue est survenue.');
+        }
       }
     },
     async fetchEvent() {
       const uri = `/api/events/${this.eventId}`;
       try {
         const token = this.$store.getters["getToken"];
+        console.log("token",token);
         if (!token) {
           alert("Veuillez vous connecter pour voir les événements.");
           this.$router.push("/");
@@ -83,9 +84,15 @@ export default defineComponent({
           console.error("Erreur de récupération :", response.status);
           this.$router.push("/");
         }
-      } catch (error) {
-        console.error("Erreur lors de la requête :", error);
+      } catch (err) {
+      if (err.response) {
+        this.message.error(err.response?.data.error || 'Une erreur est survenue.');
+      } else if (err.request) {
+        this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
+      } else {
+        this.message.error('Une erreur inconnue est survenue.');
       }
+    }
     },
   },
 });
@@ -98,9 +105,13 @@ export default defineComponent({
         <div class="detail-event-container">
           <h2>Détail de l'évènement</h2>
           <div>
-            <p><strong>Titre :</strong> {{ event.name }}</p>
-            <p><strong>Date :</strong> {{ this.formatEventDate(event.endAt) }}</p>
-            <p><strong>Description :</strong> {{ event.description }}</p>
+            <h3>{{ event.name }}</h3>
+            <p><strong>Date de fin d'inscription :</strong> {{ event.endAt }}</p>
+            <p><strong>Description :</strong><br>{{ event.description }}</p>
+            <p><strong>Participants :</strong>{{ event.participants }}</p>
+            <p><strong>Type :</strong>{{ event.type }}</p>
+            <p><strong>Nombre maximum :</strong>{{ event.nombreMax }}</p>
+            <p><strong>Lieu :</strong>{{ event.lieu }}</p>
             <button class="bouton" @click="goToEdit">Editer</button>
             <button class="bouton" @click="deleteEvent">Supprimer</button>
           </div>
