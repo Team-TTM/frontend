@@ -1,10 +1,11 @@
 <template>
   <div id="app">
     <main class="main-container">
-      <h1>
-        Saisie du numéro de Licence
-      </h1>
+
       <div class="container container-licence-input">
+        <h1>
+          Saisie du numéro de Licence
+        </h1>
         <LicenceInput/>
       </div>
     </main>

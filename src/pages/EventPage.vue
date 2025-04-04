@@ -1,8 +1,14 @@
 <script>
 import axios from "axios";
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
+import {userRole} from "@/enums/userRole.js";
 
 export default defineComponent({
+  computed: {
+    userRole() {
+      return userRole
+    }
+  },
   data() {
     return {
       events: [],
@@ -12,6 +18,9 @@ export default defineComponent({
     await this.fetchEvents();
   },
   methods: {
+    getRole() {
+      return this.$store.getters["getRole"];
+    },
     goToDetail(event) {
       if (!event || !event.eventId) {
         return;
@@ -53,8 +62,8 @@ export default defineComponent({
     <div class="main-container">
       <div class="principal-container">
         <h2>Liste des événements</h2>
-        <router-link to="/users/CreateEventPage">
-          <button class="button">Créer un évènement</button>
+        <router-link v-if="getRole() !== userRole.USER" id="bouton" to="/users/csvListeAdherent">
+          Créer un évènement
         </router-link>
         <div v-if="events.length === 0">
           <p>Aucun événement disponible.</p>
@@ -117,19 +126,31 @@ export default defineComponent({
   transition-duration: 0.4s;
 }
 
-.button {
-  background-color: #b52b1d;
-  color: #ffffff;
-  border: none;
-  padding: 10px;
-  border-radius: 10px;
+#bouton{
+  position:relative;
+  min-width :15vw;
+  height: 7.5vh;
   cursor: pointer;
-  transition: 0.3s;
+  border: none;
+  border-radius : 10px;
+  background-color: #b52b1d;
+  color:#ffffff;
+  font-weight: bold;
+  font-size: 11px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  transition-duration: 0.4s;
+  text-align : center;
+  text-transform: uppercase;
+  margin: 10px;
+  display: flex;
+  justify-content: center; /* Centre horizontalement */
+  align-items: center;
+  text-decoration: none;
 }
 
-.button:hover {
+#bouton:hover{
   background-color: #ffffff;
-  color: #b52b1d;
-  border: 1px solid #b52b1d;
+  color:#b52b1d;
+  box-shadow : 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 </style>
