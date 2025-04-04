@@ -12,9 +12,6 @@
       </router-link>
     </div>
   </div>
-  <footer>
-      © 2025 - Site TTM | Auteur | Support
-  </footer>
 </template>
 
 <script setup>

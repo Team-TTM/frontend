@@ -13,9 +13,6 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
         </div>
       </div>
     </div>
-    <footer>
-      © 2025 - Site TTM | Auteur | Support
-    </footer>
   </div>
 </template>
 

@@ -130,10 +130,6 @@
         </div>
       </div>
     </div>
-
-    <footer>
-      © 2025 - Site TTM | Auteur | Support
-    </footer>
   </div>
 </template>
 

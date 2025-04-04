@@ -77,9 +77,7 @@
               </div>
             </div>
             <div class="buttons-container">
-              <router-link to="/users/performances">
                 <button class="btn">Performances</button>
-              </router-link>
             </div>
             <h2>📅 Mes événements</h2>
 
@@ -102,25 +100,15 @@
       </div>
     </main>
   </div>
-
-  <footer>
-    © 2025 - Site TTM | Auteur | Support
-  </footer>
 </template>
 
 <script>
 import axios from "axios";
-import LogoTTM from "@/components/LogoTTM.vue";
 import {useStore} from 'vuex';
-import BoutonsHeader from "@/components/boutonsHeader.vue";
 import {useMessage} from "naive-ui";
 
 
 export default {
-  components: {
-    LogoTTM,
-    BoutonsHeader,
-  },
   data() {
     return {
       editMode: false,
@@ -385,9 +373,6 @@ export default {
 @media (max-width: 768px) {
   .profile-form {
     grid-template-columns: 1fr; /* Une seule colonne sur les petits écrans */
-  }
-  .validate-button {
-    justify-self: center; /* Centrer le bouton sur les petits écrans */
   }
 }
 

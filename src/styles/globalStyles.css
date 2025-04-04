@@ -7,11 +7,6 @@
   box-sizing: border-box;
 }
 
-html,body{
-  height: 100%;
-  width: 100%;
-}
-
 /* Mise en page globale */
 #app {
   display: flex;
@@ -40,22 +35,6 @@ header {
   object-fit: contain; /* S'assure que le logo ne déborde pas */
 }
 
-
-
-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%; /* Assure qu'il occupe toute la largeur */
-  height: 10vh;
-  background-color: white;
-  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
-  font-family: 'Open Sans', 'Helvetica', Arial, sans-serif;
-  z-index: 1000;
-}
 
 /* Conteneur principal */
 .main-container {

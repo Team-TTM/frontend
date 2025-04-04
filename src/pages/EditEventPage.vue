@@ -251,7 +251,6 @@ export default defineComponent({
         </div>
       </n-form>
     </div>
-  <footer>© 2025 - Site TTM | Auteur | Support</footer>
 </div>
 </div>
 </template>

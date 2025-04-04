@@ -13,9 +13,6 @@
       <button class="retour-button">Retour</button>
     </router-link>
   </div>
-  <footer>
-    © 2025 - Site TTM | Auteur | Support
-  </footer>
 </template>
 
 
