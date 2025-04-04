@@ -160,6 +160,7 @@ export default {
     toggleEditMode() {
       if (this.editMode) {
         this.sauvegarderProfil();
+        this.editMode = false;
       } else {
         this.editMode = true;
       }
@@ -197,9 +198,6 @@ export default {
           pratique: response.data.pratique || "",
           urgenceTelephone: response.data.urgenceTelephone || "",
         };
-
-
-      this.message.success("Les données du profil ont bien été modifiées !")
       } catch (error) {
         this.message.error("Erreur lors de la récupération des données utilisateur :",error.message);
       }
@@ -213,7 +211,7 @@ export default {
           throw new Error("Token d'authentification non disponible");
         }
 
-        const response = await axios.put(uri, {adherent: this.adherent }, {
+        const response = await axios.put(uri, { adherent: this.adherent }, {
           headers: {
             Authorization: `Bearer ${this.token}`,
             "Content-Type": "application/json",
@@ -228,38 +226,35 @@ export default {
           this.errorMessage = "Le nom de l'adhérent doit être rempli.";
           return;
         }
-        if (!this.event.prenom.trim()) {
+        if (!this.adherent.prenom.trim()) {
           this.errorMessage = "Le prénom de l'adhérent doit être rempli.";
           return;
         }
-        if (!this.event.genre.trim()) {
+        if (!this.adherent.genre.trim()) {
           this.errorMessage = "Le genre de l'adhérent doit être rempli.";
           return;
         }
-        if (!this.event.email.trim()) {
+        if (!this.adherent.email.trim()) {
           this.errorMessage = "L'adresse mail de l'adhérent doit être rempli.";
           return;
         }
-        if (!this.event.dateNaissance) {
+        if (!this.adherent.dateNaissance) {
           this.errorMessage = "La date de naissance de l'adhérent doit être rempli.";
           return;
         }
-        if (!this.event.telephone) {
+        if (!this.adherent.telephone) {
           this.errorMessage = "Le numéro de téléphone de l'adhérent doit être rempli.";
           return;
         }
-        if (!this.event.pratique.trim()) {
+        if (!this.adherent.pratique.trim()) {
           this.errorMessage = "La pratique de l'adhérent doit être rempli.";
           return;
         }
-
-        if (response.status !== 200) {
-          throw new Error(`Échec de la mise à jour : ${response.status} - ${response.data.message || "Erreur inconnue"}`);
+        if (response.status === 200) {
+          this.message.success = ("Profil mis à jour avec succès !")
         }
-        console.log("Profil mis à jour avec succès !");
-        this.editMode = false;
       } catch (error) {
-        console.error("Erreur lors de la mise à jour du profil :", error);
+        this.message.error("Erreur lors de la mise à jour du profil", error)
       }
     },
     async afficherEvent() {
