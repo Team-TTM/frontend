@@ -131,7 +131,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   switch (to.name) {
     case 'Inscription':
     case 'Connexion':
