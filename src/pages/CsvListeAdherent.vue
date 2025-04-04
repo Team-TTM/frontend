@@ -25,9 +25,22 @@
             <div class="button-container">
               <input type="file" id="fileUpload" accept=".xls,.xlsx" @change="handleFileUpload" class="file-input"/>
 
-              <button :disabled="!file && !process" class="import-button" @click="uploadCSV"
-                      :class="file ? 'active-import' : 'disabled-import'">Importer</button>
+              <button
+                @click="uploadCSV"
+                :disabled="!file || isLoading"
+                class="import-button"
+                :class="{
+                  'active-import': file && !isLoading,
+                  'disabled-import': !file || isLoading,
+                  'loading': isLoading
+                }"
+              >
+                {{ isLoading ? "Chargement..." : "Importer" }}
+              </button>
             </div>
+
+            <div v-if="isLoading" class="loader-xls"></div>
+
             <p v-if="message" :class="messageType" class="status-message">{{ message }}</p>
           </div>
         </div>
@@ -194,7 +207,7 @@ export default {
       message: "",
       messageType: "", // success ou error
       messageAlert: useMessage(),
-      process: false
+      isLoading: false,
     };
   },
   methods: {
@@ -309,20 +322,16 @@ export default {
       console.log(event);
     },
     async uploadCSV() {
-      this.process = true;
       const uri = "/api/import/adherent";
 
       if (!this.file) {
-
         this.message = "Veuillez sélectionner un fichier.";
         this.messageType = "error";
-        this.process = false;
         return;
       }
-
+      this.isLoading = true;
       let formData = new FormData();
       formData.append("excel", this.file); // Doit correspondre à "excel" défini dans l'OpenAPI
-
       try {
         const token = this.$store.getters['getToken'];
         console.log(token);
@@ -352,7 +361,7 @@ export default {
           this.messageAlert.error('Une erreur inconnue est survenue.');
         }
       } finally {
-        this.process = false;
+        this.isLoading = false;
       }
     },
     async fetchAdherents() {
