@@ -83,11 +83,12 @@ export default defineComponent({
         });
 
         if (response.status === 200) {
-          console.log("Données récupérées :", response.data);
+
           this.event = response.data.event;
 
           if (this.event.endAt) {
-            this.event.endAt = this.formatDate(this.event.endAt);
+            const endDate = new Date(this.event.endAt);
+            this.event.endAt = this.formatDate(endDate); // Format string affiché
           }
 
         } else {
@@ -198,7 +199,7 @@ export default defineComponent({
           <p>Nom de l'évènement :</p>
           <n-input v-model:value="event.name" clearable style="width: 100%" placeholder="Entrez le nom" />
 
-          <p>Date de fin d'inscription :</p>
+          <p>Date de l'évènement :</p>
           <n-date-picker
             v-model:formatted-value="event.endAt"
             value-format="yyyy-MM-dd HH:mm:ss"

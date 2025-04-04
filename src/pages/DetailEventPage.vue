@@ -67,7 +67,19 @@ export default defineComponent({
         }
       }
     },
+    formatDate(date) {
+      if (!date) return null;
 
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const seconds = String(d.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
     async fetchEvent() {
       const uri = `/api/events/${this.eventId}`;
       try {
@@ -85,8 +97,13 @@ export default defineComponent({
         });
 
         if (response.status === 200) {
-          console.log("Données récupérées :", response.data);
           this.event = response.data.event;
+
+          if (this.event.endAt) {
+            const endDate = new Date(this.event.endAt);
+            this.event.endAt = this.formatDate(endDate); // Format string affiché
+          }
+
         } else {
           console.error("Erreur de récupération :", response.status);
           this.$router.push("/");
@@ -211,7 +228,7 @@ export default defineComponent({
           <h2>Détail de l'évènement</h2>
           <div>
             <p><strong>Titre :</strong> {{ event.name }}</p>
-            <p><strong>Date de fin d'inscription :</strong> {{ event.endAt }}</p>
+            <p><strong>Date de l'évènement :</strong> {{ event.endAt }}</p>
             <p><strong>Description :</strong> {{ event.description }}</p>
             <p><strong>Type d'évènement :</strong> {{ event.type }}</p>
             <p><strong>Nombre maximum : </strong> {{ event.nombreMax}}</p>
