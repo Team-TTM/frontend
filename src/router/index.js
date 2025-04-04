@@ -22,6 +22,26 @@ const routes = [
     path: '/', // La route racine correspond à la page d'accueil
     name: 'Home',
     component: HomePage,
+    beforeEnter: async (to,) => {
+      console.log('Token stocké :', store.getters.isAuthenticated, store.getters.getToken, store.getters.getRole);
+      if (!store.getters.isAuthenticated) {
+        console.log(to.query)
+        const token = to.query.token;
+        const role = to.query.role;
+        to.query = null;
+        console.log('Token stocké :', store.getters.isAuthenticated, store.getters.getToken);
+        if (token && role) {
+          await store.dispatch('login', token);
+          await store.dispatch('setUser', role);
+          console.log('Token stocké :', store.getters.isAuthenticated, store.getters.getToken);
+          return true
+        } else {
+          return ({name: 'Accueil-auth'});
+        }
+      } else {
+        return true;
+      }
+    }
   },
   {
     path: '/users/verify-licence',
@@ -118,12 +138,12 @@ const router = createRouter({
   routes,
 });
 router.beforeEach((to, from) => {
-  console.log(store.getters.isAuthenticated);
   switch (to.name) {
     case 'Inscription':
     case 'Connexion':
     case 'Verify-licence':
     case 'Accueil-auth':
+    case 'Home':
       return true;
     default:
       if (store.getters.isAuthenticated) {

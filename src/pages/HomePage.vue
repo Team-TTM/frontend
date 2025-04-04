@@ -31,13 +31,7 @@ const role = computed(() => {
 })
 
 onMounted(() => {
-  const token = new URLSearchParams(window.location.search).get('token');
   loadingBar.finish();
-
-  if (token) {
-    store.dispatch('login', token);
-    console.log('Token stocké :', store.getters.isAuthenticated, store.getters.getToken);
-  }
 });
 </script>
 <style scoped>

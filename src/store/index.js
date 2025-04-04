@@ -3,14 +3,14 @@ import {createStore} from 'vuex';
 export const store = createStore({
   state() {
     return {
-      token: localStorage.getItem('token') || null,
-      role: localStorage.getItem('role') || null,
+      token: localStorage.getItem('token') !== 'null' ? localStorage.getItem('token') : null,
+      role: localStorage.getItem('role') !== 'null' ? localStorage.getItem('role') : null
     };
   },
 
   getters: {
     isAuthenticated(state) {
-      return state.token !== null && state.role !== null;
+      return state.token !== null || state.role !== null;
     },
     getToken(state) {
       return state.token;

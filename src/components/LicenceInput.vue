@@ -16,7 +16,6 @@
 
 <script>
 import axios from "axios";
-import {userRole} from '@/enums/userRole.js';
 import {useMessage} from 'naive-ui';
 
 export default {
@@ -60,37 +59,36 @@ export default {
         switch (response.status) {
           case 400:
             this.errorMessage = response.data.error;
+            this.message.error(response.data.error);
             break;
           case 200:
             this.goodMessage = response.data.message;
             this.$store.commit('setRole', response.data.role);
+            this.$store.commit('login', response.data.token);
             this.$router.push('/users/csvListeAdherent');
-            this.message.succes(response.data.message);
+            this.message.success(response.data.message);
             break;
           default:
             this.errorMessage = "Une erreur inconnue est survenue.";
+            this.message.error('Une erreur inconnue est survenue.');
             break;
         }
-      } catch (error) {
-        console.error("Erreur lors de la requête :", error);
-
-        // Vérification pour éviter les erreurs d'accès aux données
-        if (error.response) {
-          const status = error.response.status;
-          const message = error.response.data?.message || "Une erreur est survenue.";
-          this.errorMessage = `Erreur ${status}: ${message}`;
+      } catch (err) {
+        if (err.response) {
+          this.message.error(err.response?.data.error || 'Une erreur est survenue.');
+        } else if (err.request) {
+          this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
         } else {
-          this.errorMessage = "Erreur réseau : impossible de contacter le serveur.";
+          this.message.error('Une erreur inconnue est survenue.');
         }
       }
     },
   },
   mounted() {
     const token = this.$route.query.token;
+    this.$router.replace({path: this.$route.path});
     if (token) {
       this.$store.dispatch("login", token);
-      this.$router.dispatch('login', userRole.USER);
-      console.log("Token stocké :", this.$store.getters.isAuthenticated, this.$store.getters.getToken);
     }
   }
 };
