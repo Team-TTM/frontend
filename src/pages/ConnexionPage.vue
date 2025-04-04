@@ -1,8 +1,5 @@
 <template>
-  <header>
-    <LogoTTM/>
-  </header>
-  <div class="container-connexion">
+  <div class="container-inscription">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
       <h1>Se connecter </h1>
       <n-form-item label="Mail" path="mail">
@@ -46,14 +43,11 @@ import {useMessage} from 'naive-ui';
 import {ref} from 'vue';
 import {useLoadingBar} from 'naive-ui'
 import axios from 'axios';
-import {useStore} from 'vuex';
+import {store} from '@/store/index';
 import {useRouter} from 'vue-router';
-import {userRole} from '@/enums/userRole.js';
-import LogoTTM from '@/components/LogoTTM.vue';
-
+import {onMounted} from 'vue';
 const router = useRouter();
 
-const store = useStore();
 const loadingBar = useLoadingBar()
 const formRef = ref(null);
 const rPasswordFormItemRef = ref(null);
@@ -112,6 +106,10 @@ function handlePasswordInput() {
   }
 }
 
+onMounted(() => {
+  loadingBar.finish();
+});
+
 function handleValidateButtonClick(e) {
   const url = '/api/auth/sign-in';
   e.preventDefault();
@@ -125,10 +123,10 @@ function handleValidateButtonClick(e) {
         if (response.status === 200) {
           const authHeader = response.headers.authorization;
           const token = authHeader.split(' ')[1];
-          store.dispatch('login', token);
-          await store.dispatch('login', userRole.USER);
-          console.log(response.data);
-          await router.push('HomePage');
+          const role = response.data.role;
+          await store.dispatch('login', token);
+          await store.dispatch('setUser', role);
+          await router.push({name: 'Home'});
         } else {
           loadingBar.error();
           message.error(response.data.message);
@@ -149,24 +147,21 @@ function handleValidateButtonClick(e) {
 </script>
 
 <style scoped>
-.container-connexion {
+.container-inscription {
   width: 100%;
   height: 100%;
+  padding: 50px;
+  background: #F0F0F0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 5px;
 }
 
 #form-connexion {
-  border-radius: 5px;
-  width: 100%;
   padding: 20px;
-  max-width: 500px;
-  min-width: 300px;
-  background: #dddddd;
-  margin: auto 20px;
+  border-radius: 5px;
+  width: 600px;
+  background: #ffffff;
 }
 
 </style>

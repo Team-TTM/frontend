@@ -1,11 +1,14 @@
 <script>
 import axios from "axios";
-import { defineComponent } from "vue";
-import LogoTTM from "@/components/LogoTTM.vue";
-import BoutonsHeader from "@/components/boutonsHeader.vue";
+import {defineComponent} from "vue";
+import {userRole} from "@/enums/userRole.js";
 
 export default defineComponent({
-  components: { BoutonsHeader, LogoTTM },
+  computed: {
+    userRole() {
+      return userRole
+    }
+  },
   data() {
     return {
       events: [],
@@ -15,13 +18,8 @@ export default defineComponent({
     await this.fetchEvents();
   },
   methods: {
-    formatEventDate(dateString) {
-      if (!dateString) return null; // Vérifie si la date est null
-      const date = new Date(dateString);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
+    getRole() {
+      return this.$store.getters["getRole"];
     },
     goToDetail(event) {
       if (!event || !event.eventId) {
@@ -31,8 +29,9 @@ export default defineComponent({
     },
     async fetchEvents() {
       const uri = "/api/events";
+      const token = this.$store.getters['getToken'];
+
       try {
-        const token = this.$store.getters["getToken"];
         if (!token) {
           this.$router.push("/");
           return;
@@ -41,12 +40,10 @@ export default defineComponent({
         const response = await axios.get(uri, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         });
 
         if (response.status === 200) {
-          console.log("Données récupérées :", response.data);
           this.events = response.data.events;
         } else {
           console.error("Erreur de récupération :", response.status);
@@ -62,15 +59,11 @@ export default defineComponent({
 
 <template>
   <div id="page-container">
-    <header>
-      <LogoTTM />
-      <BoutonsHeader />
-    </header>
     <div class="main-container">
       <div class="principal-container">
         <h2>Liste des événements</h2>
-        <router-link to="/users/CreateEventPage">
-          <button class="button">Créer un évènement</button>
+        <router-link v-if="getRole() !== userRole.USER" id="bouton" to="/users/CreateEventPage">
+          Créer un évènement
         </router-link>
         <div v-if="events.length === 0">
           <p>Aucun événement disponible.</p>
@@ -78,13 +71,15 @@ export default defineComponent({
         <div class="event-container">
           <div v-for="event in events" :key="event.eventId" class="event-item" @click="goToDetail(event)">
             <h3>{{ event.name }}</h3>
-            <p><strong>Date de fin d'inscription :</strong> {{ this.formatEventDate(event.endAt) }}</p>
-            <p>{{ event.description }}</p>
+            <p><strong>Date de fin d'inscription :<br> </strong> {{ event.endAt }}</p>
+            <p><strong>Description : <br></strong>{{ event.description }}</p>
+            <p><strong>Type : </strong>{{ event.type }}</p>
+            <p><strong>Nombre maximum : </strong>{{ event.nombreMax }}</p>
+            <p><strong>Lieu : </strong>{{ event.lieu }}</p>
           </div>
         </div>
       </div>
     </div>
-    <footer>© 2025 - Site TTM | Auteur | Support</footer>
   </div>
 </template>
 
@@ -130,19 +125,31 @@ export default defineComponent({
   transition-duration: 0.4s;
 }
 
-.button {
-  background-color: #b52b1d;
-  color: #ffffff;
-  border: none;
-  padding: 10px;
-  border-radius: 10px;
+#bouton{
+  position:relative;
+  min-width :15vw;
+  height: 7.5vh;
   cursor: pointer;
-  transition: 0.3s;
+  border: none;
+  border-radius : 10px;
+  background-color: #b52b1d;
+  color:#ffffff;
+  font-weight: bold;
+  font-size: 11px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  transition-duration: 0.4s;
+  text-align : center;
+  text-transform: uppercase;
+  margin: 10px;
+  display: flex;
+  justify-content: center; /* Centre horizontalement */
+  align-items: center;
+  text-decoration: none;
 }
 
-.button:hover {
+#bouton:hover{
   background-color: #ffffff;
-  color: #b52b1d;
-  border: 1px solid #b52b1d;
+  color:#b52b1d;
+  box-shadow : 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 </style>

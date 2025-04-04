@@ -1,9 +1,5 @@
 <template>
-  <header>
-    <LogoTTM/>
-  </header>
-
-  <div class="container-connexion">
+    <div class="container-inscription">
     <n-form id="form-connexion" ref="formRef" :model="model" :rules="rules">
       <h1>S'inscrire</h1>
       <n-form-item label="Mail" path="mail">
@@ -70,14 +66,11 @@ import {useMessage} from 'naive-ui';
 import {ref} from 'vue';
 import {useLoadingBar} from 'naive-ui'
 import axios from 'axios';
-import {useStore} from 'vuex';
+import {store} from '@/store/index';
 import {useRouter} from 'vue-router';
-import LogoTTM from '@/components/LogoTTM.vue';
-import {userRole} from '@/enums/userRole.js';
 
 const router = useRouter();
 
-const store = useStore();
 const loadingBar = useLoadingBar()
 const formRef = ref(null);
 const rPasswordFormItemRef = ref(null);
@@ -181,12 +174,13 @@ function handleValidateButtonClick(e) {
         if (response.status === 201) {
           const authHeader = response.headers.authorization;
           const token = authHeader.split(' ')[1];
+          const role = response.data.role;
           await store.dispatch('login', token);
-          await store.dispatch('login', userRole.USER);
-          await router.push('HomePage');
+          await store.dispatch('setUser', role);
+          await router.push({name: 'Home'});
         } else {
           loadingBar.error();
-          message.error(response.data.message);
+          message.error(response.data.error);
         }
       } catch (err) {
         if (err.response) {
@@ -204,24 +198,21 @@ function handleValidateButtonClick(e) {
 </script>
 
 <style scoped>
-.container-connexion {
+.container-inscription {
   width: 100%;
   height: 100%;
+    padding: 50px;
+    background: #F0F0F0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 5px;
 }
 
 #form-connexion {
+    padding: 20px;
   border-radius: 5px;
-  width: 100%;
-  padding: 20px;
-  max-width: 500px;
-  min-width: 300px;
-  background: #dddddd;
-  margin: auto 20px;
+    width: 600px;
+  background: #ffffff;
 }
 </style>
 
