@@ -44,7 +44,15 @@ export default defineComponent({
         });
 
         if (response.status === 200) {
-          this.events = response.data.events;
+          const eventsWithModifiedDates = response.data.events.map(event => {
+            const modifiedEvent = { ...event };
+            const originalDate = new Date(modifiedEvent.endAt);
+            originalDate.setHours(originalDate.getHours() + 2);
+            modifiedEvent.endAt = originalDate.toISOString(); // ou garde `originalDate` si tu veux un objet Date
+            return modifiedEvent;
+          });
+
+          this.events = eventsWithModifiedDates;
         } else {
           console.error("Erreur de récupération :", response.status);
           this.$router.push("/");
@@ -71,7 +79,7 @@ export default defineComponent({
         <div class="event-container">
           <div v-for="event in events" :key="event.eventId" class="event-item" @click="goToDetail(event)">
             <h3>{{ event.name }}</h3>
-            <p><strong>Date de fin d'inscription :<br> </strong> {{ event.endAt }}</p>
+            <p><strong>Date de l'évènement :<br> </strong> {{ event.endAt }}</p>
             <p><strong>Description : <br></strong>{{ event.description }}</p>
             <p><strong>Type : </strong>{{ event.type }}</p>
             <p><strong>Nombre maximum : </strong>{{ event.nombreMax }}</p>
