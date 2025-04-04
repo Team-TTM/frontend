@@ -10,12 +10,52 @@
             <label for="licence">N° de licence (cliquez ici pour télécharger la licence)</label>
             <input id="licence" type="text" v-model="profil.licence" readonly/>
 
-            <input type="text" v-model="profil.nom" :readonly="!editMode" />
-            <input type="text" v-model="profil.prenom" :readonly="!editMode" />
-            <input type="email" v-model="profil.email" :readonly="!editMode" />
-            <input type="date" v-model="formattedDateNaissance" :readonly="!editMode" />
-            <input type="tel" v-model="profil.telephone" :readonly="!editMode" />
-            <input type="tel" v-model="profil.urgenceTelephone" :readonly="!editMode" />
+            <input
+              type="text"
+              v-model="profil.nom"
+              :readonly="!editMode"
+              :placeholder="getPlaceholder('nom')"
+              :class="{'placeholder-style': !profil.nom}"
+            />
+
+            <input
+              type="text"
+              v-model="profil.prenom"
+              :readonly="!editMode"
+              :placeholder="getPlaceholder('prenom')"
+              :class="{'placeholder-style': !profil.prenom}"
+            />
+
+            <input
+              type="email"
+              v-model="profil.email"
+              :readonly="!editMode"
+              :placeholder="getPlaceholder('email')"
+              :class="{'placeholder-style': !profil.email}"
+            />
+
+            <input
+              type="date"
+              v-model="profil.dateNaissance"
+              :readonly="!editMode"
+              :class="{'placeholder-style': !profil.dateNaissance}"
+            />
+
+            <input
+              type="tel"
+              v-model="profil.telephone"
+              :readonly="!editMode"
+              :placeholder="getPlaceholder('telephone')"
+              :class="{'placeholder-style': !profil.telephone}"
+            />
+
+            <input
+              type="tel"
+              v-model="profil.urgenceTelephone"
+              :readonly="!editMode"
+              :placeholder="getPlaceholder('urgenceTelephone')"
+              :class="{'placeholder-style': !profil.urgenceTelephone}"
+            />
           </div>
 
           <div class="right-section">
@@ -41,6 +81,19 @@
                 <button class="btn">Performances</button>
               </router-link>
             </div>
+            <h2>📅 Mes événements</h2>
+
+            <div v-if="eventsRegistered.length">
+              <ul class="event-list">
+                <li v-for="event in eventsRegistered" :key="event.eventId" class="event-card">
+                  <h3>{{ event.name }}</h3>
+                  <p>📍 <strong>Lieu :</strong> {{ event.lieu || "Non spécifié" }}</p>
+                  <p>🕒 <strong>Date :</strong> {{ formatDate(event.endAt) }}</p>
+                </li>
+              </ul>
+            </div>
+
+            <p v-else class="no-events">Tu n'es inscrit à aucun événement pour le moment.</p>
           </div>
           <button class="edit-button" @click="toggleEditMode">
             {{ editMode ? "Sauvegarder" : "Modifier" }}
@@ -86,18 +139,18 @@ export default {
         "Entrainement",
         "Ne pratique pas",
       ],
+      eventsRegistered: {},
     };
   },
   computed: {
     token() {
       return useStore().getters.getToken;
     },
-    formattedDateNaissance() {
-      return this.profil.dateNaissance ? this.formatDate(this.profil.dateNaissance) : "";
-    },
   },
   mounted() {
     this.recupererProfil();
+    this.afficherEvent();
+
   },
   methods: {
     toggleEditMode() {
@@ -116,12 +169,11 @@ export default {
       return `${year}-${month}-${day}`;
     },
     async recupererProfil() {
-      const uri = "/users/adherent";
+      const uri = "api/adherent";
       try {
         if (!this.token) {
           throw new Error("Token d'authentification non disponible");
         }
-
         const response = await axios.get(uri, {
           headers: {
             Authorization: `Bearer ${this.token}`,
@@ -140,7 +192,7 @@ export default {
           prenom: response.data.prenom || "",
           genre: response.data.genre || "",
           email: response.data.email || "",
-          dateNaissance: response.data.dateNaissance || "",
+          dateNaissance: this.formatDate(response.data.dateNaissance) || "", // Utiliser formatDate ici
           telephone: response.data.telephone || "",
           pratique: response.data.pratique || "",
           urgenceTelephone: response.data.urgenceTelephone || "",
@@ -174,6 +226,52 @@ export default {
         console.error("Erreur lors de la mise à jour du profil :", error);
       }
     },
+    async afficherEvent() {
+      const uri = `/api/events/subscribe`;
+      try {
+        const token = this.$store.getters["getToken"];
+        if (!token) {
+          alert("Veuillez vous connecter pour voir les événements.");
+          this.$router.push("/");
+          return;
+        }
+        const response = await axios.get(uri, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          console.log("Evenements ou l'user est inscrit:", response.data);
+          this.eventsRegistered = response.data.events;
+          console.log("Evenements ou l'user est inscrit sur la page profile:", this.eventsRegistered);
+
+          console.log("taille",this.eventsRegistered.length);
+        } else {
+          console.error("Erreur de récupération :", response.status);
+          this.$router.push("/");
+        }
+      } catch (err) {
+        if (err.response) {
+          this.message.error(err.response?.data.error || 'Une erreur est survenue.');
+        } else if (err.request) {
+          this.message.error('Problème de connexion. Veuillez réessayer plus tard.');
+        } else {
+          this.message.error('Une erreur inconnue est survenue.');
+        }
+      }
+    },
+    getPlaceholder(field) {
+      const placeholders = {
+        nom: "Nom",
+        prenom: "Prénom",
+        email: "Adresse Mail",
+        telephone: "Téléphone",
+        urgenceTelephone: "Numéro d'urgence",
+
+      };
+      return placeholders[field] || "";
+    }
   },
 };
 </script>
@@ -306,6 +404,10 @@ export default {
 
 .edit-button:hover {
   background-color: #0056b3;
+}
+.placeholder-style {
+  color: gray;
+  font-style: italic;
 }
 
 </style>
