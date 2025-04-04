@@ -7,54 +7,54 @@
         <form class="profile-form" @submit.prevent>
 
           <div class="left-section">
-            <label for="licence">N° de licence (cliquez ici pour télécharger la licence)</label>
-            <input id="licence" type="text" v-model="profil.licence" readonly/>
+            <label for="numeroLicence">N° de licence (cliquez ici pour télécharger la licence)</label>
+            <input id="numeroLicence" type="text" v-model="adherent.numeroLicence" readonly/>
 
             <input
               type="text"
-              v-model="profil.nom"
+              v-model="adherent.nom"
               :readonly="!editMode"
               :placeholder="getPlaceholder('nom')"
-              :class="{'placeholder-style': !profil.nom}"
+              :class="{'placeholder-style': !adherent.nom}"
             />
 
             <input
               type="text"
-              v-model="profil.prenom"
+              v-model="adherent.prenom"
               :readonly="!editMode"
               :placeholder="getPlaceholder('prenom')"
-              :class="{'placeholder-style': !profil.prenom}"
+              :class="{'placeholder-style': !adherent.prenom}"
             />
 
             <input
               type="email"
-              v-model="profil.email"
+              v-model="adherent.email"
               :readonly="!editMode"
               :placeholder="getPlaceholder('email')"
-              :class="{'placeholder-style': !profil.email}"
+              :class="{'placeholder-style': !adherent.email}"
             />
 
             <input
               type="date"
-              v-model="profil.dateNaissance"
+              v-model="adherent.dateNaissance"
               :readonly="!editMode"
-              :class="{'placeholder-style': !profil.dateNaissance}"
+              :class="{'placeholder-style': !adherent.dateNaissance}"
             />
 
             <input
               type="tel"
-              v-model="profil.telephone"
+              v-model="adherent.telephone"
               :readonly="!editMode"
               :placeholder="getPlaceholder('telephone')"
-              :class="{'placeholder-style': !profil.telephone}"
+              :class="{'placeholder-style': !adherent.telephone}"
             />
 
             <input
               type="tel"
-              v-model="profil.urgenceTelephone"
+              v-model="adherent.urgenceTelephone"
               :readonly="!editMode"
               :placeholder="getPlaceholder('urgenceTelephone')"
-              :class="{'placeholder-style': !profil.urgenceTelephone}"
+              :class="{'placeholder-style': !adherent.urgenceTelephone}"
             />
           </div>
 
@@ -68,7 +68,7 @@
                     type="radio"
                     name="pratique"
                     :value="option"
-                    v-model="profil.pratique"
+                    v-model="adherent.pratique"
                     class="form-radio"
                     :disabled="!editMode"
                   />
@@ -113,6 +113,8 @@ import axios from "axios";
 import LogoTTM from "@/components/LogoTTM.vue";
 import {useStore} from 'vuex';
 import BoutonsHeader from "@/components/boutonsHeader.vue";
+import {useMessage} from "naive-ui";
+
 
 export default {
   components: {
@@ -122,8 +124,8 @@ export default {
   data() {
     return {
       editMode: false,
-      profil: {
-        licence: "",
+      adherent: {
+        numeroLicence: "",
         nom: "",
         prenom: "",
         genre: "",
@@ -140,6 +142,8 @@ export default {
         "Ne pratique pas",
       ],
       eventsRegistered: {},
+      message : useMessage(),
+
     };
   },
   computed: {
@@ -182,12 +186,8 @@ export default {
           validateStatus: () => true,
         });
         console.log(response.data)
-        if (response.status !== 200) {
-          throw new Error(`Erreur API: ${response.status} - ${response.data.message || "Réponse inattendue"}`);
-        }
-
-        this.profil = {
-          licence: response.data.numeroLicence || "",
+        this.adherent = {
+          numeroLicence: response.data.numeroLicence || "",
           nom: response.data.nom || "",
           prenom: response.data.prenom || "",
           genre: response.data.genre || "",
@@ -197,25 +197,61 @@ export default {
           pratique: response.data.pratique || "",
           urgenceTelephone: response.data.urgenceTelephone || "",
         };
+
+
+      this.message.success("Les données du profil ont bien été modifiées !")
       } catch (error) {
-        console.error("Erreur lors de la récupération des données utilisateur :", error);
+        this.message.error("Erreur lors de la récupération des données utilisateur :",error.message);
       }
     },
 
     async sauvegarderProfil() {
-      const uri = "/users/adherent";
+      const uri = "/api/adherent/update-adherent";
       try {
 
         if (!this.token) {
           throw new Error("Token d'authentification non disponible");
         }
 
-        const response = await axios.put(uri, this.profil, {
+        const response = await axios.put(uri, {adherent: this.adherent }, {
           headers: {
             Authorization: `Bearer ${this.token}`,
             "Content-Type": "application/json",
           },
         });
+
+        if (!this.adherent.numeroLicence.trim()) {
+          this.errorMessage = "Le numéro de licence doit être rempli.";
+          return;
+        }
+        if (!this.adherent.nom.trim()) {
+          this.errorMessage = "Le nom de l'adhérent doit être rempli.";
+          return;
+        }
+        if (!this.event.prenom.trim()) {
+          this.errorMessage = "Le prénom de l'adhérent doit être rempli.";
+          return;
+        }
+        if (!this.event.genre.trim()) {
+          this.errorMessage = "Le genre de l'adhérent doit être rempli.";
+          return;
+        }
+        if (!this.event.email.trim()) {
+          this.errorMessage = "L'adresse mail de l'adhérent doit être rempli.";
+          return;
+        }
+        if (!this.event.dateNaissance) {
+          this.errorMessage = "La date de naissance de l'adhérent doit être rempli.";
+          return;
+        }
+        if (!this.event.telephone) {
+          this.errorMessage = "Le numéro de téléphone de l'adhérent doit être rempli.";
+          return;
+        }
+        if (!this.event.pratique.trim()) {
+          this.errorMessage = "La pratique de l'adhérent doit être rempli.";
+          return;
+        }
 
         if (response.status !== 200) {
           throw new Error(`Échec de la mise à jour : ${response.status} - ${response.data.message || "Erreur inconnue"}`);
