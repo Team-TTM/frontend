@@ -373,7 +373,6 @@ export default {
         if (response.status !== 200) {
           this.$router.push('/');
         }
-        await this.uploadCSV();
         this.adherents = response.data;
         this.adherentsFiltres = [...this.adherents];
 
