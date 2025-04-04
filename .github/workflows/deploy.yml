@@ -6,6 +6,24 @@ on:
       - main  # Exécute le workflow uniquement sur la branche principale
 
 jobs:
+  lint:
+     runs-on: ubuntu-latest  # Utilisation d'une machine Ubuntu
+ 
+     steps:
+       - name: Checkout code
+         uses: actions/checkout@v4
+ 
+       - name: Set up Node.js
+         uses: actions/setup-node@v4
+         with:
+           node-version: '22'  # Version stable recommandée
+ 
+       - name: Install dependencies
+         run: npm install
+ 
+       - name: Run Lint
+         run: npm run lint
+         continue-on-error: false  # Arrête si le lint échoue
 
   build:
     runs-on: ubuntu-latest
