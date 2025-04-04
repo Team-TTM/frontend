@@ -27,7 +27,7 @@ const isUserLoggedIn = computed(() => store.getters.isAuthenticated);
 
 .app-body {
   min-height: calc(100vh - 120px); /* Ajuste selon la hauteur de ton header + footer */
-  background-color: #f9f9f9;
+  background-color: #a9a8a8;
 }
 
 /*#content {
