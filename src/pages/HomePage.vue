@@ -5,7 +5,7 @@
         Vous êtes sur la page d'accueil
       </h1>
       <h2>
-        Vous êtes connecter en tant que {{ role }}
+        Vous êtes connecté en tant que {{ role }}
       </h2>
       <router-link v-if="role !== userRole.USER" id="bouton" to="/users/csvListeAdherent">
         accéder à la liste des adhérents
