@@ -6,25 +6,22 @@
   <div class="footer">
     © 2025 - Site TTM | Auteur | Support
   </div>
-
 </template>
 
 
 <style scoped>
 
-footer {
+.footer {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%; /* Assure qu'il occupe toute la largeur */
-  height: 30vh;
-  background-color: white;
+  width: 100%;
+  height: 10vh;
+  max-height: 150px;
+  background-color: #ffffff; /* Ajoutez une couleur de fond si nécessaire */
   box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
-  font-family: 'Open Sans', 'Helvetica', Arial, sans-serif;
   z-index: 1000;
+  padding: 0 20px;
 }
 
 </style>
