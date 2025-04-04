@@ -27,6 +27,19 @@ export default defineComponent({
       }
       this.$router.push({ name: "DetailEventPage", params: { eventId: event.eventId } });
     },
+    formatDate(date) {
+      if (!date) return null;
+
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const seconds = String(d.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
     async fetchEvents() {
       const uri = "/api/events";
       const token = this.$store.getters['getToken'];
@@ -47,8 +60,10 @@ export default defineComponent({
           const eventsWithModifiedDates = response.data.events.map(event => {
             const modifiedEvent = { ...event };
             const originalDate = new Date(modifiedEvent.endAt);
-            originalDate.setHours(originalDate.getHours() + 2);
-            modifiedEvent.endAt = originalDate.toISOString(); // ou garde `originalDate` si tu veux un objet Date
+
+            // 🔁 Utilise la méthode formatDate pour formater la date
+            modifiedEvent.endAt = this.formatDate(originalDate);
+
             return modifiedEvent;
           });
 
