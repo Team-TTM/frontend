@@ -79,19 +79,21 @@
             <div class="buttons-container">
                 <button class="btn">Performances</button>
             </div>
-            <h2>📅 Mes événements</h2>
 
-            <div v-if="eventsRegistered.length">
-              <ul class="event-list">
-                <li v-for="event in eventsRegistered" :key="event.eventId" class="event-card">
-                  <h3>{{ event.name }}</h3>
-                  <p>📍 <strong>Lieu :</strong> {{ event.lieu || "Non spécifié" }}</p>
-                  <p>🕒 <strong>Date :</strong> {{ formatDate(event.endAt) }}</p>
-                </li>
-              </ul>
+            <div v-if="getRole() === 'user'">
+              <h2>📅 Mes événements</h2>
+              <div v-if="eventsRegistered.length">
+                <ul class="event-list">
+                  <li v-for="event in eventsRegistered" :key="event.eventId" class="event-card">
+                    <h3>{{ event.name }}</h3>
+                    <p>📍 <strong>Lieu :</strong> {{ event.lieu || "Non spécifié" }}</p>
+                    <p>🕒 <strong>Date :</strong> {{ formatDate(event.endAt) }}</p>
+                  </li>
+                </ul>
+              </div>
+
+              <p v-else class="no-events">Tu n'es inscrit à aucun événement pour le moment.</p>
             </div>
-
-            <p v-else class="no-events">Tu n'es inscrit à aucun événement pour le moment.</p>
           </div>
           <button class="edit-button" @click="toggleEditMode">
             {{ editMode ? "Sauvegarder" : "Modifier" }}
@@ -131,7 +133,7 @@ export default {
       ],
       eventsRegistered: {},
       message : useMessage(),
-
+      adherentOriginal: {},
     };
   },
   computed: {
@@ -186,6 +188,7 @@ export default {
           pratique: response.data.pratique || "",
           urgenceTelephone: response.data.urgenceTelephone || "",
         };
+        this.adherentOriginal = { ...this.adherent };
       } catch (error) {
         this.message.error("Erreur lors de la récupération des données utilisateur :",error.message);
       }
@@ -194,57 +197,70 @@ export default {
     async sauvegarderProfil() {
       const uri = "/api/adherent/update-adherent";
       try {
-
         if (!this.token) {
           throw new Error("Token d'authentification non disponible");
         }
 
+        const phoneRegex = /^\d{10}$/;
+
+        if (!this.adherent.numeroLicence.trim()) {
+          this.message.error("Le numéro de licence doit être rempli.");
+          return;
+        }
+        if (!this.adherent.nom.trim()) {
+          this.message.error("Le nom de l'adhérent doit être rempli.");
+          return;
+        }
+        if (!this.adherent.prenom.trim()) {
+          this.message.error("Le prénom de l'adhérent doit être rempli.");
+          return;
+        }
+        if (!this.adherent.email.trim()) {
+          this.message.error("L'adresse mail de l'adhérent doit être remplie.");
+          return;
+        }
+        if (!this.adherent.dateNaissance) {
+          this.message.error("La date de naissance de l'adhérent doit être remplie.");
+          return;
+        }
+        if (!this.adherent.telephone) {
+          this.message.error("Le numéro de téléphone de l'adhérent doit être rempli.");
+          return;
+        }
+        if (!phoneRegex.test(this.adherent.telephone)) {
+          this.message.error("Le numéro de téléphone doit contenir exactement 10 chiffres.");
+          this.adherent.telephone = this.adherentOriginal.telephone;
+          return;
+        }
+        if ( this.adherent.urgenceTelephone && !phoneRegex.test(this.adherent.urgenceTelephone)) {
+          this.message.error("Le numéro d'urgence doit contenir exactement 10 chiffres ou être vide.");
+          this.adherent.urgenceTelephone = this.adherentOriginal.urgenceTelephone; // On remet l'ancien
+          return;
+        }
+        if (!this.adherent.pratique.trim()) {
+          this.message.error("La pratique de l'adhérent doit être remplie.");
+          return;
+        }
+
+        // ✅ Tout est validé, on peut envoyer la requête maintenant
         const response = await axios.put(uri, { adherent: this.adherent }, {
           headers: {
             Authorization: `Bearer ${this.token}`,
             "Content-Type": "application/json",
           },
         });
-
-        if (!this.adherent.numeroLicence.trim()) {
-          this.errorMessage = "Le numéro de licence doit être rempli.";
-          return;
-        }
-        if (!this.adherent.nom.trim()) {
-          this.errorMessage = "Le nom de l'adhérent doit être rempli.";
-          return;
-        }
-        if (!this.adherent.prenom.trim()) {
-          this.errorMessage = "Le prénom de l'adhérent doit être rempli.";
-          return;
-        }
-        if (!this.adherent.genre.trim()) {
-          this.errorMessage = "Le genre de l'adhérent doit être rempli.";
-          return;
-        }
-        if (!this.adherent.email.trim()) {
-          this.errorMessage = "L'adresse mail de l'adhérent doit être rempli.";
-          return;
-        }
-        if (!this.adherent.dateNaissance) {
-          this.errorMessage = "La date de naissance de l'adhérent doit être rempli.";
-          return;
-        }
-        if (!this.adherent.telephone) {
-          this.errorMessage = "Le numéro de téléphone de l'adhérent doit être rempli.";
-          return;
-        }
-        if (!this.adherent.pratique.trim()) {
-          this.errorMessage = "La pratique de l'adhérent doit être rempli.";
-          return;
-        }
+        this.adherentOriginal = { ...this.adherent };
         if (response.status === 200) {
-          this.message.success = ("Profil mis à jour avec succès !")
+          this.message.success("Profil mis à jour avec succès !");
+        } else {
+          this.message.error("Échec de la mise à jour du profil.");
         }
+
       } catch (error) {
-        this.message.error("Erreur lors de la mise à jour du profil", error)
+        this.message.error("Erreur lors de la mise à jour du profil : " + error.message);
       }
     },
+
     async afficherEvent() {
       const uri = `/api/events/subscribe`;
       try {
@@ -264,7 +280,7 @@ export default {
           console.log("Evenements ou l'user est inscrit:", response.data);
           this.eventsRegistered = response.data.events;
           console.log("Evenements ou l'user est inscrit sur la page profile:", this.eventsRegistered);
-
+          console.log("role actuel", this.$store.getters["getRole"]);
           console.log("taille",this.eventsRegistered.length);
         } else {
           console.error("Erreur de récupération :", response.status);
@@ -290,6 +306,9 @@ export default {
 
       };
       return placeholders[field] || "";
+    },
+    getRole() {
+      return this.$store.getters["getRole"];
     }
   },
 };
