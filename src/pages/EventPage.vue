@@ -62,7 +62,7 @@ export default defineComponent({
     <div class="main-container">
       <div class="principal-container">
         <h2>Liste des événements</h2>
-        <router-link v-if="getRole() !== userRole.USER" id="bouton" to="/users/csvListeAdherent">
+        <router-link v-if="getRole() !== userRole.USER" id="bouton" to="/users/CreateEventPage">
           Créer un évènement
         </router-link>
         <div v-if="events.length === 0">
