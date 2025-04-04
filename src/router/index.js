@@ -3,7 +3,6 @@ import AuthentificationPage from '@/pages/AuthentificationPage.vue'; // Assurez-
 import VerifyLicencePage from '@/pages/VerifyLicencePage.vue'; // Si une page "Signup" existe
 import InscriptionPage from '@/pages/InscriptionPage.vue';
 import connexionPage from '@/pages/ConnexionPage.vue';
-import ConnectedPage from '@/pages/ConnectedPage.vue';
 import CsvListeAdherent from '@/pages/CsvListeAdherent.vue';
 import ClubPage from '@/pages/ClubPage.vue';
 import EntrainementPage from '@/pages/EntrainementPage.vue';
@@ -47,11 +46,6 @@ const routes = [
     path: '/users/verify-licence',
     name: 'Verify-licence',
     component: VerifyLicencePage,
-  },
-  {
-    path:'/users/connected',
-    name: 'Connected',
-    component: ConnectedPage,
   },
   {
     path:'/users/csvListeAdherent',
